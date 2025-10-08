@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Projet MarNiniz
+## Introduction
+Ce projet est un site de recettes développé avec Next.js, pensé pour offrir une expérience culinaire moderne, rapide et intuitive. L’objectif est de permettre aux utilisateurs de découvrir, partager et gérer facilement leurs recettes préférées à travers une interface fluide et responsive. Grâce aux fonctionnalités de rendu côté serveur et à la structure modulaire de Next.js, le site allie performance, référencement optimisé (SEO) et simplicité de développement.
 
-## Getting Started
+## Technologies utilisées
 
-First, run the development server:
+Voici les principales technologies utilisées pour ce projet :
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white) Next.js
+- ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white) Vercel
+- ![TheMealDB](https://img.shields.io/badge/TheMealDB-FF5733?style=for-the-badge&logo=react&logoColor=white) TheMealDB API
+- ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white) Tailwind CSS
+- ![NextAuth](https://img.shields.io/badge/NextAuth-8B5CF6?style=for-the-badge&logo=nextauth.js&logoColor=white) NextAuth
+
+## L'API TheMealDB
+
+Voici les différentes route API qui seront utilisé
+
+### Rechercher des recettes
+
+```http
+https://www.themealdb.com/api/json/v1/1/search.php?s=chicken
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Obtenir le detail d'une recette 
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```http
+https://www.themealdb.com/api/json/v1/1/lookup.php?i=52772
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Obtenir une recette aléatoire
 
-## Learn More
+```http
+https://www.themealdb.com/api/json/v1/1/random.php
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Lister les catégories
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```http
+https://www.themealdb.com/api/json/v1/1/categories.php
+```
