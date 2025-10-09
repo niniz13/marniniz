@@ -1,8 +1,29 @@
+'use client';
+
+import { useState } from "react";
 import GlassInput from "./glassInput";
 import Link from "next/link";
-import { User } from "lucide-react";
+import { User, Search } from "lucide-react";
+import { useDispatch } from "react-redux";
+import fetchRecipes from "../../lib/store/recipes/recipesSlice";
 
 export default function Menu() {
+  const dispatch = useDispatch();
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleSearch = () => {
+    console.log("Searching for:", searchValue);
+    if (searchValue.trim() !== "") {
+      dispatch(fetchRecipes(searchValue));
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   return (
     <div className="w-full flex flex-row justify-between items-center gap-4 px-[50px] py-5">
       <a href="/" className="font-black text-2xl tracking-[-0.05em]">
@@ -24,7 +45,19 @@ export default function Menu() {
           Category
         </Link>
 
-        <GlassInput />
+        <div className="relative flex items-center">
+          <GlassInput
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onKeyDown={handleKeyPress}
+          />
+          <button
+            onClick={handleSearch}
+            className="absolute right-2 p-2 rounded-full hover:bg-white/10 transition-colors duration-300"
+          >
+            <Search size={20} strokeWidth={2} />
+          </button>
+        </div>
 
         <a
           href="/profile"

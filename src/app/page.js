@@ -1,41 +1,43 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import Image from "next/image";
 import Menu from "./components/menu";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
 export default function Home() {
-  const recipes = [
-    {
-      id: 1,
-      title: "Summer Pasta with Basil & Tomatoes",
-      category: "Italian",
-      description:
-        "Preheat oven to 350°F. Spray a 9x13-inch baking pan with non-stick spray. " +
-        "Combine soy sauce, cup water, brown sugar, ginger and garlic in a small " +
-        "saucepan and cover. Bring to a boil over medium heat. Remove lid and cook " +
-        "for one minute once boiling. Meanwhile, stir together the corn starch and 2 " +
-        "tablespoons of water in a separate dish until smooth. Once sauce is boiling, " +
-        "add mixture to the saucepan and stir to combine. Cook until the sauce starts " +
-        "to thicken then remove from heat. Place the chicken breasts in the prepared pan. " +
-        "Pour one cup of the sauce over top of chicken. Place chicken in oven and bake " +
-        "35 minutes or until cooked through. Remove from oven and shred chicken in the " +
-        "dish using two forks. Meanwhile, steam or cook the vegetables according to " +
-        "package directions. Add the cooked vegetables and rice to the casserole dish " +
-        "with the chicken. Add most of the remaining sauce, reserving a bit to drizzle " +
-        "over the top when serving. Gently toss everything together in the casserole " +
-        "dish until combined. Return to oven and cook 15 minutes. Remove from oven and " +
-        "let stand 5 minutes before serving. Drizzle each serving with remaining sauce. " +
-        "Enjoy!",
-      image:
-        "https://sugarspunrun.com/wp-content/uploads/2022/07/Summer-Garden-Pasta-3-of-5.jpg",
-    },
-  ];
+  const {
+    items: recipes = [],
+    status,
+    error,
+  } = useSelector((state) => state.recipes);
+  const [isClient, setIsClient] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    const filteredRecipes = recipes.filter((recipe) => {
+      return (
+        recipe.title.toLowerCase().includes(query.toLowerCase()) ||
+        recipe.description.toLowerCase().includes(query.toLowerCase())
+      );
+    });
+    setSearchResults(filteredRecipes);
+  };
+
+  if (!isClient) {
+    return null;
+  }
 
   return (
     <div className="relative w-full min-h-screen text-white overflow-hidden">
-      {/* Hero Section */}
       <div className="relative w-full h-screen flex items-center justify-center text-center overflow-hidden">
         <Image
           src="/hero.jpg"
