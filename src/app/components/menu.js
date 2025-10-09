@@ -26,9 +26,9 @@ export default function Menu() {
 
   return (
     <div className="w-full flex flex-row justify-between items-center gap-4 px-[50px] py-5">
-      <a href="/" className="font-black text-2xl tracking-[-0.05em]">
+      <Link href="/" className="font-black text-2xl tracking-[-0.05em]">
         MarNiniz
-      </a>
+      </Link>
 
       <div className="flex items-center gap-4">
         <Link
