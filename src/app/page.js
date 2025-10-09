@@ -1,101 +1,42 @@
 "use client";
 
 import Image from "next/image";
-import { Box, Typography } from "@mui/material";
 import Menu from "./components/menu";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <Box
-      sx={{
-        position: "relative",
-        width: "100%",
-        height: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        textAlign: "center",
-        color: "#fff",
-        overflow: "hidden",
-      }}
-    >
+    <div className="relative w-full h-screen flex items-center justify-center text-center text-white overflow-hidden">
       <Image
         src="/hero.jpg"
         alt="hero image"
         quality={60}
         fill
         priority
-        style={{
-          objectFit: "cover",
-          filter: "brightness(0.7)",
-        }}
+        className="object-cover brightness-75"
       />
 
-      <Box
-        sx={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          zIndex: 10,
-        }}
-      >
+      <div className="fixed top-0 left-0 w-full z-10">
         <Menu />
-      </Box>
+      </div>
 
-      <Box
-        sx={{
-          position: "relative",
-          zIndex: 1,
-          maxWidth: 500,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 4,
-        }}
-      >
-        <Typography
-          variant="h1"
-          sx={{
-            fontWeight: 900,
-            letterSpacing: "-2px",
-            fontFamily: "Inter, sans-serif",
-            lineHeight: 0.9,
-          }}
-        >
+      <div className="relative z-10 max-w-[500px] flex flex-col justify-center items-center gap-4">
+        <h1 className="font-black tracking-[-0.05em] leading-[0.9] text-5xl sm:text-6xl md:text-7xl">
           MarNiniz
-        </Typography>
+        </h1>
 
-        <Typography
-          sx={{
-            fontWeight: 800,
-            fontFamily: "Inter, sans-serif",
-          }}
-        >
+        <p className="font-extrabold text-base sm:text-lg md:text-xl">
           Discover homemade dishes made with seasonal ingredients, for healthy,
           modern and delicious cuisine.
-        </Typography>
-        <Typography
-          sx={{
-            backdropFilter: "blur(10px)",
-            background: "transparent",
-            borderRadius: "50px",
-            border: "1px solid rgba(255, 255, 255, 0.3)",
-            padding: "12px 30px",
-            color: "#fff",
-            fontWeight: "bold",
-            width: "fit-content",
-            transition: "all 0.3s ease",
-            cursor: "pointer",
-            "&:hover": {
-              backdropFilter: "blur(5px)",
-            },
-          }}
+        </p>
+
+        <Link
+          href="/recipes"
+          className="backdrop-blur-md bg-transparent rounded-full border border-white/30 px-8 py-3 text-white font-bold transition-all duration-300 hover:bg-white/10 cursor-pointer"
         >
           See all recipes
-        </Typography>
-      </Box>
-    </Box>
+        </Link>
+      </div>
+    </div>
   );
 }
