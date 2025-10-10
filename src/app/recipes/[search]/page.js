@@ -31,7 +31,7 @@ export default function RecipesPage() {
 
       <div className="pt-32 px-6 sm:px-12 md:px-20 lg:px-40">
         <h2 className="text-3xl sm:text-4xl font-extrabold mb-10 text-center">
-          Recipes for "{search}"
+          Recipes for {`"${search}"`}
         </h2>
 
         {status === "loading" && (
@@ -44,7 +44,7 @@ export default function RecipesPage() {
 
         {status === "succeeded" && recipes.length === 0 && (
           <p className="text-center text-white/60">
-            No recipes found for "{search}"
+            No recipes found for {`"${search}"`}.
           </p>
         )}
 
