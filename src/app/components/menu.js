@@ -1,20 +1,19 @@
-'use client';
+"use client";
 
 import { useState } from "react";
 import GlassInput from "./glassInput";
 import Link from "next/link";
 import { User, Search } from "lucide-react";
-import { useDispatch } from "react-redux";
-import fetchRecipes from "../../lib/store/recipes/recipesSlice";
+import { useRouter } from "next/navigation";
 
 export default function Menu() {
-  const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState("");
+  const router = useRouter();
 
   const handleSearch = () => {
-    console.log("Searching for:", searchValue);
-    if (searchValue.trim() !== "") {
-      dispatch(fetchRecipes(searchValue));
+    const trimmed = searchValue.trim();
+    if (trimmed !== "") {
+      router.push(`/recipes/${encodeURIComponent(trimmed)}`);
     }
   };
 

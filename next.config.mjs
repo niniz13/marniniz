@@ -6,6 +6,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "sugarspunrun.com",
       },
+      {
+        protocol: "https",
+        hostname: "www.themealdb.com",
+      },
     ],
   },
 };

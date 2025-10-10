@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import {fetchRecipes} from "./recipesAsyncAction";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { fetchRecipes } from "./fetchRecipes";
 
 const recipesSlice = createSlice({
   name: "recipes",
@@ -16,7 +16,7 @@ const recipesSlice = createSlice({
       })
       .addCase(fetchRecipes.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.items = action.payload || [];
+        state.items = action.payload;
       })
       .addCase(fetchRecipes.rejected, (state, action) => {
         state.status = "failed";
