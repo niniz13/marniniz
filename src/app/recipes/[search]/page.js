@@ -87,6 +87,7 @@ export default function RecipesPage() {
                     src={recipe.strMealThumb}
                     alt={recipe.strMeal}
                     fill
+                    quality={60}
                     className="object-cover"
                   />
                 </div>
