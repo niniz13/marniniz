@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRecipesByCategory } from "@/lib/features/recipes/fetchRecipesByCategory";
 import Image from "next/image";
@@ -50,18 +51,23 @@ export default function CategoryRecipesPage() {
                 viewport={{ once: true }}
                 className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:bg-white/10 transition-all duration-300"
               >
-                <div className="relative w-full h-64">
-                  <Image
-                    src={recipe.strMealThumb}
-                    alt={recipe.strMeal}
-                    fill
-                    quality={60}
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-5 text-center">
-                  <h3 className="text-xl font-bold mb-2">{recipe.strMeal}</h3>
-                </div>
+                <Link
+                  href={`/recipes/${recipe.idMeal}`}
+                  className="block group bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:bg-white/10 transition-all duration-300"
+                >
+                  <div className="relative w-full h-64">
+                    <Image
+                      src={recipe.strMealThumb}
+                      alt={recipe.strMeal}
+                      fill
+                      quality={60}
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="p-5 text-center">
+                    <h3 className="text-xl font-bold mb-2">{recipe.strMeal}</h3>
+                  </div>
+                </Link>
               </motion.div>
             ))}
           </div>

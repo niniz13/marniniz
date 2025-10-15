@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRecipes } from "@/lib/features/recipes/fetchRecipes";
 import Image from "next/image";
@@ -9,7 +10,7 @@ import { motion } from "framer-motion";
 import Menu from "../../components/menu";
 
 export default function RecipesPage() {
-  const { search } = useParams();
+  const { query } = useParams();
   const dispatch = useDispatch();
   const {
     items: recipes = [],
@@ -18,10 +19,10 @@ export default function RecipesPage() {
   } = useSelector((state) => state.recipes);
 
   useEffect(() => {
-    if (search) {
-      dispatch(fetchRecipes(search));
+    if (query) {
+      dispatch(fetchRecipes(query));
     }
-  }, [search, dispatch]);
+  }, [query, dispatch]);
 
   return (
     <div className="relative w-full min-h-screen text-white bg-[#0e0e0e] overflow-hidden">
@@ -31,7 +32,7 @@ export default function RecipesPage() {
 
       <div className="pt-32 px-6 sm:px-12 md:px-20 lg:px-40">
         <h2 className="text-3xl sm:text-4xl font-extrabold mb-10 text-center">
-          Recipes for {`"${search}"`}
+          Recipes for {`"${query}"`}
         </h2>
 
         {status === "loading" && (
@@ -44,7 +45,7 @@ export default function RecipesPage() {
 
         {status === "succeeded" && recipes.length === 0 && (
           <p className="text-center text-white/60">
-            No recipes found for {`"${search}"`}.
+            No recipes found for {`"${query}"`}.
           </p>
         )}
 
@@ -82,29 +83,34 @@ export default function RecipesPage() {
                   flex flex-col
                 "
               >
-                <div className="relative w-full h-64">
-                  <Image
-                    src={recipe.strMealThumb}
-                    alt={recipe.strMeal}
-                    fill
-                    quality={60}
-                    className="object-cover"
-                  />
-                </div>
-
-                <div className="flex flex-col flex-1 justify-between p-5">
-                  <div>
-                    <h3 className="text-2xl font-bold mb-1 line-clamp-1">
-                      {recipe.strMeal}
-                    </h3>
-                    <span className="text-sm uppercase text-white/60 mb-3 block">
-                      {recipe.strCategory}
-                    </span>
-                    <p className="text-white/80 text-sm line-clamp-4">
-                      {recipe.strInstructions}
-                    </p>
+                <Link
+                  href={`/recipes/${recipe.idMeal}`}
+                  className="block group bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:bg-white/10 transition-all duration-300"
+                >
+                  <div className="relative w-full h-64">
+                    <Image
+                      src={recipe.strMealThumb}
+                      alt={recipe.strMeal}
+                      fill
+                      quality={60}
+                      className="object-cover"
+                    />
                   </div>
-                </div>
+
+                  <div className="flex flex-col flex-1 justify-between p-5">
+                    <div>
+                      <h3 className="text-2xl font-bold mb-1 line-clamp-1">
+                        {recipe.strMeal}
+                      </h3>
+                      <span className="text-sm uppercase text-white/60 mb-3 block">
+                        {recipe.strCategory}
+                      </span>
+                      <p className="text-white/80 text-sm line-clamp-4">
+                        {recipe.strInstructions}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
               </motion.div>
             ))}
           </div>

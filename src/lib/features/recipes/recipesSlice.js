@@ -2,12 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 import { fetchRecipes } from "./fetchRecipes";
 import { fetchCategories } from "./fetchCategories";
 import { fetchRecipesByCategory } from "./fetchRecipesByCategory";
+import { fetchRecipeById } from "./fetchRecipeById";
 
 const recipesSlice = createSlice({
   name: "recipes",
   initialState: {
     items: [],
     categories: [],
+    selectedRecipe: null,
     status: "idle",
     error: null,
   },
@@ -46,6 +48,18 @@ const recipesSlice = createSlice({
         state.items = action.payload;
       })
       .addCase(fetchRecipesByCategory.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+
+      .addCase(fetchRecipeById.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchRecipeById.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.selectedRecipe = action.payload;
+      })
+      .addCase(fetchRecipeById.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
