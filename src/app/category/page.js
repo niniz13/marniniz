@@ -21,7 +21,7 @@ export default function CategoriesPage() {
 
   return (
     <div className="relative min-h-screen bg-[#0e0e0e] text-white">
-      <div className="fixed top-0 left-0 w-full z-10 backdrop-blur-md">
+      <div className="fixed top-0 left-0 w-full z-10">
         <Menu />
       </div>
 

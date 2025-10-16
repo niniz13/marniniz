@@ -26,7 +26,7 @@ export default function RecipesPage() {
 
   return (
     <div className="relative w-full min-h-screen text-white bg-[#0e0e0e] overflow-hidden">
-      <div className="fixed top-0 left-0 w-full z-10 backdrop-blur-md">
+      <div className="fixed top-0 left-0 w-full z-10">
         <Menu />
       </div>
 

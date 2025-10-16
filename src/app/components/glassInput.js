@@ -1,6 +1,6 @@
 export default function GlassInput({ value, onChange, onKeyDown }) {
   return (
-    <div className="backdrop-blur-md bg-transparent rounded-full border border-white/30 w-full max-w-[400px]">
+    <div className="backdrop-blur-3xl bg-transparent rounded-full border border-white/30 w-full max-w-[400px]">
       <input
         placeholder="Search recipe..."
         value={value}

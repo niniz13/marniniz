@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "MarNiniz",
+  title: "MealMind",
   description: "Search many recipes !",
 };
 
