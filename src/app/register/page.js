@@ -1,107 +1,62 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
+import { Mail } from "lucide-react";
+import Image from "next/image";
 
 export default function RegisterPage() {
-  const router = useRouter();
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
-
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      setError(data.message || "Something went wrong");
-    } else {
-      setSuccess("Account created successfully! Redirecting...");
-      setTimeout(() => router.push("/login"), 2000);
-    }
-  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0e0e0e] text-white">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white/10 backdrop-blur-lg p-8 rounded-2xl w-full max-w-md shadow-xl"
+    <div className="relative flex items-center justify-center min-h-screen text-white">
+      {/* Image d’arrière-plan */}
+      <Image
+          src="/auth.webp"
+          alt="hero image"
+          quality={60}
+          fill
+          priority
+          className="object-cover brightness-75"
+        />
+      <div className="absolute inset-0 bg-black/60"></div>
+
+      <div
+        className="relative z-10 w-full max-w-md "
       >
-        <h1 className="text-3xl font-bold mb-6 text-center">Create Account</h1>
+        <h2 className="text-4xl font-bold mb-8 text-center drop-shadow-lg">
+          Inscription
+        </h2>
 
-        {error && <p className="text-red-400 text-sm mb-3">{error}</p>}
-        {success && <p className="text-green-400 text-sm mb-3">{success}</p>}
+        {/* Bouton Email */}
+        <Link
+          href="/register-email"
+          className="flex items-center justify-center gap-3 w-full bg-black/30 hover:bg-black/10 text-white font-semibold py-3 rounded-lg transition-all duration-200 backdrop-blur-3xl border border-white/30"
+        >
+          <Mail size={20} />
+          Continuer avec un email
+        </Link>
 
-        <div className="flex flex-col gap-4">
-          <input
-            name="name"
-            type="text"
-            placeholder="Full name"
-            value={form.name}
-            onChange={handleChange}
-            className="p-3 rounded bg-transparent border border-white/30 focus:border-white outline-none"
-            required
+        {/* Bouton Google */}
+        <button
+          type="button"
+          onClick={() => signIn("google")}
+          className="flex items-center justify-center gap-3 w-full bg-black/30 hover:bg-black/10 text-white font-semibold py-3 rounded-lg transition-all duration-200 backdrop-blur-3xl border border-white/30 mt-4"
+        >
+          <Image
+            src="https://www.svgrepo.com/show/475656/google-color.svg"
+            alt="Google"
+            width={20}
+            height={20}
           />
-
-          <input
-            name="email"
-            type="email"
-            placeholder="Email"
-            value={form.email}
-            onChange={handleChange}
-            className="p-3 rounded bg-transparent border border-white/30 focus:border-white outline-none"
-            required
-          />
-
-          <input
-            name="password"
-            type="password"
-            placeholder="Password"
-            value={form.password}
-            onChange={handleChange}
-            className="p-3 rounded bg-transparent border border-white/30 focus:border-white outline-none"
-            required
-          />
-
-          <button
-            type="submit"
-            className="bg-green-600 hover:bg-green-700 transition rounded p-3 font-bold"
-          >
-            Sign Up
-          </button>
-          <button
-            type="button"
-            onClick={() => signIn("google")}
-            className="w-full bg-blue-600 hover:bg-blue-700 transition rounded p-3 font-bold mt-4"
-          >
-            Sign in with Google
-          </button>
+          Continuer avec Google
+        </button>
+        <div className="flex justify-center mt-4 gap-2">
+          <p className="font-semibold text-base sm:text-lg md:text-sm text-center">
+            Vous avez déjà un compte ?
+          </p>
+          <Link className="font-semibold text-base underline sm:text-lg md:text-sm text-center" href="/login">Connectez-vous</Link>
         </div>
-
-        <p className="text-sm text-center mt-4 text-white/70">
-          Already have an account?{" "}
-          <span
-            onClick={() => router.push("/login")}
-            className="text-green-400 cursor-pointer hover:underline"
-          >
-            Sign in
-          </span>
-        </p>
-      </form>
+      </div>
     </div>
   );
 }
