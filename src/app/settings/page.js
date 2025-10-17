@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Menu from "../components/menu";
 
 export default function SettingsPage() {
   const { data: session, status, update } = useSession();
@@ -69,10 +70,10 @@ export default function SettingsPage() {
       const res = await fetch("/api/user/update", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, image: imageUrl }),
+        body: JSON.stringify({ name, email, image: imageUrl }),
       });
       if (res.ok) {
-        // Update the session to reflect the new profile data
+        // Trigger session refresh to fetch updated data from database
         await update();
         setSaveStatus("success");
         setImageFile(null);
@@ -137,7 +138,11 @@ export default function SettingsPage() {
   const isGoogleUser = session?.user?.provider === "google";
 
   return (
-    <div className="min-h-screen bg-[#0e0e0e] text-white px-6 sm:px-20 lg:px-40 py-20">
+    <div className="min-h-screen bg-[#0e0e0e] text-white px-6 sm:px-20 lg:px-40 py-32">
+      <div className="fixed top-0 left-0 w-full z-10">
+        <Menu />
+      </div>
+
       <h1 className="text-4xl font-extrabold mb-10 text-center">
         Paramètres du compte
       </h1>
@@ -155,11 +160,18 @@ export default function SettingsPage() {
             />
           </div>
 
-          <label className="cursor-pointer bg-white/10 hover:bg-white/20 transition-all px-4 py-2 rounded-lg border border-white/20 text-sm">
+          <label
+            className={`px-4 py-2 rounded-lg border border-white/20 text-sm transition-all ${
+              isGoogleUser
+                ? "opacity-60 cursor-not-allowed bg-white/5"
+                : "cursor-pointer bg-white/10 hover:bg-white/20"
+            }`}
+          >
             <input
               type="file"
               accept="image/*"
               onChange={handleImageChange}
+              disabled={isGoogleUser}
               className="hidden"
             />
             Choisir une image
@@ -176,7 +188,9 @@ export default function SettingsPage() {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="bg-transparent border border-white/20 px-3 py-2 rounded-lg w-full text-white/80 focus:outline-none focus:ring-2 focus:ring-white/30"
+            readOnly={isGoogleUser}
+            disabled={isGoogleUser}
+            className="bg-transparent border border-white/20 px-3 py-2 rounded-lg w-full text-white/80 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-white/30"
           />
         </div>
 
@@ -229,25 +243,27 @@ export default function SettingsPage() {
 
         {/* Boutons de bas de page */}
         <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row gap-4 justify-between">
-          <button
-            onClick={handleSave}
-            disabled={loading}
-            className={`px-6 py-2 border rounded-lg transition-all ${
-              saveStatus === "success"
-                ? "bg-green-600/80 border-green-500"
+          {!isGoogleUser && (
+            <button
+              onClick={handleSave}
+              disabled={loading}
+              className={`px-6 py-2 border rounded-lg transition-all ${
+                saveStatus === "success"
+                  ? "bg-green-600/80 border-green-500"
+                  : saveStatus === "error"
+                  ? "bg-red-600/80 border-red-500"
+                  : "bg-white/10 border-white/20 hover:bg-white/20"
+              }`}
+            >
+              {loading
+                ? "Sauvegarde..."
+                : saveStatus === "success"
+                ? "✓ Enregistré"
                 : saveStatus === "error"
-                ? "bg-red-600/80 border-red-500"
-                : "bg-white/10 border-white/20 hover:bg-white/20"
-            }`}
-          >
-            {loading
-              ? "Sauvegarde..."
-              : saveStatus === "success"
-              ? "✓ Enregistré"
-              : saveStatus === "error"
-              ? "✗ Erreur"
-              : "Enregistrer"}
-          </button>
+                ? "✗ Erreur"
+                : "Enregistrer"}
+            </button>
+          )}
 
           <button
             onClick={handleDelete}

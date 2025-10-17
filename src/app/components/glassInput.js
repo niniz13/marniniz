@@ -2,7 +2,7 @@ export default function GlassInput({ value, onChange, onKeyDown }) {
   return (
     <div className="backdrop-blur-3xl bg-transparent rounded-full border border-white/30 w-full max-w-[400px]">
       <input
-        placeholder="Search recipe..."
+        placeholder="Rechercher..."
         value={value}
         onChange={onChange}  
         onKeyDown={onKeyDown}

@@ -45,17 +45,17 @@ export default function Menu() {
   }, []);
 
   return (
-    <div className="w-full flex flex-row justify-between items-center gap-4 px-[50px] py-5 relative">
+    <div className="w-full flex flex-row justify-between items-center gap-4 px-[100px] py-5 relative">
       <Link href="/" className="font-black text-2xl tracking-[-0.05em]">
         MealMind
       </Link>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-8">
         <Link
           href="/category"
           className="font-bold text-lg tracking-[-0.03em] hover:underline"
         >
-          Category
+          Categories
         </Link>
 
         <div className="relative flex items-center">
@@ -88,7 +88,7 @@ export default function Menu() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
-                className="absolute right-0 mt-3 w-56 backdrop-blur-3xl border border-white/20 rounded-xl shadow-lg "
+                className="absolute right-0 mt-3 w-56 backdrop-blur-3xl border border-white/20 rounded-xl shadow-lg"
               >
                 <div className="p-3 text-sm text-white/80">
                   {session ? (
@@ -96,13 +96,15 @@ export default function Menu() {
                       {/* Header du menu avec image et nom */}
                       <div className="flex items-center gap-3 px-2 py-1">
                         {session.user.image && (
-                          <Image
-                            src={session.user.image}
-                            alt="User"
-                            width={32}
-                            height={32}
-                            className="rounded-full object-cover"
-                          />
+                          <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center bg-white/10 border border-white/20">
+                            <Image
+                              src={session.user.image}
+                              alt="User"
+                              width={32}
+                              height={32}
+                              className="rounded-full object-cover w-full h-full"
+                            />
+                          </div>
                         )}
                         <p className="truncate text-white font-medium">
                           {session.user.name || session.user.email}

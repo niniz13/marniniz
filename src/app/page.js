@@ -19,7 +19,7 @@ export default function Home() {
           <Menu />
         </div>
 
-        <div className="relative z-10 max-w-[1000px] flex flex-col justify-center items-center gap-4">
+        <div className="relative max-w-[1000px] flex flex-col justify-center items-center gap-4">
           <h1 className="font-black tracking-[-0.05em] leading-[1] text-5xl sm:text-6xl md:text-7xl">
             Planifie tes repas en quelques secondes grâce à l’IA
           </h1>

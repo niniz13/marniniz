@@ -39,17 +39,16 @@ export const authOptions = {
     async redirect({ url, baseUrl }) {
       return baseUrl + "/";
     },
-    async jwt({ token, user, account, trigger, session: updatedSession }) {
-      // Add account provider info to token on sign in
+    async jwt({ token, user, account, trigger }) {
+      // Store user ID and provider on initial sign in
+      if (user) {
+        token.id = user.id;
+      }
       if (account) {
         token.provider = account.provider;
       }
       
-      // Update token when session is updated
-      if (trigger === "update" && updatedSession) {
-        token.name = updatedSession.name;
-        token.picture = updatedSession.image;
-      }
+      // Don't modify token on update - let session callback fetch fresh data
       
       return token;
     },
@@ -59,13 +58,27 @@ export const authOptions = {
         session.user.provider = token.provider;
       }
       
-      // Sync user data from database to session
+      // Always sync user data from database to session
       const client = await clientPromise;
       const db = client.db();
-      const user = await db.collection("users").findOne({ email: session.user.email });
+      
+      // Find user by sub (user ID from token)
+      let user;
+      if (token.sub) {
+        const { ObjectId } = require("mongodb");
+        try {
+          user = await db.collection("users").findOne({ _id: new ObjectId(token.sub) });
+        } catch (e) {
+          // If ObjectId fails, try finding by email
+          user = await db.collection("users").findOne({ email: token.email });
+        }
+      } else if (token.email) {
+        user = await db.collection("users").findOne({ email: token.email });
+      }
       
       if (user) {
         session.user.name = user.name;
+        session.user.email = user.email;
         session.user.image = user.image;
       }
       
