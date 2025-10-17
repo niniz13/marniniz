@@ -52,7 +52,7 @@ export default function LoginPage() {
         </button>
         <div className="flex justify-center mt-4 gap-2">
           <p className="font-semibold text-base sm:text-lg md:text-sm text-center">
-            Vous n'avez pas de compte ?
+            Vous n&apos;avez pas de compte ?
           </p>
           <Link className="font-semibold text-base underline sm:text-lg md:text-sm text-center" href="/register">Inscrivez-vous</Link>
         </div>

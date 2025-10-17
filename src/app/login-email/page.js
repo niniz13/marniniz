@@ -39,7 +39,7 @@ export default function LoginEmailPage() {
         className="object-cover brightness-75"
       />
       <div className="absolute inset-0 bg-black/60"></div>
-      
+
       <form onSubmit={handleSubmit} className="relative z-10 w-full max-w-md ">
         <h2 className="text-4xl font-bold mb-6 text-center">Connexion</h2>
 
@@ -77,7 +77,7 @@ export default function LoginEmailPage() {
         </div>
         <div className="flex justify-center mt-2 gap-2">
           <p className="font-semibold text-base sm:text-lg md:text-sm text-center">
-            Vous n'avez pas de compte ?
+            Vous n&apos;avez pas de compte ?
           </p>
           <Link className="font-semibold text-base underline sm:text-lg md:text-sm text-center" href="/register">Inscrivez-vous</Link>
         </div>
