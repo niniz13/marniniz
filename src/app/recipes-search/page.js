@@ -139,7 +139,7 @@ export default function SearchPage() {
           {/* Ingredients */}
           <div className="w-full">
             <label className="block mb-2 font-medium">
-              Nombre minimum d'ingrédients
+              Nombre minimum d&apos;ingrédients
             </label>
             <input
               type="number"
