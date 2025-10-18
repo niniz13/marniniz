@@ -70,7 +70,7 @@ function RecipesList() {
             </div>
             <div className="p-5">
               <h3 className="text-xl font-bold line-clamp-1">{recipe.strMeal}</h3>
-              <p className="text-sm text-white/60">
+              <p className="text-sm text-red-400">
                 {recipe.strCategory} • {recipe.strArea}
               </p>
             </div>
