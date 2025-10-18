@@ -26,7 +26,7 @@ export default function Menu() {
   const handleSearch = () => {
     const trimmed = searchValue.trim();
     if (trimmed !== "") {
-      router.push(`/search/${encodeURIComponent(trimmed)}`);
+      router.push(`/recipes?name=${encodeURIComponent(trimmed)}`);
     }
   };
 
@@ -52,10 +52,16 @@ export default function Menu() {
 
       <div className="flex items-center gap-8">
         <Link
-          href="/category"
+          href="/planning-ia"
           className="font-bold text-lg tracking-[-0.03em] hover:underline"
         >
-          Categories
+          Planning IA
+        </Link>
+        <Link
+          href="/recipes-search"
+          className="font-bold text-lg tracking-[-0.03em] hover:underline"
+        >
+          Recettes
         </Link>
 
         <div className="relative flex items-center">
