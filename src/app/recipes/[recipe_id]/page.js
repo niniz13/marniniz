@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Skeleton from "@mui/material/Skeleton";
 import Image from "next/image";
 import Menu from "@/app/components/menu";
 import { motion } from "framer-motion";
+import Footer from "../../components/footer";
 
 export default function RecipeDetailPage() {
   const { recipe_id } = useParams();
@@ -35,8 +37,83 @@ export default function RecipeDetailPage() {
 
   if (status === "loading") {
     return (
-      <div className="flex items-center justify-center h-screen text-white/70">
-        Chargement de la recette...
+      <div className="relative min-h-screen bg-[#0e0e0e] text-white">
+        {/* Menu */}
+        <div className="fixed top-0 left-0 w-full z-10">
+          <Menu />
+        </div>
+
+        {/* Contenu Skeleton */}
+        <div className="pt-32 px-6 sm:px-12 md:px-20 lg:px-40 pb-20 flex flex-col gap-10">
+          {/* Bloc image + infos */}
+          <div className="flex flex-col lg:flex-row gap-10">
+            {/* Image skeleton */}
+            <Skeleton
+              variant="rectangular"
+              animation="wave"
+              className="w-full lg:w-1/2 min-h-[400px] rounded-2xl"
+              sx={{ bgcolor: "rgba(255,255,255,0.15)" }}
+            />
+
+            {/* Right text skeleton */}
+            <div className="w-full lg:w-1/2 flex flex-col gap-4">
+              <Skeleton
+                variant="text"
+                width="60%"
+                height={40}
+                sx={{ bgcolor: "rgba(255,255,255,0.2)" }}
+              />
+              <Skeleton
+                variant="text"
+                width="40%"
+                sx={{ bgcolor: "rgba(255,255,255,0.15)" }}
+              />
+
+              {/* Liste ingrédients */}
+              <div>
+                <Skeleton
+                  variant="text"
+                  width="30%"
+                  height={30}
+                  sx={{ bgcolor: "rgba(255,255,255,0.2)" }}
+                  className="mb-2"
+                />
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <Skeleton
+                      key={i}
+                      variant="text"
+                      width="80%"
+                      height={25}
+                      sx={{ bgcolor: "rgba(255,255,255,0.15)" }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Instructions Skeleton */}
+          <div>
+            <Skeleton
+              variant="text"
+              width="40%"
+              height={35}
+              sx={{ bgcolor: "rgba(255,255,255,0.2)" }}
+              className="mb-4"
+            />
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton
+                key={i}
+                variant="text"
+                width="100%"
+                height={20}
+                sx={{ bgcolor: "rgba(255,255,255,0.15)" }}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
@@ -118,6 +195,7 @@ export default function RecipeDetailPage() {
           </p>
         </motion.div>
       </div>
+      <Footer />
     </div>
   );
 }

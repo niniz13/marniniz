@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Menu from "./components/menu";
 import Link from "next/link";
+import Footer from "./components/footer";
 
 export default function Home() {
   return (
@@ -40,6 +41,7 @@ export default function Home() {
           </Link>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Menu from "../components/menu";
+import Footer from "../components/footer";
 
 export default function SearchPage() {
   const router = useRouter();
@@ -44,7 +45,7 @@ export default function SearchPage() {
       </div>
 
       {/* Content */}
-      <div className="pt-32 px-20 sm:px-20 lg:px-80 mx-auto">
+      <div className="py-32 px-20 sm:px-20 lg:px-80 mx-auto">
         <h1 className="text-4xl font-bold mb-10">Rechercher des recettes</h1>
 
         <motion.form
@@ -161,6 +162,7 @@ export default function SearchPage() {
           </button>
         </motion.form>
       </div>
+      <Footer />
     </div>
   );
 }

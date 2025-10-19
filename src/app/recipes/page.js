@@ -6,11 +6,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Menu from "../components/menu";
+import Skeleton from "@mui/material/Skeleton";
+import Footer from "../components/footer";
 
 function RecipesList() {
   const searchParams = useSearchParams();
   const [recipes, setRecipes] = useState([]);
-  const [status, setStatus] = useState("idle"); // idle | loading | succeeded | failed
+  const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -33,7 +35,37 @@ function RecipesList() {
   }, [searchParams]);
 
   if (status === "loading") {
-    return <p className="text-center text-white/70">Chargement des recettes...</p>;
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="flex flex-col">
+            {/* Image skeleton */}
+            <Skeleton
+              variant="rectangular"
+              animation="wave"
+              className="w-full min-h-64 rounded-2xl"
+              sx={{ bgcolor: "rgba(255,255,255,0.15)" }}
+            />
+
+            {/* Text skeleton */}
+            <div className="p-5">
+              <Skeleton
+                variant="text"
+                width="80%"
+                height={28}
+                sx={{ bgcolor: "rgba(255,255,255,0.2)" }}
+              />
+              <Skeleton
+                variant="text"
+                width="60%"
+                height={20}
+                sx={{ bgcolor: "rgba(255,255,255,0.15)" }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
   }
 
   if (status === "failed") {
@@ -41,7 +73,11 @@ function RecipesList() {
   }
 
   if (status === "succeeded" && recipes.length === 0) {
-    return <p className="text-center text-white/60">Aucune recette trouvée avec ces filtres.</p>;
+    return (
+      <p className="text-center text-white/60">
+        Aucune recette trouvée avec ces filtres.
+      </p>
+    );
   }
 
   return (
@@ -69,7 +105,9 @@ function RecipesList() {
               )}
             </div>
             <div className="p-5">
-              <h3 className="text-xl font-bold line-clamp-1">{recipe.strMeal}</h3>
+              <h3 className="text-xl font-bold line-clamp-1">
+                {recipe.strMeal}
+              </h3>
               <p className="text-sm text-red-400">
                 {recipe.strCategory} • {recipe.strArea}
               </p>
@@ -93,10 +131,15 @@ export default function RecipesPage() {
           Résultats de votre recherche
         </h2>
 
-        <Suspense fallback={<p className="text-white/70 text-center p-10">Chargement...</p>}>
+        <Suspense
+          fallback={
+            <p className="text-white/70 text-center p-10">Chargement...</p>
+          }
+        >
           <RecipesList />
         </Suspense>
       </div>
+      <Footer />
     </div>
   );
 }
