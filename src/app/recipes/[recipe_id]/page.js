@@ -7,6 +7,7 @@ import Image from "next/image";
 import Menu from "@/app/components/menu";
 import { motion } from "framer-motion";
 import Footer from "../../components/footer";
+import { Download } from "lucide-react";
 
 export default function RecipeDetailPage() {
   const { recipe_id } = useParams();
@@ -14,6 +15,10 @@ export default function RecipeDetailPage() {
   const [recipe, setRecipe] = useState(null);
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState(null);
+
+  const handleExportPDF = () => {
+    window.print();
+  };
 
   useEffect(() => {
     if (!recipe_id) return;
@@ -157,7 +162,17 @@ export default function RecipeDetailPage() {
 
           {/* Catégorie, area et ingrédients */}
           <div className="w-full lg:w-1/2 flex flex-col gap-6">
-            <h1 className="text-4xl font-extrabold">{recipe.strMeal}</h1>
+            <div className="flex items-start justify-between gap-4">
+              <h1 className="text-4xl font-extrabold">{recipe.strMeal}</h1>
+              <button
+                onClick={handleExportPDF}
+                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg transition-all no-print"
+                title="Exporter en PDF"
+              >
+                <Download size={20} />
+                <span className="hidden sm:inline">PDF</span>
+              </button>
+            </div>
             <p className="text-white/60 uppercase text-sm tracking-wide">
               {recipe.strCategory} — {recipe.strArea}
             </p>
