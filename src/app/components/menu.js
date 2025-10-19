@@ -10,6 +10,8 @@ import {
   Settings,
   Calendar,
   BookOpen,
+  Menu as MenuIcon,
+  X,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
@@ -18,7 +20,8 @@ import Image from "next/image";
 
 export default function Menu() {
   const [searchValue, setSearchValue] = useState("");
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false); // user menu
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // burger menu
   const menuRef = useRef(null);
   const router = useRouter();
   const { data: session } = useSession();
@@ -45,12 +48,13 @@ export default function Menu() {
   }, []);
 
   return (
-    <div className="w-full flex flex-row justify-between items-center gap-4 px-[100px] py-5 relative">
+    <div className="w-full flex justify-between items-center gap-4 md:px-24 px-8 py-5 relative">
       <Link href="/" className="font-black text-2xl tracking-[-0.05em]">
         MealMind
       </Link>
 
-      <div className="flex items-center gap-8">
+      {/* --- MENU DESKTOP --- */}
+      <div className="hidden md:flex items-center gap-8">
         <Link
           href="/planning-ia"
           className="font-bold text-lg tracking-[-0.03em] hover:underline"
@@ -78,7 +82,7 @@ export default function Menu() {
           </button>
         </div>
 
-        {/* ---- USER MENU ---- */}
+        {/* USER MENU */}
         <div className="relative" ref={menuRef}>
           <button
             onClick={() => setMenuOpen(!menuOpen)}
@@ -99,7 +103,7 @@ export default function Menu() {
                 <div className="p-3 text-sm text-white/80">
                   {session ? (
                     <>
-                      {/* Header du menu avec image et nom */}
+                      {/* Header */}
                       <div className="flex items-center gap-3 px-2 py-1">
                         {session.user.image && (
                           <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center bg-white/10 border border-white/20">
@@ -119,7 +123,7 @@ export default function Menu() {
 
                       <hr className="border-white/10 my-2" />
 
-                      {/* Liens utilisateur */}
+                      {/* Links */}
                       <button
                         onClick={() => {
                           router.push("/my-recipes");
@@ -182,6 +186,74 @@ export default function Menu() {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* --- BURGER BUTTON MOBILE --- */}
+      <button
+        className="md:hidden p-2"
+        onClick={() => setMobileMenuOpen(true)}
+      >
+        <MenuIcon size={28} />
+      </button>
+
+      {/* --- MOBILE FULLSCREEN MENU --- */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-lg p-6 flex flex-col"
+          >
+            <button
+              className="self-end mb-6"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <X size={28} />
+            </button>
+
+            <div className="flex flex-col gap-6 text-white text-lg items-center">
+              <Link href="/" onClick={() => setMobileMenuOpen(false)} className="text-center">
+                Home
+              </Link>
+              <Link href="/planning-ia" onClick={() => setMobileMenuOpen(false)} className="text-center">
+                Planning IA
+              </Link>
+              <Link href="/recipes-search" onClick={() => setMobileMenuOpen(false)} className="text-center">
+                Recettes
+              </Link>
+
+              {session ? (
+                <>
+                  <Link href="/my-recipes" onClick={() => setMobileMenuOpen(false)} className="text-center">
+                    Mes recettes
+                  </Link>
+                  <Link href="/my-plannings" onClick={() => setMobileMenuOpen(false)} className="text-center">
+                    Mes plannings
+                  </Link>
+                  <Link href="/settings" onClick={() => setMobileMenuOpen(false)} className="text-center">
+                    Paramètres
+                  </Link>
+                  <button
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="text-red-400 text-center"
+                  >
+                    Déconnexion
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="text-center">
+                    Connexion
+                  </Link>
+                  <Link href="/register" onClick={() => setMobileMenuOpen(false)} className="text-center">
+                    Inscription
+                  </Link>
+                </>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
