@@ -170,8 +170,13 @@ export default function SearchPage() {
                 <option value="Total Fat">Total Fat</option>
                 <option value="Sodium">Sodium</option>
                 <option value="Total Carbohydrate">Total Carbohydrate</option>
+                <option value="Dietary Fiber">Dietary Fiber</option>
+                <option value="Total Sugars">Total Sugars</option>
                 <option value="Protein">Protein</option>
-                <option value="Calories">Calories</option>
+                <option value="Vitamin C">Vitamin C</option>
+                <option value="Calcium">Calcium</option>
+                <option value="Iron">Iron</option>
+                <option value="Potassium">Potassium</option>
               </select>
             </div>
 
