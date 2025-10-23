@@ -14,6 +14,14 @@ export default function SearchPage() {
     category: "",
     area: "",
     minIngredients: "",
+    maxIngredients: "",
+    prepTimeMin: "",
+    prepTimeMax: "",
+    cookTimeMin: "",
+    cookTimeMax: "",
+    nutritionKey: "",
+    nutritionOp: "lt",
+    nutritionValue: "",
   });
 
   const handleChange = (e) => {
@@ -27,24 +35,19 @@ export default function SearchPage() {
     e.preventDefault();
 
     const params = new URLSearchParams();
-
-    if (filters.name) params.set("name", filters.name);
-    if (filters.category) params.set("category", filters.category);
-    if (filters.area) params.set("area", filters.area);
-    if (filters.minIngredients)
-      params.set("minIngredients", filters.minIngredients);
+    Object.entries(filters).forEach(([key, val]) => {
+      if (val !== "") params.set(key, val);
+    });
 
     router.push(`/recipes?${params.toString()}`);
   };
 
   return (
     <div className="min-h-screen bg-[#0e0e0e] text-white">
-      {/* Menu */}
       <div className="fixed top-0 left-0 w-full z-10">
         <Menu />
       </div>
 
-      {/* Content */}
       <div className="py-32 px-20 sm:px-20 lg:px-80 mx-auto">
         <h1 className="text-4xl font-bold mb-10">Rechercher des recettes</h1>
 
@@ -54,7 +57,7 @@ export default function SearchPage() {
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col items-center space-y-6"
         >
-          {/* Name */}
+          {/* Nom */}
           <div className="w-full">
             <label className="block mb-2 font-medium">Nom de la recette</label>
             <input
@@ -62,98 +65,144 @@ export default function SearchPage() {
               name="name"
               value={filters.name}
               onChange={handleChange}
-              placeholder="ex: Chicken"
-              className="flex items-center justify-center gap-3 w-full bg-white/10 text-white font-semibold p-3 rounded-lg transition-all duration-200 backdrop-blur-3xl border border-white/30"
+              placeholder="ex: Apple Bread"
+              className="w-full bg-white/10 text-white font-semibold p-3 rounded-lg border border-white/30"
             />
           </div>
 
-          {/* Category */}
-          <div className="w-full">
-            <label className="block mb-2 font-medium">Catégorie</label>
-            <select
-              name="category"
-              value={filters.category}
-              onChange={handleChange}
-              className="flex items-center justify-center gap-3 w-full bg-white/10 text-white font-semibold p-3 rounded-lg transition-all duration-200 backdrop-blur-3xl border border-white/30"
-            >
-              <option value="">-- Choisir une catégorie --</option>
-              <option value="Beef">Beef</option>
-              <option value="Breakfast">Breakfast</option>
-              <option value="Chicken">Chicken</option>
-              <option value="Dessert">Dessert</option>
-              <option value="Goat">Goat</option>
-              <option value="Lamb">Lamb</option>
-              <option value="Miscellaneous">Miscellaneous</option>
-              <option value="Pasta">Pasta</option>
-              <option value="Pork">Pork</option>
-              <option value="Seafood">Seafood</option>
-              <option value="Side">Side</option>
-              <option value="Starter">Starter</option>
-              <option value="Vegan">Vegan</option>
-              <option value="Vegetarian">Vegetarian</option>
-            </select>
+          {/* Temps de préparation */}
+          <div className="w-full grid grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-2 font-medium">
+                Préparation min (min)
+              </label>
+              <input
+                type="number"
+                name="prepTimeMin"
+                value={filters.prepTimeMin}
+                onChange={handleChange}
+                className="w-full bg-white/10 text-white p-3 rounded-lg border border-white/30"
+              />
+            </div>
+            <div>
+              <label className="block mb-2 font-medium">
+                Préparation max (min)
+              </label>
+              <input
+                type="number"
+                name="prepTimeMax"
+                value={filters.prepTimeMax}
+                onChange={handleChange}
+                className="w-full bg-white/10 text-white p-3 rounded-lg border border-white/30"
+              />
+            </div>
           </div>
 
-          {/* Area */}
-          <div className="w-full">
-            <label className="block mb-2 font-medium">Origine / Area</label>
-            <select
-              name="area"
-              value={filters.area}
-              onChange={handleChange}
-              className="flex items-center justify-center gap-3 w-full bg-white/10 text-white font-semibold p-3 rounded-lg transition-all duration-200 backdrop-blur-3xl border border-white/30"
-            >
-              <option value="">-- Choisir une zone --</option>
-              <option value="American">American</option>
-              <option value="British">British</option>
-              <option value="Canadian">Canadian</option>
-              <option value="Chinese">Chinese</option>
-              <option value="Croatian">Croatian</option>
-              <option value="Dutch">Dutch</option>
-              <option value="Egyptian">Egyptian</option>
-              <option value="Filipino">Filipino</option>
-              <option value="French">French</option>
-              <option value="Greek">Greek</option>
-              <option value="Indian">Indian</option>
-              <option value="Irish">Irish</option>
-              <option value="Italian">Italian</option>
-              <option value="Jamaican">Jamaican</option>
-              <option value="Japanese">Japanese</option>
-              <option value="Kenyan">Kenyan</option>
-              <option value="Malaysian">Malaysian</option>
-              <option value="Mexican">Mexican</option>
-              <option value="Moroccan">Moroccan</option>
-              <option value="Polish">Polish</option>
-              <option value="Portuguese">Portuguese</option>
-              <option value="Russian">Russian</option>
-              <option value="Spanish">Spanish</option>
-              <option value="Syrian">Syrian</option>
-              <option value="Thai">Thai</option>
-              <option value="Tunisian">Tunisian</option>
-              <option value="Turkish">Turkish</option>
-              <option value="Ukrainian">Ukrainian</option>
-              <option value="Uruguayan">Uruguayan</option>
-              <option value="Vietnamese">Vietnamese</option>
-            </select>
+          {/* Temps de cuisson */}
+          <div className="w-full grid grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-2 font-medium">
+                Cuisson min (min)
+              </label>
+              <input
+                type="number"
+                name="cookTimeMin"
+                value={filters.cookTimeMin}
+                onChange={handleChange}
+                className="w-full bg-white/10 text-white p-3 rounded-lg border border-white/30"
+              />
+            </div>
+            <div>
+              <label className="block mb-2 font-medium">
+                Cuisson max (min)
+              </label>
+              <input
+                type="number"
+                name="cookTimeMax"
+                value={filters.cookTimeMax}
+                onChange={handleChange}
+                className="w-full bg-white/10 text-white p-3 rounded-lg border border-white/30"
+              />
+            </div>
           </div>
 
-          {/* Ingredients */}
-          <div className="w-full">
-            <label className="block mb-2 font-medium">
-              Nombre minimum d&apos;ingrédients
-            </label>
-            <input
-              type="number"
-              min="1"
-              name="minIngredients"
-              value={filters.minIngredients}
-              onChange={handleChange}
-              placeholder="ex: 5"
-              className="flex items-center justify-center gap-3 w-full bg-white/10 text-white font-semibold p-3 rounded-lg transition-all duration-200 backdrop-blur-3xl border border-white/30"
-            />
+          {/* Ingrédients min / max */}
+          <div className="w-full grid grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-2 font-medium">
+                Nombre minimum d&apos;ingrédients
+              </label>
+              <input
+                type="number"
+                name="minIngredients"
+                value={filters.minIngredients}
+                onChange={handleChange}
+                placeholder="ex: 3"
+                className="w-full bg-white/10 text-white p-3 rounded-lg border border-white/30"
+              />
+            </div>
+            <div>
+              <label className="block mb-2 font-medium">
+                Nombre maximum d&apos;ingrédients
+              </label>
+              <input
+                type="number"
+                name="maxIngredients"
+                value={filters.maxIngredients}
+                onChange={handleChange}
+                placeholder="ex: 10"
+                className="w-full bg-white/10 text-white p-3 rounded-lg border border-white/30"
+              />
+            </div>
           </div>
 
-          {/* Submit */}
+          {/* Nutrition */}
+          <div className="w-full grid grid-cols-3 gap-4">
+            <div>
+              <label className="block mb-2 font-medium">Type nutrition</label>
+              <select
+                name="nutritionKey"
+                value={filters.nutritionKey}
+                onChange={handleChange}
+                className="w-full bg-white/10 text-white p-3 rounded-lg border border-white/30"
+              >
+                <option value="">-- Choisir --</option>
+                <option value="Total Fat">Total Fat</option>
+                <option value="Sodium">Sodium</option>
+                <option value="Total Carbohydrate">Total Carbohydrate</option>
+                <option value="Protein">Protein</option>
+                <option value="Calories">Calories</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block mb-2 font-medium">Condition</label>
+              <select
+                name="nutritionOp"
+                value={filters.nutritionOp}
+                onChange={handleChange}
+                className="w-full bg-white/10 text-white p-3 rounded-lg border border-white/30"
+              >
+                <option value="lt">&lt; (inférieur à)</option>
+                <option value="gt">&gt; (supérieur à)</option>
+                <option value="eq">= (égal à)</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block mb-2 font-medium">Valeur</label>
+              <input
+                type="number"
+                name="nutritionValue"
+                value={filters.nutritionValue}
+                onChange={handleChange}
+                placeholder="ex: 10"
+                className="w-full bg-white/10 text-white p-3 rounded-lg border border-white/30"
+              />
+            </div>
+          </div>
+
+          {/* Bouton */}
           <button
             type="submit"
             className="bg-red-600 rounded-sm px-8 py-3 w-1/2 text-white font-bold transition-all duration-300 hover:bg-red-400 cursor-pointer mt-4"
@@ -162,6 +211,7 @@ export default function SearchPage() {
           </button>
         </motion.form>
       </div>
+
       <Footer />
     </div>
   );

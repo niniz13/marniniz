@@ -4,16 +4,12 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "sugarspunrun.com",
-      },
-      {
-        protocol: "https",
-        hostname: "www.themealdb.com",
-      },
-      {
-        protocol: "https",
         hostname: "lh3.googleusercontent.com",
       },
+      {
+        protocol: "https",
+        hostname: "www.allrecipes.com"
+      }
     ],
   },
 };

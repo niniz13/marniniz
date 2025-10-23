@@ -1,29 +1,42 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Menu from "../components/menu";
 import Skeleton from "@mui/material/Skeleton";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import Footer from "../components/footer";
 
 function RecipesList() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+
   const [recipes, setRecipes] = useState([]);
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(searchParams.get("page")) || 1
+  );
 
   useEffect(() => {
     const fetchFilteredRecipes = async () => {
       setStatus("loading");
       try {
-        const queryString = searchParams.toString();
-        const res = await fetch(`/api/recipes?${queryString}`);
+        const query = new URLSearchParams(searchParams);
+        query.set("page", currentPage); // forcer le paramètre page
+
+        const res = await fetch(`/api/recipes?${query.toString()}`);
         if (!res.ok) throw new Error(`Erreur serveur: ${res.status}`);
         const data = await res.json();
-        setRecipes(data);
+
+        setRecipes(data.recipes);
+        setTotalPages(data.totalPages);
+        setCurrentPage(data.currentPage);
         setStatus("succeeded");
       } catch (err) {
         console.error(err);
@@ -32,22 +45,26 @@ function RecipesList() {
       }
     };
     fetchFilteredRecipes();
-  }, [searchParams]);
+  }, [searchParams, currentPage]);
+
+  const handlePageChange = (_, value) => {
+    setCurrentPage(value);
+    const query = new URLSearchParams(searchParams);
+    query.set("page", value);
+    router.push(`/recipes?${query.toString()}`);
+  };
 
   if (status === "loading") {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
         {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} className="flex flex-col">
-            {/* Image skeleton */}
             <Skeleton
               variant="rectangular"
               animation="wave"
               className="w-full min-h-64 rounded-2xl"
               sx={{ bgcolor: "rgba(255,255,255,0.15)" }}
             />
-
-            {/* Text skeleton */}
             <div className="p-5">
               <Skeleton
                 variant="text"
@@ -81,41 +98,64 @@ function RecipesList() {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
-      {recipes.map((recipe, index) => (
-        <motion.div
-          key={recipe.idMeal}
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
-          viewport={{ once: true }}
-        >
-          <Link href={`/recipes/${recipe.idMeal}`} className="block group">
-            <div className="relative w-full h-64">
-              {recipe.strMealThumb ? (
-                <Image
-                  src={recipe.strMealThumb}
-                  alt={recipe.strMeal}
-                  fill
-                  quality={60}
-                  className="object-cover rounded-2xl"
-                />
-              ) : (
-                <div className="w-full h-full bg-white/10 rounded-2xl" />
-              )}
-            </div>
-            <div className="p-5">
-              <h3 className="text-xl font-bold line-clamp-1">
-                {recipe.strMeal}
-              </h3>
-              <p className="text-sm text-red-400">
-                {recipe.strCategory} • {recipe.strArea}
-              </p>
-            </div>
-          </Link>
-        </motion.div>
-      ))}
-    </div>
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
+        {recipes.map((recipe, index) => (
+          <motion.div
+            key={recipe._id}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
+            viewport={{ once: true }}
+          >
+            <Link href={`/recipes/${recipe._id}`} className="block group">
+              <div className="relative w-full h-64">
+                {recipe.strMealThumb ? (
+                  <Image
+                    src={recipe.strMealThumb}
+                    alt={recipe.strMeal}
+                    fill
+                    quality={60}
+                    className="object-cover rounded-2xl"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-white/10 rounded-2xl" />
+                )}
+              </div>
+              <div className="p-5">
+                <h3 className="text-xl font-bold line-clamp-1">
+                  {recipe.strMeal}
+                </h3>
+                <p className="text-sm text-red-400">
+                  Préparation : {recipe.strPrepTime} • Pour{" "}
+                  {recipe.strServings} personnes
+                </p>
+              </div>
+            </Link>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* ✅ Pagination MUI */}
+      <div className="flex justify-center pb-20">
+        <Stack spacing={2}>
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color="primary"
+            sx={{
+              "& .MuiPaginationItem-root": {
+                color: "white",
+              },
+              "& .MuiPaginationItem-root.Mui-selected": {
+                backgroundColor: "rgba(255,255,255,0.2)",
+              },
+            }}
+          />
+        </Stack>
+      </div>
+    </>
   );
 }
 

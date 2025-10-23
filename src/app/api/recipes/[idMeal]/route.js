@@ -1,13 +1,14 @@
 import clientPromise from "@/lib/mongodb";
+import { ObjectId } from "mongodb";
 
 export async function GET(req, context) {
   try {
     const params = await context.params;
     const { idMeal } = params;
 
-    // Si pas de idMeal, retourner une erreur 400 (requete invalide)
+    // Si pas d'id, retourner une erreur 400 (requete invalide)
     if (!idMeal) {
-      return new Response(JSON.stringify({ message: "idMeal manquant" }), {
+      return new Response(JSON.stringify({ message: "id manquant" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
@@ -16,7 +17,7 @@ export async function GET(req, context) {
     const client = await clientPromise;
     const db = client.db();
 
-    const recipe = await db.collection("recipes").findOne({ idMeal });
+    const recipe = await db.collection("recipes").findOne({ _id: new ObjectId(idMeal) });
 
     // Si pas de recette trouvee, retourner une erreur 404 (non trouve)
     if (!recipe) {
@@ -33,7 +34,7 @@ export async function GET(req, context) {
     });
 
   } catch (err) {
-    console.error("Erreur API /recipes/[idMeal] :", err);
+    console.error("Erreur API /recipes/[id] :", err);
     return new Response(JSON.stringify({ message: "Erreur serveur" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
