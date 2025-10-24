@@ -206,31 +206,45 @@ export default function RecipeDetailPage() {
         </motion.div>
 
         {/* Section Nutrition */}
-        {recipe.strNutrition && Object.keys(recipe.strNutrition).length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="mt-12"
-          >
-            <h2 className="text-3xl font-bold mb-4">Valeurs nutritionnelles</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {Object.entries(recipe.strNutrition).map(([label, values]) => (
-                <div
-                  key={label}
-                  className="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col items-start"
-                >
-                  <h4 className="font-semibold text-white/90 mb-1">{label}</h4>
-                  <p className="text-white/70">
-                    {Array.isArray(values)
-                      ? values.join(" — ")
-                      : String(values)}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
+        {recipe.strNutrition &&
+          Object.entries(recipe.strNutrition).some(
+            ([, value]) =>
+              value && (Array.isArray(value) ? value.length > 0 : value !== "")
+          ) && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="mt-12"
+            >
+              <h2 className="text-3xl font-bold mb-4">
+                Valeurs nutritionnelles
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Object.entries(recipe.strNutrition)
+                  .filter(
+                    ([, value]) =>
+                      value &&
+                      (Array.isArray(value) ? value.length > 0 : value !== "")
+                  )
+                  .map(([label, values]) => (
+                    <div
+                      key={label}
+                      className="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col items-start"
+                    >
+                      <h4 className="font-semibold text-white/90 mb-1">
+                        {label}
+                      </h4>
+                      <p className="text-white/70">
+                        {Array.isArray(values)
+                          ? values.join(" — ")
+                          : String(values)}
+                      </p>
+                    </div>
+                  ))}
+              </div>
+            </motion.div>
+          )}
       </div>
       <Footer />
     </div>

@@ -249,7 +249,7 @@ export default function SettingsPage() {
           Paramètres du compte
         </h1>
 
-        <div className="max-w-xl mx-auto flex flex-col gap-6 bg-white/5 p-8 rounded-2xl border border-white/10 backdrop-blur-md">
+        <div className="max-w-2xl mx-auto w-full flex flex-col gap-6 bg-white/5 p-6 sm:p-8 rounded-2xl border border-white/10 backdrop-blur-md">
           {/* Image de profil avec animation */}
           <div className="flex flex-col items-center gap-3">
             <div className="w-24 h-24 rounded-full overflow-hidden flex items-center justify-center bg-white/10 border border-white/20 relative">
@@ -322,7 +322,9 @@ export default function SettingsPage() {
           {/* Mot de passe */}
           {!isGoogleUser && (
             <div className="border-t border-white/10 pt-6">
-              <h3 className="text-xl font-bold mb-3">Changer le mot de passe</h3>
+              <h3 className="text-xl font-bold mb-3">
+                Changer le mot de passe
+              </h3>
               <div className="flex flex-col gap-3">
                 <input
                   type="password"
@@ -354,17 +356,17 @@ export default function SettingsPage() {
           )}
 
           {/* Boutons de bas de page */}
-          <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
             {!isGoogleUser && (
               <button
                 onClick={handleSave}
                 disabled={loading}
-                className={`px-6 py-2 border rounded-lg transition-all w-1/2 ${
+                className={`flex-1 min-w-[150px] px-6 py-2 rounded-lg text-sm sm:text-base transition-all ${
                   saveStatus === "success"
-                    ? "bg-green-600/80 border-green-500"
+                    ? "bg-green-600/80 border border-green-500"
                     : saveStatus === "error"
-                    ? "bg-red-600/80 border-red-500"
-                    : "bg-white/10 border-white/20 hover:bg-white/20"
+                    ? "bg-red-600/80 border border-red-500"
+                    : "bg-white/10 border border-white/20 hover:bg-white/20"
                 }`}
               >
                 {loading
@@ -379,7 +381,7 @@ export default function SettingsPage() {
 
             <button
               onClick={handleDelete}
-              className="px-6 py-2 bg-red-600/80 hover:bg-red-700 rounded-lg transition-all w-1/2"
+              className="flex-1 min-w-[150px] px-6 py-2 rounded-lg text-sm sm:text-base bg-red-600/80 hover:bg-red-700 border border-red-500 transition-all"
             >
               Supprimer le compte
             </button>
