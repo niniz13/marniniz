@@ -2,24 +2,28 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import Skeleton from "@mui/material/Skeleton";
 import Image from "next/image";
 import Menu from "@/app/components/menu";
 import { motion } from "framer-motion";
 import Footer from "../../components/footer";
-import { Download } from "lucide-react";
+import { Download, Heart } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function RecipeDetailPage() {
   const { recipe_id } = useParams();
+  const { data: session } = useSession();
 
   const [recipe, setRecipe] = useState(null);
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState(null);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [loadingFavorite, setLoadingFavorite] = useState(false);
 
-  const handleExportPDF = () => {
-    window.print();
-  };
+  const handleExportPDF = () => window.print();
 
+  // Charger les détails de la recette
   useEffect(() => {
     if (!recipe_id) return;
 
@@ -39,6 +43,56 @@ export default function RecipeDetailPage() {
 
     fetchRecipeDetail();
   }, [recipe_id]);
+
+  // Vérifier si la recette est déjà en favoris (plus rapide)
+  useEffect(() => {
+    const checkFavorite = async () => {
+      if (!session?.user?.id || !recipe_id) return;
+      try {
+        const res = await fetch(`/api/favorites/${recipe_id}`, {
+          credentials: "include",
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setIsFavorite(data.favorite);
+        }
+      } catch (err) {
+        console.error("Erreur vérification favoris :", err);
+      }
+    };
+    checkFavorite();
+  }, [session, recipe_id]);
+
+  // Ajouter / retirer des favoris
+  const toggleFavorite = async () => {
+    if (!session?.user?.id) {
+      toast.error("Connectez-vous pour ajouter aux favoris !");
+      return;
+    }
+
+    setLoadingFavorite(true);
+    try {
+      const res = await fetch("/api/favorites", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ recipeId: recipe_id }),
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setIsFavorite(data.favorite);
+        toast.success(
+          data.favorite ? "Ajouté aux favoris ❤️" : "Retiré des favoris 💔"
+        );
+      } else {
+        toast.error("Erreur lors de la mise à jour des favoris");
+      }
+    } catch (err) {
+      console.error("Erreur favoris :", err);
+    } finally {
+      setLoadingFavorite(false);
+    }
+  };
 
   if (status === "loading") {
     return (
@@ -122,10 +176,9 @@ export default function RecipeDetailPage() {
   }
 
   const imageSrc =
-    recipe.strMealThumb && recipe.strMealThumb.trim() !== ""
+    recipe.strMealThumb?.trim() !== ""
       ? recipe.strMealThumb
       : "/placeholder.jpg";
-  const imageAlt = recipe.strMeal || "Image de recette";
 
   return (
     <div className="relative min-h-screen bg-[#0e0e0e] text-white">
@@ -145,24 +198,45 @@ export default function RecipeDetailPage() {
           <div className="w-full lg:w-1/2 h-[400px] rounded-2xl overflow-hidden shadow-lg relative">
             <Image
               src={imageSrc}
-              alt={imageAlt}
+              alt={recipe.strMeal}
               fill
               className="object-cover rounded-2xl"
             />
           </div>
 
-          {/* Infos principales */}
+          {/* Détails */}
           <div className="w-full lg:w-1/2 flex flex-col gap-6">
             <div className="flex items-start justify-between gap-4">
               <h1 className="text-4xl font-extrabold">{recipe.strMeal}</h1>
-              <button
-                onClick={handleExportPDF}
-                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg transition-all no-print"
-                title="Exporter en PDF"
-              >
-                <Download size={20} />
-                <span className="hidden sm:inline">PDF</span>
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={toggleFavorite}
+                  disabled={loadingFavorite}
+                  className={`flex items-center gap-2 px-4 py-2 border rounded-lg transition-all ${
+                    isFavorite
+                      ? "bg-red-500/20 border-red-400 text-red-400 hover:bg-red-500/30"
+                      : "bg-white/10 border-white/20 text-white hover:bg-white/20"
+                  }`}
+                  title={
+                    isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"
+                  }
+                >
+                  <Heart
+                    size={20}
+                    fill={isFavorite ? "red" : "none"}
+                    color={isFavorite ? "red" : "white"}
+                  />
+                </button>
+
+                <button
+                  onClick={handleExportPDF}
+                  className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg transition-all no-print"
+                  title="Exporter en PDF"
+                >
+                  <Download size={20} />
+                  <span className="hidden sm:inline">PDF</span>
+                </button>
+              </div>
             </div>
 
             <p className="text-white/60 uppercase text-sm tracking-wide">

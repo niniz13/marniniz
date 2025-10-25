@@ -39,49 +39,43 @@ export const authOptions = {
     async redirect({ url, baseUrl }) {
       return baseUrl + "/";
     },
-    async jwt({ token, user, account, trigger }) {
-      // Store user ID and provider on initial sign in
+
+    async jwt({ token, user, account }) {
       if (user) {
-        token.id = user.id;
+        token.id = user.id || user._id?.toString() || token.sub;
       }
       if (account) {
         token.provider = account.provider;
       }
-      
-      // Don't modify token on update - let session callback fetch fresh data
-      
       return token;
     },
+
     async session({ session, token }) {
-      // Add provider info to session
-      if (token.provider) {
+      if (token?.id) {
+        session.user.id = token.id;
+      }
+      if (token?.provider) {
         session.user.provider = token.provider;
       }
-      
-      // Always sync user data from database to session
+
       const client = await clientPromise;
       const db = client.db();
-      
-      // Find user by sub (user ID from token)
-      let user;
-      if (token.sub) {
+
+      try {
         const { ObjectId } = require("mongodb");
-        try {
-          user = await db.collection("users").findOne({ _id: new ObjectId(token.sub) });
-        } catch (e) {
-          // If ObjectId fails, try finding by email
-          user = await db.collection("users").findOne({ email: token.email });
+        const dbUser = await db.collection("users").findOne({
+          _id: new ObjectId(token.id),
+        });
+
+        if (dbUser) {
+          session.user.name = dbUser.name;
+          session.user.email = dbUser.email;
+          session.user.image = dbUser.image;
         }
-      } else if (token.email) {
-        user = await db.collection("users").findOne({ email: token.email });
+      } catch (err) {
+        console.warn("Impossible de synchroniser l'utilisateur :", err);
       }
-      
-      if (user) {
-        session.user.name = user.name;
-        session.user.email = user.email;
-        session.user.image = user.image;
-      }
-      
+
       return session;
     },
   },

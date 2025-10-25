@@ -237,7 +237,6 @@ export default function SettingsPage() {
 
   const isGoogleUser = session?.user?.provider === "google";
 
-  // 🔹 --- PAGE COMPLÈTE ---
   return (
     <div className="w-full min-h-screen bg-[#0e0e0e] text-white">
       <div className="fixed top-0 left-0 w-full z-10">
@@ -288,9 +287,6 @@ export default function SettingsPage() {
               />
               Choisir une image
             </label>
-            {imageFile && (
-              <p className="text-xs text-white/60">{imageFile.name}</p>
-            )}
           </div>
 
           {/* Nom */}
