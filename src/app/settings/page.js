@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Skeleton from "@mui/material/Skeleton";
+import { toast } from "react-hot-toast";
 import Menu from "../components/menu";
 import Footer from "../components/footer";
 
@@ -22,7 +23,6 @@ export default function SettingsPage() {
 
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [passwordMessage, setPasswordMessage] = useState("");
 
   useEffect(() => {
     if (session?.user) {
@@ -32,7 +32,7 @@ export default function SettingsPage() {
     }
   }, [session]);
 
-  // 🔹 --- ÉTAT DE CHARGEMENT (Skeletons) ---
+  // --- ÉTAT DE CHARGEMENT (Skeletons) ---
   if (status === "loading") {
     return (
       <div className="w-full min-h-screen bg-[#0e0e0e] text-white">
@@ -144,13 +144,13 @@ export default function SettingsPage() {
     );
   }
 
-  // 🔹 Redirection si pas connecté
+  // Redirection si pas connecté
   if (!session) {
     router.push("/login");
     return null;
   }
 
-  // 🔹 Gestion du changement d’image avec preview
+  // Gestion du changement d’image avec preview
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -161,7 +161,7 @@ export default function SettingsPage() {
     }
   };
 
-  // 🔹 Sauvegarde profil
+  // Sauvegarde profil
   const handleSave = async () => {
     setLoading(true);
     setSaveStatus("");
@@ -190,32 +190,58 @@ export default function SettingsPage() {
     }
   };
 
-  // 🔹 Suppression du compte
   const handleDelete = async () => {
-    if (
-      confirm(
-        "Voulez-vous vraiment supprimer votre compte ? Cette action est irréversible."
-      )
-    ) {
-      try {
-        const res = await fetch("/api/user/delete", { method: "DELETE" });
-        if (res.ok) {
-          alert("Compte supprimé 🗑️");
-          await signOut({ callbackUrl: "/" });
-        } else {
-          alert("Erreur lors de la suppression du compte ❌");
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    }
+    // Toast de confirmation custom
+    toast((t) => (
+      <div className="flex flex-col gap-2">
+        <p className="font-semibold">
+          Voulez-vous vraiment supprimer votre compte ? ⚠️
+        </p>
+        <p className="text-sm text-gray-600">
+          Cette action est{" "}
+          <span className="font-bold text-red-500">irréversible</span>.
+        </p>
+        <div className="flex gap-2 mt-2">
+          <button
+            onClick={async () => {
+              toast.dismiss(t.id); // Ferme le toast de confirmation
+              const deleting = toast.loading("Suppression du compte...");
+              try {
+                const res = await fetch("/api/user/delete", {
+                  method: "DELETE",
+                });
+                toast.dismiss(deleting);
+                if (res.ok) {
+                  toast.success("Compte supprimé 🗑️");
+                  await signOut({ callbackUrl: "/" });
+                } else {
+                  toast.error("Erreur lors de la suppression du compte ❌");
+                }
+              } catch (err) {
+                toast.dismiss(deleting);
+                toast.error("Erreur de connexion au serveur ❌");
+                console.error(err);
+              }
+            }}
+            className="px-6 py-2 rounded-lg text-sm sm:text-base transition-all bg-red-600/80 hover:bg-red-600"
+          >
+            Supprimer
+          </button>
+          <button
+            onClick={() => toast.dismiss(t.id)}
+            className="px-6 py-2 rounded-lg text-sm sm:text-base transition-all bg-white/10 border border-white/20 hover:bg-white/20"
+          >
+            Annuler
+          </button>
+        </div>
+      </div>
+    ));
   };
 
-  // 🔹 Changement de mot de passe
+  // Changement de mot de passe
   const handleChangePassword = async () => {
-    setPasswordMessage("");
     if (!oldPassword || !newPassword) {
-      setPasswordMessage("Veuillez remplir les deux champs.");
+      toast.error("Veuillez remplir les deux champs.");
       return;
     }
 
@@ -226,11 +252,12 @@ export default function SettingsPage() {
     });
 
     if (res.ok) {
-      setPasswordMessage("Mot de passe mis à jour ✅");
+      toast.success("Mot de passe mis à jour avec succès !");
       setOldPassword("");
       setNewPassword("");
     } else {
       const text = await res.text();
+      toast.error(`Erreur lors du changement de mot de passe : ${text}`);
       setPasswordMessage(`Erreur : ${text}`);
     }
   };
@@ -262,9 +289,10 @@ export default function SettingsPage() {
                   className="absolute inset-0"
                 >
                   <Image
-                    src={image || "/default-avatar.png"}
+                    src={image || "/default-avatar.svg"}
                     alt={name || "User"}
                     fill
+                    unoptimized
                     className="object-cover w-full h-full"
                   />
                 </motion.div>
@@ -342,11 +370,6 @@ export default function SettingsPage() {
                 >
                   Modifier le mot de passe
                 </button>
-                {passwordMessage && (
-                  <p className="text-sm text-center text-white/70 mt-2">
-                    {passwordMessage}
-                  </p>
-                )}
               </div>
             </div>
           )}

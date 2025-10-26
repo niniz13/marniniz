@@ -19,7 +19,16 @@ export default function RootLayout({ children }) {
       <body className={`${inter.variable} antialiased`}>
         <StoreProvider>
           {children}
-          <Toaster position="bottom-center"/>
+          <Toaster
+            position="bottom-center"
+            toastOptions={{
+              style: {
+                background: "#1a1a1a",
+                color: "#fff",
+                border: "1px solid #333",
+              },
+            }}
+          />
         </StoreProvider>
       </body>
     </html>

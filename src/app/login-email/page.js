@@ -5,11 +5,11 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 export default function LoginEmailPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e) => {
@@ -21,8 +21,9 @@ export default function LoginEmailPage() {
     });
 
     if (result.error) {
-      setError(result.error);
+      toast.error(`Echec de la connexion : ${result.error}`);
     } else {
+      toast.success("Connexion réussie !");
       router.push("/");
     }
   };
@@ -60,8 +61,6 @@ export default function LoginEmailPage() {
           className="flex items-center justify-center gap-3 w-full bg-white/10 text-white font-semibold p-3 rounded-lg transition-all duration-200 backdrop-blur-3xl border border-white/30 mt-4"
           required
         />
-
-        {error && <p className="text-red-400 mb-3">{error}</p>}
 
         <button
           type="submit"

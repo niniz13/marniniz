@@ -4,12 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [form, setForm] = useState({ name: "", email: "", password: "", image: "/default-avatar.svg" });
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -17,8 +16,6 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
 
     const res = await fetch("/api/register", {
       method: "POST",
@@ -29,9 +26,9 @@ export default function RegisterPage() {
     const data = await res.json();
 
     if (!res.ok) {
-      setError(data.message || "Something went wrong");
+      toast.error(`Echec de l'inscription : ${data.message}`);
     } else {
-      setSuccess("Account created successfully! Redirecting...");
+      toast.success("Inscription réussie ! Redirection vers la page de connexion...");
       setTimeout(() => router.push("/login"), 2000);
     }
   };
@@ -51,9 +48,6 @@ export default function RegisterPage() {
 
       <form onSubmit={handleSubmit} className="relative z-10 w-full max-w-md ">
         <h2 className="text-3xl font-bold mb-6 text-center">Inscription</h2>
-
-        {error && <p className="text-red-400 text-sm mb-3">{error}</p>}
-        {success && <p className="text-green-400 text-sm mb-3">{success}</p>}
 
         <div className="flex flex-col gap-4">
           <input
