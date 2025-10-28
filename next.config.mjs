@@ -8,7 +8,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "www.allrecipes.com"
+        hostname: "images.immediate.co.uk"
       }
     ],
   },
