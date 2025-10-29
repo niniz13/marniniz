@@ -32,7 +32,11 @@ export default function Menu() {
   const handleSearch = () => {
     const trimmed = searchValue.trim();
     if (trimmed !== "") {
-      router.push(`/recipes?name=${encodeURIComponent(trimmed)}`);
+      // Supprime les anciens paramètres d’URL (comme page=5)
+      const newUrl = `/recipes?name=${encodeURIComponent(trimmed)}&page=1`;
+
+      // 🔹 Redirige proprement
+      router.push(newUrl, { scroll: false });
     }
   };
 

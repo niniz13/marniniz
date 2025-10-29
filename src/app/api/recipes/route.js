@@ -15,13 +15,15 @@ export async function GET(req) {
     const db = client.db();
     const { searchParams } = new URL(req.url);
 
-    // 🔹 Pagination
+    // Pagination
     const page = parseInt(searchParams.get("page")) || 1;
     const limit = 12;
     const skip = (page - 1) * limit;
 
-    // 🔹 Filtres
+    // Filtres
     const name = searchParams.get("name");
+    const difficulty = searchParams.get("difficulty");
+    const subCategory = searchParams.get("subCategory");
     const minIngredients = parseInt(searchParams.get("minIngredients"));
     const maxIngredients = parseInt(searchParams.get("maxIngredients"));
     const prepTimeMin = parseInt(searchParams.get("prepTimeMin"));
@@ -30,16 +32,16 @@ export async function GET(req) {
     const cookTimeMax = parseInt(searchParams.get("cookTimeMax"));
     const nutritionKey = searchParams.get("nutritionKey");
     const nutritionOp = searchParams.get("nutritionOp");
-    const nutritionValue = searchParams.get("nutritionValue");
+    const nutritionValue = parseFloat(searchParams.get("nutritionValue"));
 
     const filter = {};
 
     if (name) filter.strMeal = { $regex: name, $options: "i" };
+    if (difficulty) filter.strDifficulty = difficulty;
+    if (subCategory) filter.strSubCategory = subCategory;
 
-    // 🔹 On récupère d'abord tous les résultats correspondant à la recherche
     const allRecipes = await db.collection("recipes").find(filter).toArray();
 
-    // 🔹 Filtrage avancé en mémoire
     const filteredRecipes = allRecipes.filter((r) => {
       const ingredientCount = Array.isArray(r.strIngredients)
         ? r.strIngredients.filter((ing) => ing && ing.trim() !== "").length
@@ -56,23 +58,24 @@ export async function GET(req) {
       if (cookTimeMin && (cook === null || cook < cookTimeMin)) return false;
       if (cookTimeMax && (cook === null || cook > cookTimeMax)) return false;
 
-      if (nutritionKey && nutritionValue && r.strNutrition) {
-        const rawVal = r.strNutrition[nutritionKey]?.[0];
-        if (!rawVal) return false;
+      // Filtre nutrition
+      if (nutritionKey && !isNaN(nutritionValue) && r.strNutrition) {
+        let rawVal = r.strNutrition[nutritionKey];
+        if (!rawVal || typeof rawVal !== "string") return false;
+
+        rawVal = rawVal.replace(/[^\d.-]/g, ""); // Supprime g, kcal, etc.
         const numericVal = parseFloat(rawVal);
-        const targetVal = parseFloat(nutritionValue);
+        if (isNaN(numericVal)) return false;
 
         switch (nutritionOp) {
           case "lt":
-            if (!(numericVal < targetVal)) return false;
+            if (numericVal >= nutritionValue) return false;
             break;
           case "gt":
-            if (!(numericVal > targetVal)) return false;
+            if (numericVal <= nutritionValue) return false;
             break;
           case "eq":
-            if (!(numericVal === targetVal)) return false;
-            break;
-          default:
+            if (numericVal !== nutritionValue) return false;
             break;
         }
       }
@@ -80,7 +83,7 @@ export async function GET(req) {
       return true;
     });
 
-    // 🔹 Pagination serveur
+    // Pagination
     const totalRecipes = filteredRecipes.length;
     const totalPages = Math.ceil(totalRecipes / limit);
     const paginatedRecipes = filteredRecipes.slice(skip, skip + limit);

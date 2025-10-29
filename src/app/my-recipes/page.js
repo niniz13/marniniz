@@ -117,12 +117,12 @@ function FavoriteRecipesList() {
                 <div className="w-full h-full bg-white/10 rounded-2xl" />
               )}
             </div>
-            <div className="p-5">
+            <div className="py-5 px-2">
               <h3 className="text-xl font-bold line-clamp-1">
                 {recipe.strMeal}
               </h3>
               <p className="text-sm text-red-400">
-                Préparation : {recipe.strPrepTime} • Pour {recipe.strServings}{" "}
+                {recipe.strDishType || "?"} • Pour {recipe.strServings || "?"}{" "}
                 personnes
               </p>
             </div>

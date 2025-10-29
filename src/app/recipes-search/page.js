@@ -6,13 +6,39 @@ import { motion } from "framer-motion";
 import Menu from "../components/menu";
 import Footer from "../components/footer";
 
+const difficulties = ["", "Easy", "More effort", "A challenge"];
+
+const subCategories = [
+  "Barbecues", "Batch cooking", "Birthdays", "Biscuit recipes", "Bread",
+  "Breakfast", "Breakfast recipes", "Budget dinners", "Cakes",
+  "Cheese recipes", "Chicken", "Cocktails", "Coffees", "Desserts", "Dinner",
+  "Dinner recipes", "Fish and seafood", "Fitness & lifestyle", "Free-from baking",
+  "Freezable meals", "High protein", "Hosting", "Keto", "Kids' baking",
+  "Kids' birthdays", "Low calorie", "Lunch", "Lunch recipes", "Meat", "Mocktails",
+  "Pasta", "Picnics", "Quick bakes", "Salads", "Savoury pastries", "Slow cooker",
+  "Smoothies", "Special occasions", "Spring recipes", "Storecupboard", "Student meals",
+  "Sweet treats", "Teas", "Vegan", "Vegan baking", "Vegetarian"
+];
+
+// 🔹 Types de valeurs nutritionnelles réelles
+const nutritionTypes = [
+  { key: "kcal", label: "Calories (kcal)" },
+  { key: "fat", label: "Fat (g)" },
+  { key: "saturates", label: "Saturated fat (g)" },
+  { key: "carbs", label: "Carbs (g)" },
+  { key: "sugars", label: "Sugars (g)" },
+  { key: "fibre", label: "Fibre (g)" },
+  { key: "protein", label: "Protein (g)" },
+  { key: "salt", label: "Salt (g)" },
+];
+
 export default function SearchPage() {
   const router = useRouter();
 
   const [filters, setFilters] = useState({
     name: "",
-    category: "",
-    area: "",
+    difficulty: "",
+    subCategory: "",
     minIngredients: "",
     maxIngredients: "",
     prepTimeMin: "",
@@ -56,10 +82,10 @@ export default function SearchPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="max-w-3xl mx-auto flex flex-col space-y-6"
+          className="max-w-3xl mx-auto flex flex-col space-y-8"
         >
           {/* Nom */}
-          <div className="w-full">
+          <div>
             <label className="block mb-2 font-medium text-white/80">
               Nom de la recette
             </label>
@@ -73,8 +99,47 @@ export default function SearchPage() {
             />
           </div>
 
+          {/* Difficulté */}
+          <div>
+            <label className="block mb-2 font-medium text-white/80">
+              Difficulté
+            </label>
+            <select
+              name="difficulty"
+              value={filters.difficulty}
+              onChange={handleChange}
+              className="w-full bg-white/10 text-white p-3 rounded-lg border border-white/20 focus:ring-2 focus:ring-white/30 outline-none"
+            >
+              {difficulties.map((d) => (
+                <option key={d} value={d}>
+                  {d === "" ? "-- Choisir --" : d}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Sous-catégorie */}
+          <div>
+            <label className="block mb-2 font-medium text-white/80">
+              Sous-catégorie
+            </label>
+            <select
+              name="subCategory"
+              value={filters.subCategory}
+              onChange={handleChange}
+              className="w-full bg-white/10 text-white p-3 rounded-lg border border-white/20 focus:ring-2 focus:ring-white/30 outline-none"
+            >
+              <option value="">-- Choisir --</option>
+              {subCategories.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* Temps de préparation */}
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block mb-2 font-medium text-white/80">
                 Préparation min (min)
@@ -102,7 +167,7 @@ export default function SearchPage() {
           </div>
 
           {/* Temps de cuisson */}
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block mb-2 font-medium text-white/80">
                 Cuisson min (min)
@@ -130,7 +195,7 @@ export default function SearchPage() {
           </div>
 
           {/* Ingrédients min / max */}
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block mb-2 font-medium text-white/80">
                 Nombre minimum d&apos;ingrédients
@@ -160,7 +225,7 @@ export default function SearchPage() {
           </div>
 
           {/* Nutrition */}
-          <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="block mb-2 font-medium text-white/80">
                 Type nutrition
@@ -172,16 +237,11 @@ export default function SearchPage() {
                 className="w-full bg-white/10 text-white p-3 rounded-lg border border-white/20 focus:ring-2 focus:ring-white/30 outline-none"
               >
                 <option value="">-- Choisir --</option>
-                <option value="Total Fat">Total Fat</option>
-                <option value="Sodium">Sodium</option>
-                <option value="Total Carbohydrate">Total Carbohydrate</option>
-                <option value="Dietary Fiber">Dietary Fiber</option>
-                <option value="Total Sugars">Total Sugars</option>
-                <option value="Protein">Protein</option>
-                <option value="Vitamin C">Vitamin C</option>
-                <option value="Calcium">Calcium</option>
-                <option value="Iron">Iron</option>
-                <option value="Potassium">Potassium</option>
+                {nutritionTypes.map((n) => (
+                  <option key={n.key} value={n.key}>
+                    {n.label}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -217,7 +277,7 @@ export default function SearchPage() {
           </div>
 
           {/* Bouton */}
-          <div className="flex justify-center w-full">
+          <div className="flex justify-center w-full pt-6">
             <button
               type="submit"
               className="bg-red-600 hover:bg-red-700 transition-all duration-300 font-bold rounded-lg px-6 py-3 w-full sm:w-1/2"

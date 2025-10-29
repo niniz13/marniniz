@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -23,20 +23,64 @@ function RecipesList() {
     parseInt(searchParams.get("page")) || 1
   );
 
+  const prevFiltersRef = useRef(null);
+
+  useEffect(() => {
+    const filtersToWatch = [
+      "name",
+      "difficulty",
+      "subCategory",
+      "nutritionKey",
+      "nutritionOp",
+      "nutritionValue",
+      "minIngredients",
+      "maxIngredients",
+      "prepTimeMin",
+      "prepTimeMax",
+      "cookTimeMin",
+      "cookTimeMax",
+    ];
+
+    const currentFilters = filtersToWatch
+      .map((key) => `${key}=${searchParams.get(key) || ""}`)
+      .join("&");
+
+    if (prevFiltersRef.current !== null && prevFiltersRef.current !== currentFilters) {
+      const page = parseInt(searchParams.get("page")) || 1;
+      if (page > 1) {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set("page", "1");
+        router.replace(`/recipes?${newParams.toString()}`);
+      }
+    }
+
+    prevFiltersRef.current = currentFilters;
+  }, [
+    searchParams,
+    router,
+    searchParams.get("name"),
+    searchParams.get("difficulty"),
+    searchParams.get("subCategory"),
+    searchParams.get("nutritionKey"),
+    searchParams.get("nutritionOp"),
+    searchParams.get("nutritionValue"),
+  ]);
+
   useEffect(() => {
     const fetchFilteredRecipes = async () => {
       setStatus("loading");
       try {
-        const query = new URLSearchParams(searchParams);
-        query.set("page", currentPage); // forcer le paramètre page
+        const pageFromUrl = parseInt(searchParams.get("page")) || 1;
+        setCurrentPage(pageFromUrl);
 
-        const res = await fetch(`/api/recipes?${query.toString()}`);
+        const res = await fetch(`/api/recipes?${searchParams.toString()}`, {
+          cache: "no-store",
+        });
         if (!res.ok) throw new Error(`Erreur serveur: ${res.status}`);
         const data = await res.json();
 
         setRecipes(data.recipes);
         setTotalPages(data.totalPages);
-        setCurrentPage(data.currentPage);
         setStatus("succeeded");
       } catch (err) {
         console.error(err);
@@ -45,7 +89,7 @@ function RecipesList() {
       }
     };
     fetchFilteredRecipes();
-  }, [searchParams, currentPage]);
+  }, [searchParams]);
 
   const handlePageChange = (_, value) => {
     setCurrentPage(value);
@@ -122,13 +166,13 @@ function RecipesList() {
                   <div className="w-full h-full bg-white/10 rounded-2xl" />
                 )}
               </div>
-              <div className="p-5">
+              <div className="py-5 px-2">
                 <h3 className="text-xl font-bold line-clamp-1">
                   {recipe.strMeal}
                 </h3>
                 <p className="text-sm text-red-400">
-                  Préparation : {recipe.strPrepTime} • Pour{" "}
-                  {recipe.strServings} personnes
+                  {recipe.strDishType || "?"} • Pour{" "}
+                  {recipe.strServings || "?"} personnes
                 </p>
               </div>
             </Link>
@@ -136,7 +180,7 @@ function RecipesList() {
         ))}
       </div>
 
-      {/* ✅ Pagination MUI */}
+      {/* Pagination MUI */}
       <div className="flex justify-center pb-20">
         <Stack spacing={2}>
           <Pagination
@@ -145,9 +189,7 @@ function RecipesList() {
             onChange={handlePageChange}
             color="primary"
             sx={{
-              "& .MuiPaginationItem-root": {
-                color: "white",
-              },
+              "& .MuiPaginationItem-root": { color: "white" },
               "& .MuiPaginationItem-root.Mui-selected": {
                 backgroundColor: "rgba(255,255,255,0.2)",
               },
