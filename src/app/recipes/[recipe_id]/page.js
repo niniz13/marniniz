@@ -102,12 +102,66 @@ export default function RecipeDetailPage() {
         </div>
 
         <div className="pt-32 px-6 sm:px-12 md:px-20 lg:px-40 pb-20 flex flex-col gap-10">
-          <Skeleton
-            variant="rectangular"
-            animation="wave"
-            className="w-full h-[500px] rounded-2xl"
-            sx={{ bgcolor: "rgba(255,255,255,0.15)" }}
-          />
+          <div className="flex flex-col lg:flex-row gap-10">
+            <Skeleton
+              variant="rectangular"
+              animation="wave"
+              className="w-full lg:w-1/2 min-h-[400px] rounded-2xl"
+              sx={{ bgcolor: "rgba(255,255,255,0.15)" }}
+            />
+            <div className="w-full lg:w-1/2 flex flex-col gap-4">
+              <Skeleton
+                variant="text"
+                width="60%"
+                height={40}
+                sx={{ bgcolor: "rgba(255,255,255,0.2)" }}
+              />
+              <Skeleton
+                variant="text"
+                width="40%"
+                sx={{ bgcolor: "rgba(255,255,255,0.15)" }}
+              />
+              <div>
+                <Skeleton
+                  variant="text"
+                  width="30%"
+                  height={30}
+                  sx={{ bgcolor: "rgba(255,255,255,0.2)" }}
+                  className="mb-2"
+                />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <Skeleton
+                      key={i}
+                      variant="text"
+                      width="80%"
+                      height={25}
+                      sx={{ bgcolor: "rgba(255,255,255,0.15)" }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <Skeleton
+              variant="text"
+              width="40%"
+              height={35}
+              sx={{ bgcolor: "rgba(255,255,255,0.2)" }}
+              className="mb-4"
+            />
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton
+                key={i}
+                variant="text"
+                width="100%"
+                height={20}
+                sx={{ bgcolor: "rgba(255,255,255,0.15)" }}
+              />
+            ))}
+          </div>
         </div>
       </div>
     );
