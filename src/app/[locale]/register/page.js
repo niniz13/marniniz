@@ -1,11 +1,13 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import Link from "next/link";
 import { Mail } from "lucide-react";
 import Image from "next/image";
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 
-export default function LoginPage() {
+export default function RegisterPage() {
+  const t = useTranslations('RegisterPage');
 
   return (
     <div className="relative flex items-center justify-center min-h-screen text-white">
@@ -24,16 +26,16 @@ export default function LoginPage() {
         className="relative z-10 w-full max-w-md "
       >
         <h2 className="text-4xl font-bold mb-8 text-center drop-shadow-lg">
-          Connexion
+          {t('title')}
         </h2>
 
         {/* Bouton Email */}
         <Link
-          href="/login-email"
+          href="/register-email"
           className="flex items-center justify-center gap-3 w-full bg-black/30 hover:bg-black/10 text-white font-semibold py-3 rounded-lg transition-all duration-200 backdrop-blur-3xl border border-white/30"
         >
           <Mail size={20} />
-          Continuer avec un email
+          {t('continueWithEmail')}
         </Link>
 
         {/* Bouton Google */}
@@ -48,13 +50,13 @@ export default function LoginPage() {
             width={20}
             height={20}
           />
-          Continuer avec Google
+          {t('continueWithGoogle')}
         </button>
         <div className="flex justify-center mt-4 gap-2">
           <p className="font-semibold text-base sm:text-lg md:text-sm text-center">
-            Vous n&apos;avez pas de compte ?
+            {t('hasAccount')}
           </p>
-          <Link className="font-semibold text-base underline sm:text-lg md:text-sm text-center" href="/register">Inscrivez-vous</Link>
+          <Link className="font-semibold text-base underline sm:text-lg md:text-sm text-center" href="/login">{t('signIn')}</Link>
         </div>
       </div>
     </div>

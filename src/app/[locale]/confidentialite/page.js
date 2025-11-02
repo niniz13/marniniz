@@ -1,7 +1,7 @@
 "use client";
 
-import Menu from "../components/menu";
-import Footer from "../components/footer";
+import Menu from "@/app/components/menu";
+import Footer from "@/app/components/footer";
 import { Shield } from "lucide-react";
 
 export default function ConfidentialitePage() {

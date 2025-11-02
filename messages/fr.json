@@ -1,0 +1,173 @@
+{
+  "HomePage": {
+    "hero": {
+      "title": "Planifie tes repas en quelques secondes grâce à l'IA",
+      "description": "Simplifie ta vie en cuisine grâce à notre IA intelligente. En un clic, génère ton planning de repas pour la semaine, accompagné de la liste de courses complète et optimisée. Tu veux de l'inspiration ? Explore des centaines de recettes selon tes envies, ton régime ou les ingrédients que tu as déjà chez toi.",
+      "cta": "Créer mon planning"
+    }
+  },
+  "RecipesPage": {
+    "title": "Résultats de votre recherche",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "noResults": "Aucune recette trouvée avec ces filtres.",
+    "servings": "Pour {count} personnes",
+    "serverError": "Erreur serveur: {status}"
+  },
+  "LoginPage": {
+    "title": "Connexion",
+    "continueWithEmail": "Continuer avec un email",
+    "continueWithGoogle": "Continuer avec Google",
+    "noAccount": "Vous n'avez pas de compte ?",
+    "signUp": "Inscrivez-vous"
+  },
+  "RegisterPage": {
+    "title": "Inscription",
+    "continueWithEmail": "Continuer avec un email",
+    "continueWithGoogle": "Continuer avec Google",
+    "hasAccount": "Vous avez déjà un compte ?",
+    "signIn": "Connectez-vous"
+  },
+  "Menu": {
+    "planningIA": "Planning IA",
+    "recipes": "Recettes",
+    "myRecipes": "Mes recettes",
+    "myPlannings": "Mes plannings",
+    "settings": "Paramètres",
+    "logout": "Déconnexion",
+    "login": "Connexion",
+    "register": "Inscription",
+    "home": "Accueil"
+  },
+  "LoginEmailPage": {
+    "title": "Connexion",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Mot de passe",
+    "loginButton": "Connexion",
+    "forgotPassword": "Mot de passe oublié ?",
+    "resetPassword": "Réinitialisez-le",
+    "noAccount": "Vous n'avez pas de compte ?",
+    "signUp": "Inscrivez-vous",
+    "useAnotherMethod": "Utiliser une autre méthode",
+    "loginFailed": "Echec de la connexion : {error}",
+    "loginSuccess": "Connexion réussie !"
+  },
+  "RegisterEmailPage": {
+    "title": "Inscription",
+    "namePlaceholder": "Nom complet",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Mot de passe",
+    "registerButton": "Inscription",
+    "hasAccount": "Vous avez déjà un compte ?",
+    "signIn": "Connectez-vous",
+    "useAnotherMethod": "Utiliser une autre méthode",
+    "registerFailed": "Echec de l'inscription : {message}",
+    "registerSuccess": "Inscription réussie ! Redirection vers la page de connexion..."
+  },
+  "MyRecipesPage": {
+    "title": "Mes recettes favorites",
+    "loading": "Chargement...",
+    "unauthorized": "Vous devez être connecté pour voir vos recettes favorites.",
+    "error": "Erreur",
+    "noRecipes": "Vous n'avez encore enregistré aucune recette.",
+    "servings": "Pour {count} personnes",
+    "serverError": "Erreur serveur : {status}"
+  },
+  "SettingsPage": {
+    "title": "Paramètres du compte",
+    "chooseImage": "Choisir une image",
+    "nameLabel": "Nom",
+    "emailLabel": "Email",
+    "changePassword": "Changer le mot de passe",
+    "oldPasswordPlaceholder": "Ancien mot de passe",
+    "newPasswordPlaceholder": "Nouveau mot de passe",
+    "changePasswordButton": "Modifier le mot de passe",
+    "saveButton": "Enregistrer",
+    "saving": "...",
+    "saved": "Enregistré",
+    "errorSaving": "Erreur",
+    "deleteAccount": "Supprimer le compte",
+    "deleteConfirmTitle": "Voulez-vous vraiment supprimer votre compte ? ⚠️",
+    "deleteConfirmMessage": "Cette action est irréversible.",
+    "deleteButton": "Supprimer",
+    "cancelButton": "Annuler",
+    "deleting": "Suppression du compte...",
+    "accountDeleted": "Compte supprimé 🗑️",
+    "deleteError": "Erreur lors de la suppression du compte ❌",
+    "serverError": "Erreur de connexion au serveur ❌",
+    "fillBothFields": "Veuillez remplir les deux champs.",
+    "passwordUpdated": "Mot de passe mis à jour avec succès !",
+    "passwordUpdateError": "Erreur lors du changement de mot de passe : {error}"
+  },
+  "RecipesSearchPage": {
+    "title": "Rechercher des recettes",
+    "searchPlaceholder": "Nom de la recette",
+    "difficulty": "Difficulté",
+    "category": "Catégorie",
+    "minIngredients": "Ingrédients min",
+    "maxIngredients": "Ingrédients max",
+    "prepTimeMin": "Temps de préparation min (min)",
+    "prepTimeMax": "Temps de préparation max (min)",
+    "cookTimeMin": "Temps de cuisson min (min)",
+    "cookTimeMax": "Temps de cuisson max (min)",
+    "nutritionType": "Type de nutrition",
+    "nutritionOperator": "Opérateur",
+    "nutritionValue": "Valeur",
+    "lessThan": "Moins de",
+    "greaterThan": "Plus de",
+    "searchButton": "Rechercher",
+    "resetButton": "Réinitialiser"
+  },
+  "RecipeDetailPage": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "serverError": "Erreur serveur: {status}",
+    "exportPDF": "Exporter en PDF",
+    "addToFavorites": "Ajouter aux favoris",
+    "removeFromFavorites": "Retirer des favoris",
+    "mustBeLoggedIn": "Vous devez être connecté",
+    "addedToFavorites": "Ajouté aux favoris !",
+    "removedFromFavorites": "Retiré des favoris !",
+    "favoriteError": "Erreur lors de l'ajout aux favoris",
+    "unfavoriteError": "Erreur lors du retrait des favoris",
+    "servings": "Pour {count} personnes",
+    "prepTime": "Préparation : {time}",
+    "cookTime": "Cuisson : {time}",
+    "difficulty": "Difficulté",
+    "ingredients": "Ingrédients",
+    "instructions": "Instructions",
+    "nutrition": "Valeurs nutritionnelles",
+    "per100g": "Pour 100g"
+  },
+  "Footer": {
+    "navigation": {
+      "title": "Navigation",
+      "description": "Explorez les recettes, découvrez notre planning intelligent ou revenez à l’accueil.",
+      "links": {
+        "home": "Accueil",
+        "recipes": "Recettes",
+        "planning": "Planning IA"
+      }
+    },
+    "about": {
+      "title": "À propos",
+      "links": {
+        "mission": "Notre mission",
+        "contact": "Contact",
+        "blog": "Blog"
+      }
+    },
+    "legal": {
+      "title": "Légal",
+      "links": {
+        "mentions": "Mentions légales",
+        "privacy": "Politique de confidentialité",
+        "cookies": "Cookies"
+      }
+    },
+    "social": {
+      "title": "Suivez-nous"
+    },
+    "copyright": "MealMind Website — Tous droits réservés."
+  }
+}

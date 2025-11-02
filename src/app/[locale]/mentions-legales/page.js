@@ -1,8 +1,9 @@
 "use client";
 
-import Menu from "../components/menu";
-import Footer from "../components/footer";
+import Menu from "@/app/components/menu";
+import Footer from "@/app/components/footer";
 import { Scale } from "lucide-react";
+import Link from "next/link";
 
 export default function MentionsLegalesPage() {
   return (
@@ -123,9 +124,9 @@ export default function MentionsLegalesPage() {
               </p>
               <p className="text-white/70 leading-relaxed mt-3">
                 Pour plus d&apos;informations, consultez notre{" "}
-                <a href="/confidentialite" className="text-red-400 hover:text-red-300 transition font-semibold">
+                <Link href="/confidentialite" className="text-red-400 hover:text-red-300 transition font-semibold">
                   Politique de confidentialité
-                </a>.
+                </Link>.
               </p>
             </section>
 
@@ -137,9 +138,9 @@ export default function MentionsLegalesPage() {
               <p className="text-white/70 leading-relaxed">
                 Ce site utilise des cookies pour améliorer l&apos;expérience utilisateur et analyser le trafic. 
                 Pour en savoir plus sur notre utilisation des cookies et comment les gérer, consultez notre{" "}
-                <a href="/cookies" className="text-red-400 hover:text-red-300 transition font-semibold">
+                <Link href="/cookies" className="text-red-400 hover:text-red-300 transition font-semibold">
                   Politique de cookies
-                </a>.
+                </Link>.
               </p>
             </section>
 

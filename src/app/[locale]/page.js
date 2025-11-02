@@ -1,9 +1,12 @@
 import Image from "next/image";
-import Menu from "./components/menu";
+import Menu from "../components/menu";
 import Link from "next/link";
-import Footer from "./components/footer";
+import Footer from "../components/footer";
+import { useTranslations } from 'next-intl';
 
 export default function Home() {
+  const t = useTranslations('HomePage');
+
   return (
     <div className="relative w-full min-h-screen text-white overflow-hidden">
       <div className="relative w-full h-screen flex items-center justify-center text-center overflow-hidden">
@@ -22,22 +25,18 @@ export default function Home() {
 
         <div className="relative max-w-[1000px] flex flex-col justify-center items-center gap-4">
           <h1 className="font-black tracking-[-0.05em] leading-[1] text-5xl sm:text-6xl md:text-7xl">
-            Planifie tes repas en quelques secondes grâce à l’IA
+            {t('hero.title')}
           </h1>
 
           <p className="max-w-[800px] leading-[1.2] font-semibold text-base sm:text-lg md:text-xl">
-            Simplifie ta vie en cuisine grâce à notre IA intelligente. En un
-            clic, génère ton planning de repas pour la semaine, accompagné de la
-            liste de courses complète et optimisée. Tu veux de l’inspiration ?
-            Explore des centaines de recettes selon tes envies, ton régime ou
-            les ingrédients que tu as déjà chez toi.
+            {t('hero.description')}
           </p>
 
           <Link
             href="/recipes"
             className="bg-red-600 rounded-sm px-8 py-3 text-white font-bold transition-all duration-300 hover:bg-red-400 cursor-pointer"
           >
-            Créer mon planning
+            {t('hero.cta')}
           </Link>
         </div>
       </div>

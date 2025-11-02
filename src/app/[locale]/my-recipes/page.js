@@ -2,15 +2,17 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Skeleton from "@mui/material/Skeleton";
-import Menu from "../components/menu";
-import Footer from "../components/footer";
+import Menu from "@/app/components/menu";
+import Footer from "@/app/components/footer";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/routing";
 
 function FavoriteRecipesList() {
   const { data: session, status: authStatus } = useSession();
+  const t = useTranslations("MyRecipesPage");
   const [recipes, setRecipes] = useState([]);
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
@@ -28,9 +30,11 @@ function FavoriteRecipesList() {
         const res = await fetch("/api/user/favorites", {
           credentials: "include",
         });
-        if (!res.ok) throw new Error(`Erreur serveur : ${res.status}`);
+
+        if (!res.ok) throw new Error(t("serverError", { status: res.status }));
+
         const data = await res.json();
-        setRecipes(data.recipes);
+        setRecipes(data.recipes || []);
         setStatus("succeeded");
       } catch (err) {
         console.error(err);
@@ -40,8 +44,9 @@ function FavoriteRecipesList() {
     };
 
     fetchFavorites();
-  }, [session, authStatus]);
+  }, [session, authStatus, t]);
 
+  // --- Loading skeleton ---
   if (authStatus === "loading" || status === "loading") {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
@@ -73,26 +78,34 @@ function FavoriteRecipesList() {
     );
   }
 
+  // --- Unauthorized ---
   if (status === "unauthorized") {
     return (
       <p className="text-center text-white/60 pb-20">
-        Vous devez être connecté pour voir vos recettes favorites.
+        {t("unauthorized")}
       </p>
     );
   }
 
+  // --- Error ---
   if (status === "failed") {
-    return <p className="text-center text-red-400 pb-20">Erreur : {error}</p>;
+    return (
+      <p className="text-center text-red-400 pb-20">
+        {t("error")}: {error}
+      </p>
+    );
   }
 
+  // --- Empty list ---
   if (status === "succeeded" && recipes.length === 0) {
     return (
       <p className="text-center text-white/60 pb-20">
-        Vous n&apos;avez encore enregistré aucune recette.
+        {t("noRecipes")}
       </p>
     );
   }
 
+  // --- Success ---
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
       {recipes.map((recipe, index) => (
@@ -122,8 +135,8 @@ function FavoriteRecipesList() {
                 {recipe.strMeal}
               </h3>
               <p className="text-sm text-red-400">
-                {recipe.strDishType || "?"} • Pour {recipe.strServings || "?"}{" "}
-                personnes
+                {recipe.strDishType || "?"} •{" "}
+                {t("servings", { count: recipe.strServings || "?" })}
               </p>
             </div>
           </Link>
@@ -134,6 +147,8 @@ function FavoriteRecipesList() {
 }
 
 export default function MyRecipesPage() {
+  const t = useTranslations("MyRecipesPage");
+
   return (
     <div className="relative w-full min-h-screen text-white bg-[#0e0e0e] overflow-hidden">
       <div className="fixed top-0 left-0 w-full z-10">
@@ -142,12 +157,14 @@ export default function MyRecipesPage() {
 
       <div className="pt-32 px-6 sm:px-12 md:px-20 lg:px-40">
         <h2 className="text-3xl sm:text-4xl font-extrabold mb-10">
-          Mes recettes favorites
+          {t("title")}
         </h2>
 
         <Suspense
           fallback={
-            <p className="text-white/70 text-center p-10">Chargement...</p>
+            <p className="text-white/70 text-center p-10">
+              {t("loading")}
+            </p>
           }
         >
           <FavoriteRecipesList />

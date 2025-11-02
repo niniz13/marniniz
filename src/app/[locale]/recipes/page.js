@@ -1,19 +1,22 @@
 "use client";
 
 import { Suspense, useEffect, useState, useRef } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import Menu from "../components/menu";
+import Menu from "@/app/components/menu";
 import Skeleton from "@mui/material/Skeleton";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import Footer from "../components/footer";
+import Footer from "@/app/components/footer";
+import { useTranslations } from 'next-intl';
 
 function RecipesList() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const params = useParams();
+  const t = useTranslations('RecipesPage');
 
   const [recipes, setRecipes] = useState([]);
   const [status, setStatus] = useState("idle");
@@ -74,9 +77,9 @@ function RecipesList() {
         setCurrentPage(pageFromUrl);
 
         const res = await fetch(`/api/recipes?${searchParams.toString()}`, {
-          cache: "no-store",
+          cache: "force-cache",
         });
-        if (!res.ok) throw new Error(`Erreur serveur: ${res.status}`);
+        if (!res.ok) throw new Error(t('serverError', { status: res.status }));
         const data = await res.json();
 
         setRecipes(data.recipes);
@@ -89,13 +92,13 @@ function RecipesList() {
       }
     };
     fetchFilteredRecipes();
-  }, [searchParams]);
+  }, [t, searchParams]);
 
   const handlePageChange = (_, value) => {
     setCurrentPage(value);
     const query = new URLSearchParams(searchParams);
     query.set("page", value);
-    router.push(`/recipes?${query.toString()}`);
+    router.push(`/${params.locale}/recipes?${query.toString()}`);
   };
 
   if (status === "loading") {
@@ -130,13 +133,13 @@ function RecipesList() {
   }
 
   if (status === "failed") {
-    return <p className="text-center text-red-400">Erreur : {error}</p>;
+    return <p className="text-center text-red-400">{t('error')} : {error}</p>;
   }
 
   if (status === "succeeded" && recipes.length === 0) {
     return (
       <p className="text-center text-white/60">
-        Aucune recette trouvée avec ces filtres.
+        {t('noResults')}
       </p>
     );
   }
@@ -152,7 +155,7 @@ function RecipesList() {
             transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
             viewport={{ once: true }}
           >
-            <Link href={`/recipes/${recipe._id}`} className="block group">
+            <Link href={`/${params.locale}/recipes/${recipe._id}`} className="block group">
               <div className="relative w-full h-64">
                 {recipe.strMealThumb ? (
                   <Image
@@ -171,8 +174,7 @@ function RecipesList() {
                   {recipe.strMeal}
                 </h3>
                 <p className="text-sm text-red-400">
-                  {recipe.strDishType || "?"} • Pour{" "}
-                  {recipe.strServings || "?"} personnes
+                  {recipe.strDishType || "?"} • {t('servings', { count: recipe.strServings || "?" })}
                 </p>
               </div>
             </Link>
@@ -202,6 +204,8 @@ function RecipesList() {
 }
 
 export default function RecipesPage() {
+  const t = useTranslations('RecipesPage');
+
   return (
     <div className="relative w-full min-h-screen text-white bg-[#0e0e0e] overflow-hidden">
       <div className="fixed top-0 left-0 w-full z-10">
@@ -210,12 +214,12 @@ export default function RecipesPage() {
 
       <div className="pt-32 px-6 sm:px-12 md:px-20 lg:px-40">
         <h2 className="text-3xl sm:text-4xl font-extrabold mb-10">
-          Résultats de votre recherche
+          {t('title')}
         </h2>
 
         <Suspense
           fallback={
-            <p className="text-white/70 text-center p-10">Chargement...</p>
+            <p className="text-white/70 text-center p-10">{t('loading')}</p>
           }
         >
           <RecipesList />

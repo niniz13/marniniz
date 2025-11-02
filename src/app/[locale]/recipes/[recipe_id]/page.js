@@ -7,13 +7,15 @@ import Skeleton from "@mui/material/Skeleton";
 import Image from "next/image";
 import Menu from "@/app/components/menu";
 import { motion } from "framer-motion";
-import Footer from "../../components/footer";
+import Footer from "@/app/components/footer";
 import { Download, Heart } from "lucide-react";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 export default function RecipeDetailPage() {
   const { recipe_id } = useParams();
   const { data: session } = useSession();
+  const t = useTranslations("RecipeDetailPage");
 
   const [recipe, setRecipe] = useState(null);
   const [status, setStatus] = useState("loading");
@@ -30,7 +32,7 @@ export default function RecipeDetailPage() {
     const fetchRecipeDetail = async () => {
       try {
         const res = await fetch(`/api/recipes/${recipe_id}`);
-        if (!res.ok) throw new Error(`Erreur serveur: ${res.status}`);
+        if (!res.ok) throw new Error(t("serverError", { status: res.status }));
 
         const data = await res.json();
         setRecipe(data);
@@ -42,7 +44,7 @@ export default function RecipeDetailPage() {
     };
 
     fetchRecipeDetail();
-  }, [recipe_id]);
+  }, [t, recipe_id]);
 
   // Vérifier si la recette est déjà en favoris (plus rapide)
   useEffect(() => {
@@ -66,7 +68,7 @@ export default function RecipeDetailPage() {
   // Ajouter / retirer des favoris
   const toggleFavorite = async () => {
     if (!session?.user?.id) {
-      toast.error("Connectez-vous pour ajouter aux favoris !");
+      toast.error(t("mustBeLoggedIn"));
       return;
     }
 
@@ -77,15 +79,16 @@ export default function RecipeDetailPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ recipeId: recipe_id }),
         credentials: "include",
+        cache: "force-cache",
       });
       const data = await res.json();
       if (res.ok) {
         setIsFavorite(data.favorite);
         toast.success(
-          data.favorite ? "Ajouté aux favoris ❤️" : "Retiré des favoris 💔"
+          data.favorite ? t("addedToFavorites") : t("removedFromFavorites")
         );
       } else {
-        toast.error("Erreur lors de la mise à jour des favoris");
+        toast.error(data.favorite ? t("favoriteError") : t("unfavoriteError"));
       }
     } catch (err) {
       console.error("Erreur favoris :", err);
@@ -170,7 +173,7 @@ export default function RecipeDetailPage() {
   if (status === "failed" || !recipe) {
     return (
       <div className="flex items-center justify-center h-screen text-red-400">
-        Erreur : {error || "Recette introuvable"}
+        {t("error")} : {error || t("error")}
       </div>
     );
   }
@@ -221,7 +224,9 @@ export default function RecipeDetailPage() {
                         : "bg-white/10 border-white/20 text-white hover:bg-white/20"
                     }`}
                     title={
-                      isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"
+                      isFavorite
+                        ? t("removeFromFavorites")
+                        : t("addToFavorites")
                     }
                   >
                     <Heart
@@ -234,7 +239,7 @@ export default function RecipeDetailPage() {
                   <button
                     onClick={handleExportPDF}
                     className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg transition-all no-print"
-                    title="Exporter en PDF"
+                    title={t("exportPDF")}
                   >
                     <Download size={20} />
                     <span className="hidden sm:inline">PDF</span>
@@ -243,8 +248,9 @@ export default function RecipeDetailPage() {
               </div>
 
               <p className="text-white/60 uppercase text-sm tracking-wide">
-                Préparation {recipe.strPrepTime} — Cuisson {recipe.strCookTime}{" "}
-                — {recipe.strServings} parts
+                {t("prepTime", { time: recipe.strPrepTime })} —{" "}
+                {t("cookTime", { time: recipe.strCookTime })} —{" "}
+                {t("servings", { count: recipe.strServings })}
               </p>
 
               {recipe.strDescription && (
@@ -256,7 +262,7 @@ export default function RecipeDetailPage() {
               <div className="flex flex-wrap gap-3 text-sm text-white/70">
                 {recipe.strDifficulty && (
                   <span className="bg-white/10 border border-white/20 rounded-lg px-3 py-1">
-                    Difficulté : <strong>{recipe.strDifficulty}</strong>
+                    {t("difficulty")} : <strong>{recipe.strDifficulty}</strong>
                   </span>
                 )}
                 {recipe.strSubCategory && (
@@ -272,7 +278,7 @@ export default function RecipeDetailPage() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-bold mb-3">Ingrédients</h3>
+                <h3 className="text-2xl font-bold mb-3">{t("ingredients")}</h3>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {recipe.strIngredients?.length > 0 ? (
                     recipe.strIngredients.map((ing, i) => (
@@ -302,9 +308,9 @@ export default function RecipeDetailPage() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mt-14"
         >
-          <h2 className="text-3xl font-bold mb-4">Instructions</h2>
+          <h2 className="text-3xl font-bold mb-4">{t("instructions")}</h2>
           <p className="text-white/80 leading-relaxed whitespace-pre-line">
-            {recipe.strDirections || "Aucune instruction disponible."}
+            {recipe.strDirections || t("error")}
           </p>
         </motion.div>
 
@@ -320,9 +326,7 @@ export default function RecipeDetailPage() {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="mt-12"
             >
-              <h2 className="text-3xl font-bold mb-4">
-                Valeurs nutritionnelles
-              </h2>
+              <h2 className="text-3xl font-bold mb-4">{t("nutrition")}</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {Object.entries(recipe.strNutrition)
                   .filter(

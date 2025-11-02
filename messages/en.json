@@ -1,0 +1,173 @@
+{
+  "HomePage": {
+    "hero": {
+      "title": "Plan your meals in seconds with AI",
+      "description": "Simplify your life in the kitchen with our intelligent AI. With one click, generate your meal plan for the week, along with a complete and optimized shopping list. Want inspiration? Explore hundreds of recipes based on your preferences, diet, or ingredients you already have at home.",
+      "cta": "Create my plan"
+    }
+  },
+  "RecipesPage": {
+    "title": "Search results",
+    "loading": "Loading...",
+    "error": "Error",
+    "noResults": "No recipes found with these filters.",
+    "servings": "Serves {count}",
+    "serverError": "Server error: {status}"
+  },
+  "LoginPage": {
+    "title": "Login",
+    "continueWithEmail": "Continue with email",
+    "continueWithGoogle": "Continue with Google",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up"
+  },
+  "RegisterPage": {
+    "title": "Sign up",
+    "continueWithEmail": "Continue with email",
+    "continueWithGoogle": "Continue with Google",
+    "hasAccount": "Already have an account?",
+    "signIn": "Sign in"
+  },
+  "Menu": {
+    "planningIA": "AI Planning",
+    "recipes": "Recipes",
+    "myRecipes": "My Recipes",
+    "myPlannings": "My Plannings",
+    "settings": "Settings",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Sign up",
+    "home": "Home"
+  },
+  "LoginEmailPage": {
+    "title": "Login",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Password",
+    "loginButton": "Login",
+    "forgotPassword": "Forgot password?",
+    "resetPassword": "Reset it",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "useAnotherMethod": "Use another method",
+    "loginFailed": "Login failed: {error}",
+    "loginSuccess": "Login successful!"
+  },
+  "RegisterEmailPage": {
+    "title": "Sign up",
+    "namePlaceholder": "Full name",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Password",
+    "registerButton": "Sign up",
+    "hasAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "useAnotherMethod": "Use another method",
+    "registerFailed": "Registration failed: {message}",
+    "registerSuccess": "Registration successful! Redirecting to login page..."
+  },
+  "MyRecipesPage": {
+    "title": "My favorite recipes",
+    "loading": "Loading...",
+    "unauthorized": "You must be logged in to view your favorite recipes.",
+    "error": "Error",
+    "noRecipes": "You haven't saved any recipes yet.",
+    "servings": "Serves {count}",
+    "serverError": "Server error: {status}"
+  },
+  "SettingsPage": {
+    "title": "Account settings",
+    "chooseImage": "Choose an image",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "changePassword": "Change password",
+    "oldPasswordPlaceholder": "Old password",
+    "newPasswordPlaceholder": "New password",
+    "changePasswordButton": "Change password",
+    "saveButton": "Save",
+    "saving": "...",
+    "saved": "Saved",
+    "errorSaving": "Error",
+    "deleteAccount": "Delete account",
+    "deleteConfirmTitle": "Do you really want to delete your account? ⚠️",
+    "deleteConfirmMessage": "This action is irreversible.",
+    "deleteButton": "Delete",
+    "cancelButton": "Cancel",
+    "deleting": "Deleting account...",
+    "accountDeleted": "Account deleted 🗑️",
+    "deleteError": "Error deleting account ❌",
+    "serverError": "Server connection error ❌",
+    "fillBothFields": "Please fill in both fields.",
+    "passwordUpdated": "Password updated successfully!",
+    "passwordUpdateError": "Error changing password: {error}"
+  },
+  "RecipesSearchPage": {
+    "title": "Search recipes",
+    "searchPlaceholder": "Recipe name",
+    "difficulty": "Difficulty",
+    "category": "Category",
+    "minIngredients": "Min ingredients",
+    "maxIngredients": "Max ingredients",
+    "prepTimeMin": "Min prep time (min)",
+    "prepTimeMax": "Max prep time (min)",
+    "cookTimeMin": "Min cook time (min)",
+    "cookTimeMax": "Max cook time (min)",
+    "nutritionType": "Nutrition type",
+    "nutritionOperator": "Operator",
+    "nutritionValue": "Value",
+    "lessThan": "Less than",
+    "greaterThan": "Greater than",
+    "searchButton": "Search",
+    "resetButton": "Reset"
+  },
+  "RecipeDetailPage": {
+    "loading": "Loading...",
+    "error": "Error",
+    "serverError": "Server error: {status}",
+    "exportPDF": "Export to PDF",
+    "addToFavorites": "Add to favorites",
+    "removeFromFavorites": "Remove from favorites",
+    "mustBeLoggedIn": "You must be logged in",
+    "addedToFavorites": "Added to favorites!",
+    "removedFromFavorites": "Removed from favorites!",
+    "favoriteError": "Error adding to favorites",
+    "unfavoriteError": "Error removing from favorites",
+    "servings": "Serves {count}",
+    "prepTime": "Prep: {time}",
+    "cookTime": "Cook: {time}",
+    "difficulty": "Difficulty",
+    "ingredients": "Ingredients",
+    "instructions": "Instructions",
+    "nutrition": "Nutrition facts",
+    "per100g": "Per 100g"
+  },
+  "Footer": {
+    "navigation": {
+      "title": "Navigation",
+      "description": "Explore recipes, try our smart planner, or return to the homepage.",
+      "links": {
+        "home": "Home",
+        "recipes": "Recipes",
+        "planning": "AI Planner"
+      }
+    },
+    "about": {
+      "title": "About",
+      "links": {
+        "mission": "Our Mission",
+        "contact": "Contact",
+        "blog": "Blog"
+      }
+    },
+    "legal": {
+      "title": "Legal",
+      "links": {
+        "mentions": "Legal Notice",
+        "privacy": "Privacy Policy",
+        "cookies": "Cookies"
+      }
+    },
+    "social": {
+      "title": "Follow us"
+    },
+    "copyright": "MealMind Website — All rights reserved."
+  }
+}

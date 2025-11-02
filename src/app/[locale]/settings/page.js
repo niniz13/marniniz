@@ -2,17 +2,20 @@
 
 import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Skeleton from "@mui/material/Skeleton";
 import { toast } from "react-hot-toast";
-import Menu from "../components/menu";
-import Footer from "../components/footer";
+import Menu from "@/app/components/menu";
+import Footer from "@/app/components/footer";
+import { useTranslations } from 'next-intl';
 
 export default function SettingsPage() {
   const { data: session, status, update } = useSession();
   const router = useRouter();
+  const params = useParams();
+  const t = useTranslations('SettingsPage');
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -42,7 +45,7 @@ export default function SettingsPage() {
 
         <div className="pt-32 px-6 sm:px-12 md:px-20 lg:px-40 pb-20">
           <h1 className="text-4xl font-extrabold mb-10 text-center">
-            Paramètres du compte
+            {t('title')}
           </h1>
 
           <div className="max-w-xl mx-auto flex flex-col gap-6 bg-white/5 p-8 rounded-2xl border border-white/10 backdrop-blur-md">
@@ -146,7 +149,7 @@ export default function SettingsPage() {
 
   // Redirection si pas connecté
   if (!session) {
-    router.push("/login");
+    router.push(`/${params.locale}/login`);
     return null;
   }
 
@@ -192,46 +195,45 @@ export default function SettingsPage() {
 
   const handleDelete = async () => {
     // Toast de confirmation custom
-    toast((t) => (
+    toast((toastInstance) => (
       <div className="flex flex-col gap-2">
         <p className="font-semibold">
-          Voulez-vous vraiment supprimer votre compte ? ⚠️
+          {t('deleteConfirmTitle')}
         </p>
         <p className="text-sm text-gray-600">
-          Cette action est{" "}
-          <span className="font-bold text-red-500">irréversible</span>.
+          {t('deleteConfirmMessage')}
         </p>
         <div className="flex gap-2 mt-2">
           <button
             onClick={async () => {
-              toast.dismiss(t.id); // Ferme le toast de confirmation
-              const deleting = toast.loading("Suppression du compte...");
+              toast.dismiss(toastInstance.id); // Ferme le toast de confirmation
+              const deleting = toast.loading(t('deleting'));
               try {
                 const res = await fetch("/api/user/delete", {
                   method: "DELETE",
                 });
                 toast.dismiss(deleting);
                 if (res.ok) {
-                  toast.success("Compte supprimé 🗑️");
-                  await signOut({ callbackUrl: "/" });
+                  toast.success(t('accountDeleted'));
+                  await signOut({ callbackUrl: `/${params.locale}` });
                 } else {
-                  toast.error("Erreur lors de la suppression du compte ❌");
+                  toast.error(t('deleteError'));
                 }
               } catch (err) {
                 toast.dismiss(deleting);
-                toast.error("Erreur de connexion au serveur ❌");
+                toast.error(t('serverError'));
                 console.error(err);
               }
             }}
             className="px-6 py-2 rounded-lg text-sm sm:text-base transition-all bg-red-600/80 hover:bg-red-600"
           >
-            Supprimer
+            {t('deleteButton')}
           </button>
           <button
-            onClick={() => toast.dismiss(t.id)}
+            onClick={() => toast.dismiss(toastInstance.id)}
             className="px-6 py-2 rounded-lg text-sm sm:text-base transition-all bg-white/10 border border-white/20 hover:bg-white/20"
           >
-            Annuler
+            {t('cancelButton')}
           </button>
         </div>
       </div>
@@ -241,7 +243,7 @@ export default function SettingsPage() {
   // Changement de mot de passe
   const handleChangePassword = async () => {
     if (!oldPassword || !newPassword) {
-      toast.error("Veuillez remplir les deux champs.");
+      toast.error(t('fillBothFields'));
       return;
     }
 
@@ -252,13 +254,12 @@ export default function SettingsPage() {
     });
 
     if (res.ok) {
-      toast.success("Mot de passe mis à jour avec succès !");
+      toast.success(t('passwordUpdated'));
       setOldPassword("");
       setNewPassword("");
     } else {
       const text = await res.text();
-      toast.error(`Erreur lors du changement de mot de passe : ${text}`);
-      setPasswordMessage(`Erreur : ${text}`);
+      toast.error(t('passwordUpdateError', { error: text }));
     }
   };
 
@@ -272,7 +273,7 @@ export default function SettingsPage() {
 
       <div className="pt-32 px-6 sm:px-12 md:px-20 lg:px-40 pb-20">
         <h1 className="text-4xl font-extrabold mb-10 text-center">
-          Paramètres du compte
+          {t('title')}
         </h1>
 
         <div className="max-w-2xl mx-auto w-full flex flex-col gap-6 bg-white/5 p-6 sm:p-8 rounded-2xl border border-white/10 backdrop-blur-md">
@@ -313,13 +314,13 @@ export default function SettingsPage() {
                 disabled={isGoogleUser}
                 className="hidden"
               />
-              Choisir une image
+              {t('chooseImage')}
             </label>
           </div>
 
           {/* Nom */}
           <div>
-            <label className="block text-sm text-white/60 mb-1">Nom</label>
+            <label className="block text-sm text-white/60 mb-1">{t('nameLabel')}</label>
             <input
               type="text"
               value={name}
@@ -332,7 +333,7 @@ export default function SettingsPage() {
 
           {/* Email */}
           <div>
-            <label className="block text-sm text-white/60 mb-1">Email</label>
+            <label className="block text-sm text-white/60 mb-1">{t('emailLabel')}</label>
             <input
               type="email"
               value={email}
@@ -347,19 +348,19 @@ export default function SettingsPage() {
           {!isGoogleUser && (
             <div className="border-t border-white/10 pt-6">
               <h3 className="text-xl font-bold mb-3">
-                Changer le mot de passe
+                {t('changePassword')}
               </h3>
               <div className="flex flex-col gap-3">
                 <input
                   type="password"
-                  placeholder="Ancien mot de passe"
+                  placeholder={t('oldPasswordPlaceholder')}
                   value={oldPassword}
                   onChange={(e) => setOldPassword(e.target.value)}
                   className="bg-transparent border border-white/20 px-3 py-2 rounded-lg text-white/80 focus:outline-none focus:ring-2 focus:ring-white/30"
                 />
                 <input
                   type="password"
-                  placeholder="Nouveau mot de passe"
+                  placeholder={t('newPasswordPlaceholder')}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   className="bg-transparent border border-white/20 px-3 py-2 rounded-lg text-white/80 focus:outline-none focus:ring-2 focus:ring-white/30"
@@ -368,7 +369,7 @@ export default function SettingsPage() {
                   onClick={handleChangePassword}
                   className="bg-white/10 hover:bg-white/20 transition-all px-6 py-2 rounded-lg"
                 >
-                  Modifier le mot de passe
+                  {t('changePasswordButton')}
                 </button>
               </div>
             </div>
@@ -389,12 +390,12 @@ export default function SettingsPage() {
                 }`}
               >
                 {loading
-                  ? "..."
+                  ? t('saving')
                   : saveStatus === "success"
-                  ? "Enregistré"
+                  ? t('saved')
                   : saveStatus === "error"
-                  ? "Erreur"
-                  : "Enregistrer"}
+                  ? t('errorSaving')
+                  : t('saveButton')}
               </button>
             )}
 
@@ -402,7 +403,7 @@ export default function SettingsPage() {
               onClick={handleDelete}
               className="flex-1 min-w-[150px] px-6 py-2 rounded-lg text-sm sm:text-base bg-red-600/80 hover:bg-red-700 border border-red-500 transition-all"
             >
-              Supprimer le compte
+              {t('deleteAccount')}
             </button>
           </div>
         </div>

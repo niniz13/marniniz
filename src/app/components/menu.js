@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import GlassInput from "./glassInput";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import {
   User,
   Search,
@@ -14,10 +14,13 @@ import {
   X,
   Loader2,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter as useNextRouter, useParams } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 import { signOut, useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import LanguageSwitcher from "./languageSwitcher";
 
 export default function Menu() {
   const [searchValue, setSearchValue] = useState("");
@@ -25,6 +28,8 @@ export default function Menu() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const router = useRouter();
+  const params = useParams();
+  const t = useTranslations("Menu");
 
   // Récupération session et état de chargement
   const { data: session, status } = useSession();
@@ -36,7 +41,7 @@ export default function Menu() {
       const newUrl = `/recipes?name=${encodeURIComponent(trimmed)}&page=1`;
 
       // 🔹 Redirige proprement
-      router.push(newUrl, { scroll: false });
+      router.push(newUrl);
     }
   };
 
@@ -55,7 +60,7 @@ export default function Menu() {
   }, []);
 
   return (
-    <div className="w-full flex justify-between items-center gap-4 md:px-24 px-8 py-5 relative">
+    <div className="w-full flex justify-between items-center gap-4 px-6 sm:px-12 md:px-20 lg:px-40 py-5 relative">
       <Link href="/" className="font-black text-2xl tracking-[-0.05em]">
         MealMind
       </Link>
@@ -66,14 +71,17 @@ export default function Menu() {
           href="/planning-ia"
           className="font-bold text-lg tracking-[-0.03em] hover:underline"
         >
-          Planning IA
+          {t("planningIA")}
         </Link>
         <Link
           href="/recipes-search"
           className="font-bold text-lg tracking-[-0.03em] hover:underline"
         >
-          Recettes
+          {t("recipes")}
         </Link>
+
+        {/* --- LANGUAGE SWITCHER --- */}
+        <LanguageSwitcher />
 
         {/* --- BARRE DE RECHERCHE --- */}
         <div className="relative flex items-center">
@@ -143,7 +151,7 @@ export default function Menu() {
                     }}
                     className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-md hover:bg-white/10 transition-all"
                   >
-                    <BookOpen size={18} /> Mes recettes
+                    <BookOpen size={18} /> {t("myRecipes")}
                   </button>
 
                   <button
@@ -153,7 +161,7 @@ export default function Menu() {
                     }}
                     className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-md hover:bg-white/10 transition-all"
                   >
-                    <Calendar size={18} /> Mes plannings
+                    <Calendar size={18} /> {t("myPlannings")}
                   </button>
 
                   <button
@@ -163,16 +171,18 @@ export default function Menu() {
                     }}
                     className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-md hover:bg-white/10 transition-all"
                   >
-                    <Settings size={18} /> Paramètres
+                    <Settings size={18} /> {t("settings")}
                   </button>
 
                   <hr className="border-white/10 my-2" />
 
                   <button
-                    onClick={() => signOut({ callbackUrl: "/" })}
+                    onClick={() =>
+                      signOut({ callbackUrl: `/${params.locale}` })
+                    }
                     className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-md hover:bg-white/10 text-red-400 transition-all"
                   >
-                    <LogOut size={18} /> Déconnexion
+                    <LogOut size={18} /> {t("logout")}
                   </button>
                 </div>
               </motion.div>
@@ -191,13 +201,13 @@ export default function Menu() {
                     onClick={() => router.push("/login")}
                     className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-md hover:bg-white/10 transition-all"
                   >
-                    <User size={18} /> Connexion
+                    <User size={18} /> {t("login")}
                   </button>
                   <button
                     onClick={() => router.push("/register")}
                     className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-md hover:bg-white/10 transition-all"
                   >
-                    <User size={18} /> Inscription
+                    <User size={18} /> {t("register")}
                   </button>
                 </div>
               </motion.div>
@@ -229,20 +239,23 @@ export default function Menu() {
 
             <div className="flex flex-col gap-6 text-white text-lg items-center">
               <Link href="/" onClick={() => setMobileMenuOpen(false)}>
-                Home
+                {t("home")}
               </Link>
               <Link
                 href="/planning-ia"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Planning IA
+                {t("planningIA")}
               </Link>
               <Link
                 href="/recipes-search"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Recettes
+                {t("recipes")}
               </Link>
+
+              {/* --- LANGUAGE SWITCHER MOBILE --- */}
+              <LanguageSwitcher />
 
               {status === "loading" ? (
                 <div className="animate-spin text-white/60">
@@ -254,37 +267,39 @@ export default function Menu() {
                     href="/my-recipes"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Mes recettes
+                    {t("myRecipes")}
                   </Link>
                   <Link
                     href="/my-plannings"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Mes plannings
+                    {t("myPlannings")}
                   </Link>
                   <Link
                     href="/settings"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Paramètres
+                    {t("settings")}
                   </Link>
                   <button
-                    onClick={() => signOut({ callbackUrl: "/" })}
+                    onClick={() =>
+                      signOut({ callbackUrl: `/${params.locale}` })
+                    }
                     className="text-red-400"
                   >
-                    Déconnexion
+                    {t("logout")}
                   </button>
                 </>
               ) : (
                 <>
                   <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
-                    Connexion
+                    {t("login")}
                   </Link>
                   <Link
                     href="/register"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Inscription
+                    {t("register")}
                   </Link>
                 </>
               )}

@@ -1,23 +1,61 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { motion } from "framer-motion";
-import Menu from "../components/menu";
-import Footer from "../components/footer";
+import Menu from "@/app/components/menu";
+import Footer from "@/app/components/footer";
+import { useTranslations } from "next-intl";
 
-const difficulties = ["", "Easy", "More effort", "A challenge"];
+const difficulties = ["Easy", "More effort", "A challenge"];
 
 const subCategories = [
-  "Barbecues", "Batch cooking", "Birthdays", "Biscuit recipes", "Bread",
-  "Breakfast", "Breakfast recipes", "Budget dinners", "Cakes",
-  "Cheese recipes", "Chicken", "Cocktails", "Coffees", "Desserts", "Dinner",
-  "Dinner recipes", "Fish and seafood", "Fitness & lifestyle", "Free-from baking",
-  "Freezable meals", "High protein", "Hosting", "Keto", "Kids' baking",
-  "Kids' birthdays", "Low calorie", "Lunch", "Lunch recipes", "Meat", "Mocktails",
-  "Pasta", "Picnics", "Quick bakes", "Salads", "Savoury pastries", "Slow cooker",
-  "Smoothies", "Special occasions", "Spring recipes", "Storecupboard", "Student meals",
-  "Sweet treats", "Teas", "Vegan", "Vegan baking", "Vegetarian"
+  "Barbecues",
+  "Batch cooking",
+  "Birthdays",
+  "Biscuit recipes",
+  "Bread",
+  "Breakfast",
+  "Breakfast recipes",
+  "Budget dinners",
+  "Cakes",
+  "Cheese recipes",
+  "Chicken",
+  "Cocktails",
+  "Coffees",
+  "Desserts",
+  "Dinner",
+  "Dinner recipes",
+  "Fish and seafood",
+  "Fitness & lifestyle",
+  "Free-from baking",
+  "Freezable meals",
+  "High protein",
+  "Hosting",
+  "Keto",
+  "Kids' baking",
+  "Kids' birthdays",
+  "Low calorie",
+  "Lunch",
+  "Lunch recipes",
+  "Meat",
+  "Mocktails",
+  "Pasta",
+  "Picnics",
+  "Quick bakes",
+  "Salads",
+  "Savoury pastries",
+  "Slow cooker",
+  "Smoothies",
+  "Special occasions",
+  "Spring recipes",
+  "Storecupboard",
+  "Student meals",
+  "Sweet treats",
+  "Teas",
+  "Vegan",
+  "Vegan baking",
+  "Vegetarian",
 ];
 
 // 🔹 Types de valeurs nutritionnelles réelles
@@ -34,6 +72,8 @@ const nutritionTypes = [
 
 export default function SearchPage() {
   const router = useRouter();
+  const params = useParams();
+  const t = useTranslations("RecipesSearchPage");
 
   const [filters, setFilters] = useState({
     name: "",
@@ -59,11 +99,11 @@ export default function SearchPage() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    const params = new URLSearchParams();
+    const queryParams = new URLSearchParams();
     Object.entries(filters).forEach(([key, val]) => {
-      if (val !== "") params.set(key, val);
+      if (val !== "") queryParams.set(key, val);
     });
-    router.push(`/recipes?${params.toString()}`);
+    router.push(`/${params.locale}/recipes?${queryParams.toString()}`);
   };
 
   return (
@@ -74,7 +114,7 @@ export default function SearchPage() {
 
       <div className="pt-32 pb-20 px-6 sm:px-10 md:px-20 lg:px-40">
         <h1 className="text-3xl sm:text-4xl font-bold mb-10 text-center">
-          Rechercher des recettes
+          {t("title")}
         </h1>
 
         <motion.form
@@ -87,14 +127,14 @@ export default function SearchPage() {
           {/* Nom */}
           <div>
             <label className="block mb-2 font-medium text-white/80">
-              Nom de la recette
+              {t("searchPlaceholder")}
             </label>
             <input
               type="text"
               name="name"
               value={filters.name}
               onChange={handleChange}
-              placeholder="ex: Apple Bread"
+              placeholder={t("searchPlaceholder")}
               className="w-full bg-white/10 text-white font-semibold p-3 rounded-lg border border-white/20 focus:ring-2 focus:ring-white/30 outline-none"
             />
           </div>
@@ -102,7 +142,7 @@ export default function SearchPage() {
           {/* Difficulté */}
           <div>
             <label className="block mb-2 font-medium text-white/80">
-              Difficulté
+              {t("difficulty")}
             </label>
             <select
               name="difficulty"
@@ -110,6 +150,7 @@ export default function SearchPage() {
               onChange={handleChange}
               className="w-full bg-white/10 text-white p-3 rounded-lg border border-white/20 focus:ring-2 focus:ring-white/30 outline-none"
             >
+              <option value="">-- Choisir --</option>
               {difficulties.map((d) => (
                 <option key={d} value={d}>
                   {d === "" ? "-- Choisir --" : d}
@@ -121,7 +162,7 @@ export default function SearchPage() {
           {/* Sous-catégorie */}
           <div>
             <label className="block mb-2 font-medium text-white/80">
-              Sous-catégorie
+              {t("category")}
             </label>
             <select
               name="subCategory"
@@ -142,7 +183,7 @@ export default function SearchPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block mb-2 font-medium text-white/80">
-                Préparation min (min)
+                {t("prepTimeMin")}
               </label>
               <input
                 type="number"
@@ -154,7 +195,7 @@ export default function SearchPage() {
             </div>
             <div>
               <label className="block mb-2 font-medium text-white/80">
-                Préparation max (min)
+                {t("prepTimeMax")}
               </label>
               <input
                 type="number"
@@ -170,7 +211,7 @@ export default function SearchPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block mb-2 font-medium text-white/80">
-                Cuisson min (min)
+                {t("cookTimeMin")}
               </label>
               <input
                 type="number"
@@ -182,7 +223,7 @@ export default function SearchPage() {
             </div>
             <div>
               <label className="block mb-2 font-medium text-white/80">
-                Cuisson max (min)
+                {t("cookTimeMax")}
               </label>
               <input
                 type="number"
@@ -198,7 +239,7 @@ export default function SearchPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block mb-2 font-medium text-white/80">
-                Nombre minimum d&apos;ingrédients
+                {t("minIngredients")}
               </label>
               <input
                 type="number"
@@ -211,7 +252,7 @@ export default function SearchPage() {
             </div>
             <div>
               <label className="block mb-2 font-medium text-white/80">
-                Nombre maximum d&apos;ingrédients
+                {t("maxIngredients")}
               </label>
               <input
                 type="number"
@@ -228,7 +269,7 @@ export default function SearchPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="block mb-2 font-medium text-white/80">
-                Type nutrition
+                {t("nutritionType")}
               </label>
               <select
                 name="nutritionKey"
@@ -247,7 +288,7 @@ export default function SearchPage() {
 
             <div>
               <label className="block mb-2 font-medium text-white/80">
-                Condition
+                {t("nutritionOperator")}
               </label>
               <select
                 name="nutritionOp"
@@ -255,15 +296,15 @@ export default function SearchPage() {
                 onChange={handleChange}
                 className="w-full bg-white/10 text-white p-3 rounded-lg border border-white/20 focus:ring-2 focus:ring-white/30 outline-none"
               >
-                <option value="lt">&lt; (inférieur à)</option>
-                <option value="gt">&gt; (supérieur à)</option>
-                <option value="eq">= (égal à)</option>
+                <option value="lt">&lt; ({t("lessThan")})</option>
+                <option value="gt">&gt; ({t("greaterThan")})</option>
+                <option value="eq">= (=)</option>
               </select>
             </div>
 
             <div>
               <label className="block mb-2 font-medium text-white/80">
-                Valeur
+                {t("nutritionValue")}
               </label>
               <input
                 type="number"
@@ -282,7 +323,7 @@ export default function SearchPage() {
               type="submit"
               className="bg-red-600 hover:bg-red-700 transition-all duration-300 font-bold rounded-lg px-6 py-3 w-full sm:w-1/2"
             >
-              Rechercher
+              {t("searchButton")}
             </button>
           </div>
         </motion.form>

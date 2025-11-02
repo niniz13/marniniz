@@ -2,15 +2,18 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 
 export default function LoginEmailPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const params = useParams();
+  const t = useTranslations('LoginEmailPage');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,10 +24,10 @@ export default function LoginEmailPage() {
     });
 
     if (result.error) {
-      toast.error(`Echec de la connexion : ${result.error}`);
+      toast.error(t('loginFailed', { error: result.error }));
     } else {
-      toast.success("Connexion réussie !");
-      router.push("/");
+      toast.success(t('loginSuccess'));
+      router.push(`/${params.locale}`);
     }
   };
 
@@ -42,11 +45,11 @@ export default function LoginEmailPage() {
       <div className="absolute inset-0 bg-black/60"></div>
 
       <form onSubmit={handleSubmit} className="relative z-10 w-full max-w-md ">
-        <h2 className="text-4xl font-bold mb-6 text-center">Connexion</h2>
+        <h2 className="text-4xl font-bold mb-6 text-center">{t('title')}</h2>
 
         <input
           type="email"
-          placeholder="Email"
+          placeholder={t('emailPlaceholder')}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="flex items-center justify-center gap-3 w-full bg-white/10 text-white font-semibold p-3 rounded-lg transition-all duration-200 backdrop-blur-3xl border border-white/30"
@@ -55,7 +58,7 @@ export default function LoginEmailPage() {
 
         <input
           type="password"
-          placeholder="Mot de passe"
+          placeholder={t('passwordPlaceholder')}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="flex items-center justify-center gap-3 w-full bg-white/10 text-white font-semibold p-3 rounded-lg transition-all duration-200 backdrop-blur-3xl border border-white/30 mt-4"
@@ -66,25 +69,25 @@ export default function LoginEmailPage() {
           type="submit"
           className="bg-red-600 rounded-sm px-8 py-3 w-full text-white font-bold transition-all duration-300 hover:bg-red-400 cursor-pointer mt-4"
         >
-          Connexion
+          {t('loginButton')}
         </button>
         <div className="flex justify-center mt-4 gap-2">
           <p className="font-semibold text-base sm:text-lg md:text-sm text-center">
-            Mot de passe oublié ? 
+            {t('forgotPassword')}
           </p>
-          <Link className="font-semibold text-base underline sm:text-lg md:text-sm text-center" href="#">Réinitialisez-le</Link>
+          <Link className="font-semibold text-base underline sm:text-lg md:text-sm text-center" href="#">{t('resetPassword')}</Link>
         </div>
         <div className="flex justify-center mt-2 gap-2">
           <p className="font-semibold text-base sm:text-lg md:text-sm text-center">
-            Vous n&apos;avez pas de compte ?
+            {t('noAccount')}
           </p>
-          <Link className="font-semibold text-base underline sm:text-lg md:text-sm text-center" href="/register">Inscrivez-vous</Link>
+          <Link className="font-semibold text-base underline sm:text-lg md:text-sm text-center" href="/register">{t('signUp')}</Link>
         </div>
         <Link
           href="/login"
           className="flex items-center justify-center gap-3 w-full bg-black/30 hover:bg-black/10 text-white font-semibold py-3 rounded-lg transition-all duration-200 backdrop-blur-3xl border border-white/30 mt-4"
         >
-          Utiliser une autre méthode
+          {t('useAnotherMethod')}
         </Link>
       </form>
     </div>
