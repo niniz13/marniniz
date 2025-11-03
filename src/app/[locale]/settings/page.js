@@ -11,6 +11,46 @@ import Menu from "@/app/components/menu";
 import Footer from "@/app/components/footer";
 import { useTranslations } from 'next-intl';
 
+
+/**
+ * @fileoverview
+ * Le composant `SettingsPage` gère la page des paramètres utilisateur :
+ * - Affiche les informations de profil (nom, email, image).
+ * - Permet la mise à jour du profil utilisateur (nom, email, photo).
+ * - Permet le changement de mot de passe (sauf pour les comptes Google).
+ * - Permet la suppression du compte avec confirmation et feedback via toasts.
+ * - Affiche un `Skeleton` animé pendant le chargement de la session.
+ *
+ * Il s’intègre avec :
+ * - **NextAuth** (`useSession`, `signOut`, `update`) pour la gestion de l’authentification.
+ * - **Next.js App Router** (`useRouter`, `useParams`) pour la navigation dynamique et la locale.
+ * - **Next-Intl** pour la traduction dynamique du contenu.
+ * - **Framer Motion** pour les animations de transitions.
+ * - **react-hot-toast** pour les retours utilisateur instantanés.
+ * - **Material UI Skeleton** pour le chargement visuel.
+ */
+
+/**
+ * @component
+ * @description
+ * Page de gestion des paramètres utilisateur (profil, sécurité et suppression de compte).
+ *  
+ * - Si l’utilisateur est connecté → affichage du formulaire.
+ * - Si la session est en cours de chargement → affichage du `Skeleton`.
+ * - Si non connecté → redirection vers la page de connexion localisée.
+ *
+ * @example
+ * ```jsx
+ * import SettingsPage from "@/app/settings/page";
+ *
+ * export default function Page() {
+ *   return <SettingsPage />;
+ * }
+ * ```
+ *
+ * @returns {JSX.Element|null} La page de paramètres complète, ou `null` pendant une redirection.
+ */
+
 export default function SettingsPage() {
   const { data: session, status, update } = useSession();
   const router = useRouter();
@@ -35,7 +75,10 @@ export default function SettingsPage() {
     }
   }, [session]);
 
-  // --- ÉTAT DE CHARGEMENT (Skeletons) ---
+  /**
+   * Affiche un `Skeleton` animé pendant le chargement de la session utilisateur.
+   * @returns {JSX.Element} Un squelette de chargement.
+   */
   if (status === "loading") {
     return (
       <div className="w-full min-h-screen bg-[#0e0e0e] text-white">

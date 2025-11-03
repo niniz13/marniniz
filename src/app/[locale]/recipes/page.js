@@ -12,6 +12,40 @@ import Stack from "@mui/material/Stack";
 import Footer from "@/app/components/footer";
 import { useLocale, useTranslations } from "next-intl";
 
+/**
+ * @fileoverview
+ * Ce fichier contient les composants `RecipesPage` et `RecipesList` :
+ *
+ * - `RecipesPage` : composant principal de la page des recettes, affichant le titre, la navigation (`Menu`), la liste paginée de recettes et le `Footer`.
+ * - `RecipesList` : composant logique et visuel chargé de récupérer, filtrer, paginer et afficher les recettes depuis l’API `/api/recipes`.
+ *
+ * Fonctionnalités principales :
+ * - Recherche et filtrage via les paramètres d’URL (`useSearchParams`).
+ * - Requêtes API dynamiques avec rechargement automatique à chaque changement de filtre.
+ * - Gestion des états (`idle`, `loading`, `succeeded`, `failed`).
+ * - Pagination avec MUI (`Pagination` + `Stack`).
+ * - Animations douces avec Framer Motion.
+ * - Internationalisation via `next-intl` (traductions et locale dynamique).
+ */
+
+/**
+ * @component
+ * @description
+ * Liste des recettes filtrées avec pagination et gestion d’état.
+ *
+ * - Récupère les filtres depuis l’URL (nom, difficulté, sous-catégorie, etc.).
+ * - Fait une requête à `/api/recipes` avec la locale courante.
+ * - Gère les changements de page et rafraîchit les résultats.
+ * - Affiche des Skeletons pendant le chargement.
+ * - Affiche un message en cas d’erreur ou de résultats vides.
+ *
+ * @example
+ * ```jsx
+ * <RecipesList />
+ * ```
+ *
+ * @returns {JSX.Element} La grille de recettes avec pagination ou des messages d’état (chargement, erreur, vide).
+ */
 function RecipesList() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -19,6 +53,7 @@ function RecipesList() {
   const t = useTranslations("RecipesPage");
   const locale = useLocale();
 
+  // --- États internes ---
   const [recipes, setRecipes] = useState([]);
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
@@ -29,6 +64,7 @@ function RecipesList() {
 
   const prevFiltersRef = useRef(null);
 
+  // --- Extraction des filtres depuis les paramètres d’URL ---
   const name = searchParams.get("name");
   const difficulty = searchParams.get("difficulty");
   const subCategory = searchParams.get("subCategory");
@@ -36,6 +72,10 @@ function RecipesList() {
   const nutritionOp = searchParams.get("nutritionOp");
   const nutritionValue = searchParams.get("nutritionValue");
 
+  /**
+   * @effect
+   * Réinitialise la page à 1 si les filtres changent (ex. : changement de nom, difficulté, etc.).
+   */
   useEffect(() => {
     const filtersToWatch = [
       "name",
@@ -80,6 +120,11 @@ function RecipesList() {
     nutritionValue,
   ]);
 
+  /**
+   * @effect
+   * Récupère les recettes filtrées depuis l’API `/api/recipes`.
+   * Gère les erreurs et met à jour la pagination.
+   */
   useEffect(() => {
     const fetchFilteredRecipes = async () => {
       setStatus("loading");
@@ -108,6 +153,13 @@ function RecipesList() {
     fetchFilteredRecipes();
   }, [t, searchParams, locale]);
 
+  /**
+   * @function handlePageChange
+   * @description
+   * Change la page de la pagination et met à jour l’URL (page=X).
+   * @param {React.ChangeEvent<unknown>} _ - Événement de changement de page (ignoré).
+   * @param {number} value - Numéro de la page sélectionnée.
+   */
   const handlePageChange = (_, value) => {
     setCurrentPage(value);
     const query = new URLSearchParams(searchParams);
@@ -115,6 +167,7 @@ function RecipesList() {
     router.push(`/${params.locale}/recipes?${query.toString()}`);
   };
 
+  // --- États visuels ---
   if (status === "loading") {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
@@ -158,8 +211,10 @@ function RecipesList() {
     return <p className="text-center text-white/60">{t("noResults")}</p>;
   }
 
+  // --- Rendu principal ---
   return (
     <>
+      {/* --- GRILLE DE RECETTES --- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
         {recipes.map((recipe, index) => (
           <motion.div
@@ -200,7 +255,7 @@ function RecipesList() {
         ))}
       </div>
 
-      {/* Pagination MUI */}
+      {/* --- PAGINATION --- */}
       <div className="flex justify-center pb-20">
         <Stack spacing={2}>
           <Pagination
@@ -221,15 +276,36 @@ function RecipesList() {
   );
 }
 
+/**
+ * @component
+ * @description
+ * Page principale des recettes (`/recipes`) :
+ * - Affiche la navigation (`Menu`) et le `Footer`.
+ * - Contient le composant `RecipesList` chargé de l’affichage dynamique.
+ * - Utilise `Suspense` pour le rendu progressif.
+ *
+ * @example
+ * ```jsx
+ * import RecipesPage from "@/app/recipes/page";
+ *
+ * export default function Page() {
+ *   return <RecipesPage />;
+ * }
+ * ```
+ *
+ * @returns {JSX.Element} La page complète listant les recettes avec filtrage et pagination.
+ */
 export default function RecipesPage() {
   const t = useTranslations("RecipesPage");
 
   return (
     <div className="relative w-full min-h-screen text-white bg-[#0e0e0e] overflow-hidden">
+      {/* --- MENU FIXE --- */}
       <div className="fixed top-0 left-0 w-full z-10">
         <Menu />
       </div>
 
+      {/* --- CONTENU PRINCIPAL --- */}
       <div className="pt-32 px-6 sm:px-12 md:px-20 lg:px-40">
         <h2 className="text-3xl sm:text-4xl font-extrabold mb-10">
           {t("title")}
@@ -243,6 +319,8 @@ export default function RecipesPage() {
           <RecipesList />
         </Suspense>
       </div>
+
+      {/* --- PIED DE PAGE --- */}
       <Footer />
     </div>
   );

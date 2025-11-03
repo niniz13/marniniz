@@ -4,16 +4,55 @@ import Menu from "@/app/components/menu";
 import Footer from "@/app/components/footer";
 import { Shield } from "lucide-react";
 
+/**
+ * @fileoverview
+ * Page **Politique de confidentialité** du site MealMind.
+ *
+ * Cette page explique comment MealMind collecte, utilise, conserve et protège les données personnelles
+ * des utilisateurs, conformément au **Règlement Général sur la Protection des Données (RGPD)**.
+ *
+ * Elle couvre :
+ * - Les types de données collectées (identification, utilisation, techniques)
+ * - Les finalités et bases légales du traitement
+ * - Les droits des utilisateurs et les moyens de les exercer
+ * - Les mesures de sécurité et les transferts internationaux éventuels
+ *
+ * **Technologies utilisées :**
+ * - `lucide-react` → icône de bouclier (visuel principal)
+ * - Composants globaux `Menu` et `Footer`
+ * - Mise en page en fond sombre avec effet *glassmorphism* (`backdrop-blur-md`)
+ */
+
+/**
+ * @component
+ * @description
+ * Affiche la page **Politique de Confidentialité** détaillant la gestion des données personnelles sur MealMind.
+ *
+ * Cette page est statique, structurée en sections numérotées pour une meilleure lisibilité et conformité RGPD.
+ *
+ * @example
+ * ```jsx
+ * import ConfidentialitePage from "@/app/confidentialite/page";
+ *
+ * export default function Page() {
+ *   return <ConfidentialitePage />;
+ * }
+ * ```
+ *
+ * @returns {JSX.Element} La page complète présentant la politique de confidentialité du site MealMind.
+ */
 export default function ConfidentialitePage() {
   return (
     <div className="w-full min-h-screen bg-[#0e0e0e] text-white">
+      {/* Menu principal */}
       <div className="fixed top-0 left-0 w-full z-10">
         <Menu />
       </div>
 
+      {/* Contenu principal */}
       <div className="pt-32 px-6 sm:px-12 md:px-20 lg:px-40 pb-20">
         <div className="max-w-4xl mx-auto">
-          {/* Header */}
+          {/* En-tête */}
           <div className="flex items-center justify-center gap-4 mb-8">
             <Shield size={48} className="text-red-600" />
             <h1 className="text-4xl sm:text-5xl font-extrabold text-center">
@@ -25,46 +64,49 @@ export default function ConfidentialitePage() {
             Dernière mise à jour : {new Date().toLocaleDateString("fr-FR")}
           </p>
 
-          {/* Content */}
+          {/* Corps du texte */}
           <div className="bg-white/5 p-6 sm:p-8 rounded-2xl border border-white/10 backdrop-blur-md space-y-8">
-            
-            {/* Section 1 */}
+            {/* 1. Introduction */}
             <section>
               <h2 className="text-2xl font-bold mb-4 text-red-500">
                 1. Introduction
               </h2>
               <p className="text-white/70 leading-relaxed mb-4">
-                MealMind accorde une grande importance à la protection de vos données personnelles. Cette politique 
-                de confidentialité explique comment nous collectons, utilisons, partageons et protégeons vos 
-                informations personnelles conformément au Règlement Général sur la Protection des Données (RGPD).
+                MealMind accorde une grande importance à la protection de vos
+                données personnelles. Cette politique décrit nos pratiques de
+                collecte, d&apos;utilisation et de protection des informations,
+                conformément au RGPD.
               </p>
               <p className="text-white/70 leading-relaxed">
-                En utilisant notre site, vous acceptez les pratiques décrites dans cette politique.
+                En utilisant notre site, vous acceptez les pratiques décrites
+                dans cette politique.
               </p>
             </section>
 
-            {/* Section 2 */}
+            {/* 2. Données collectées */}
             <section>
               <h2 className="text-2xl font-bold mb-4 text-red-500">
                 2. Données collectées
               </h2>
               <p className="text-white/70 leading-relaxed mb-4">
-                Nous collectons différents types de données personnelles :
+                Nous collectons plusieurs types de données personnelles :
               </p>
-              
+
               <div className="space-y-4">
+                {/* Identité */}
                 <div className="bg-white/5 p-5 rounded-xl border border-white/10">
                   <h3 className="text-xl font-semibold mb-2 text-white">
                     📝 Données d&apos;identification
                   </h3>
                   <ul className="list-disc list-inside text-white/60 space-y-1 ml-4">
                     <li>Nom et prénom</li>
-                    <li>Adresse email</li>
+                    <li>Adresse e-mail</li>
                     <li>Photo de profil</li>
                     <li>Mot de passe (crypté)</li>
                   </ul>
                 </div>
 
+                {/* Utilisation */}
                 <div className="bg-white/5 p-5 rounded-xl border border-white/10">
                   <h3 className="text-xl font-semibold mb-2 text-white">
                     🍽️ Données d&apos;utilisation
@@ -77,6 +119,7 @@ export default function ConfidentialitePage() {
                   </ul>
                 </div>
 
+                {/* Techniques */}
                 <div className="bg-white/5 p-5 rounded-xl border border-white/10">
                   <h3 className="text-xl font-semibold mb-2 text-white">
                     💻 Données techniques
@@ -91,190 +134,228 @@ export default function ConfidentialitePage() {
               </div>
             </section>
 
-            {/* Section 3 */}
+            {/* 3. Finalités */}
             <section>
               <h2 className="text-2xl font-bold mb-4 text-red-500">
                 3. Finalités du traitement
               </h2>
               <p className="text-white/70 leading-relaxed mb-4">
-                Vos données personnelles sont utilisées pour :
+                Vos données sont utilisées pour :
               </p>
               <ul className="list-disc list-inside text-white/60 space-y-2 ml-4">
-                <li>Créer et gérer votre compte utilisateur</li>
-                <li>Personnaliser votre expérience sur le site</li>
-                <li>Générer des plannings de repas adaptés à vos préférences</li>
-                <li>Améliorer nos services et développer de nouvelles fonctionnalités</li>
-                <li>Vous envoyer des communications (avec votre consentement)</li>
+                <li>Gérer votre compte utilisateur</li>
+                <li>Personnaliser votre expérience</li>
+                <li>Générer des plannings de repas adaptés</li>
+                <li>Améliorer nos services</li>
+                <li>Communiquer avec vous (si consentement donné)</li>
                 <li>Assurer la sécurité et prévenir la fraude</li>
                 <li>Respecter nos obligations légales</li>
               </ul>
             </section>
 
-            {/* Section 4 */}
+            {/* 4. Base légale */}
             <section>
               <h2 className="text-2xl font-bold mb-4 text-red-500">
                 4. Base légale du traitement
               </h2>
               <div className="space-y-3 text-white/70">
-                <p>Le traitement de vos données repose sur :</p>
+                <p>Le traitement repose sur :</p>
                 <ul className="list-disc list-inside space-y-2 ml-4">
-                  <li><span className="font-semibold text-white">Votre consentement</span> pour certaines finalités spécifiques</li>
-                  <li><span className="font-semibold text-white">L&apos;exécution du contrat</span> pour la fourniture de nos services</li>
-                  <li><span className="font-semibold text-white">Notre intérêt légitime</span> pour améliorer nos services</li>
-                  <li><span className="font-semibold text-white">Nos obligations légales</span> en matière de conservation des données</li>
+                  <li>
+                    <span className="font-semibold text-white">
+                      Votre consentement
+                    </span>{" "}
+                    pour certaines fonctionnalités
+                  </li>
+                  <li>
+                    <span className="font-semibold text-white">
+                      L&apos;exécution d&apos;un contrat
+                    </span>{" "}
+                    pour les services fournis
+                  </li>
+                  <li>
+                    <span className="font-semibold text-white">
+                      L&apos;intérêt légitime
+                    </span>{" "}
+                    pour améliorer le service
+                  </li>
+                  <li>
+                    <span className="font-semibold text-white">
+                      Les obligations légales
+                    </span>{" "}
+                    en matière de conservation
+                  </li>
                 </ul>
               </div>
             </section>
 
-            {/* Section 5 */}
+            {/* 5. Partage */}
             <section>
               <h2 className="text-2xl font-bold mb-4 text-red-500">
                 5. Partage des données
               </h2>
               <p className="text-white/70 leading-relaxed mb-4">
-                Nous ne vendons jamais vos données personnelles. Nous pouvons partager vos données avec :
+                Nous ne vendons jamais vos données. Nous les partageons
+                uniquement avec :
               </p>
               <ul className="list-disc list-inside text-white/60 space-y-2 ml-4">
-                <li>Nos prestataires de services (hébergement, analyse, paiement)</li>
-                <li>Les autorités légales si requis par la loi</li>
-                <li>Des partenaires avec votre consentement explicite</li>
+                <li>
+                  Prestataires de services (hébergement, paiement, analyse)
+                </li>
+                <li>Autorités légales si la loi l&apos;exige</li>
+                <li>Partenaires tiers avec votre consentement explicite</li>
               </ul>
             </section>
 
-            {/* Section 6 */}
+            {/* 6. Conservation */}
             <section>
               <h2 className="text-2xl font-bold mb-4 text-red-500">
                 6. Durée de conservation
               </h2>
               <p className="text-white/70 leading-relaxed mb-4">
-                Nous conservons vos données personnelles pendant la durée nécessaire aux finalités pour lesquelles 
-                elles ont été collectées :
+                Les durées varient selon la nature des données :
               </p>
               <ul className="list-disc list-inside text-white/60 space-y-2 ml-4">
-                <li>Données de compte : jusqu&apos;à la suppression de votre compte + 1 an</li>
-                <li>Données de navigation : 13 mois maximum</li>
+                <li>Compte utilisateur : jusqu&apos;à suppression + 1 an</li>
+                <li>Données de navigation : 13 mois max</li>
                 <li>Données de facturation : 10 ans (obligation légale)</li>
               </ul>
             </section>
 
-            {/* Section 7 */}
+            {/* 7. Droits */}
             <section>
               <h2 className="text-2xl font-bold mb-4 text-red-500">
                 7. Vos droits
               </h2>
               <p className="text-white/70 leading-relaxed mb-4">
-                Conformément au RGPD, vous disposez des droits suivants :
+                Conformément au RGPD, vous pouvez :
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="bg-white/5 p-4 rounded-xl border border-white/10">
-                  <h4 className="font-semibold text-white mb-2">✅ Droit d&apos;accès</h4>
-                  <p className="text-white/60 text-sm">Obtenir une copie de vos données</p>
+                  <h4 className="font-semibold text-white mb-2">
+                    ✅ Droit d&apos;accès
+                  </h4>
+                  <p className="text-white/60 text-sm">
+                    Obtenir une copie de vos données
+                  </p>
                 </div>
                 <div className="bg-white/5 p-4 rounded-xl border border-white/10">
-                  <h4 className="font-semibold text-white mb-2">✏️ Droit de rectification</h4>
-                  <p className="text-white/60 text-sm">Corriger vos données inexactes</p>
+                  <h4 className="font-semibold text-white mb-2">
+                    ✏️ Droit de rectification
+                  </h4>
+                  <p className="text-white/60 text-sm">
+                    Corriger vos informations
+                  </p>
                 </div>
                 <div className="bg-white/5 p-4 rounded-xl border border-white/10">
-                  <h4 className="font-semibold text-white mb-2">🗑️ Droit à l&apos;effacement</h4>
-                  <p className="text-white/60 text-sm">Supprimer vos données</p>
+                  <h4 className="font-semibold text-white mb-2">
+                    🗑️ Droit à l&apos;effacement
+                  </h4>
+                  <p className="text-white/60 text-sm">
+                    Demander la suppression
+                  </p>
                 </div>
                 <div className="bg-white/5 p-4 rounded-xl border border-white/10">
-                  <h4 className="font-semibold text-white mb-2">⛔ Droit d&apos;opposition</h4>
-                  <p className="text-white/60 text-sm">Vous opposer au traitement</p>
-                </div>
-                <div className="bg-white/5 p-4 rounded-xl border border-white/10">
-                  <h4 className="font-semibold text-white mb-2">📦 Droit à la portabilité</h4>
-                  <p className="text-white/60 text-sm">Récupérer vos données</p>
-                </div>
-                <div className="bg-white/5 p-4 rounded-xl border border-white/10">
-                  <h4 className="font-semibold text-white mb-2">🔒 Droit à la limitation</h4>
-                  <p className="text-white/60 text-sm">Limiter le traitement</p>
+                  <h4 className="font-semibold text-white mb-2">
+                    ⛔ Droit d&apos;opposition
+                  </h4>
+                  <p className="text-white/60 text-sm">Refuser un traitement</p>
                 </div>
               </div>
               <p className="text-white/70 leading-relaxed mt-4">
-                Pour exercer ces droits, contactez-nous à :{" "}
-                <a href="mailto:dpo@mealmind.com" className="text-red-400 hover:text-red-300 transition font-semibold">
+                Pour exercer vos droits :{" "}
+                <a
+                  href="mailto:dpo@mealmind.com"
+                  className="text-red-400 hover:text-red-300 font-semibold"
+                >
                   dpo@mealmind.com
                 </a>
               </p>
             </section>
 
-            {/* Section 8 */}
+            {/* 8. Sécurité */}
             <section>
               <h2 className="text-2xl font-bold mb-4 text-red-500">
                 8. Sécurité des données
               </h2>
-              <p className="text-white/70 leading-relaxed mb-4">
-                Nous mettons en œuvre des mesures techniques et organisationnelles appropriées pour protéger 
-                vos données personnelles :
-              </p>
               <ul className="list-disc list-inside text-white/60 space-y-2 ml-4">
-                <li>Cryptage des données sensibles (SSL/TLS)</li>
+                <li>Chiffrement (SSL/TLS)</li>
                 <li>Authentification sécurisée</li>
-                <li>Accès restreint aux données personnelles</li>
-                <li>Surveillance et détection des incidents</li>
+                <li>Accès restreint</li>
+                <li>Surveillance continue</li>
                 <li>Sauvegardes régulières</li>
               </ul>
             </section>
 
-            {/* Section 9 */}
+            {/* 9. Transferts internationaux */}
             <section>
               <h2 className="text-2xl font-bold mb-4 text-red-500">
                 9. Transferts internationaux
               </h2>
               <p className="text-white/70 leading-relaxed">
-                Vos données peuvent être transférées et stockées dans des pays en dehors de l&apos;Union Européenne. 
-                Dans ce cas, nous nous assurons que des garanties appropriées sont en place conformément au RGPD 
-                (clauses contractuelles types, Privacy Shield, etc.).
+                Si des données sont transférées hors UE, elles sont protégées
+                par des garanties conformes au RGPD (clauses contractuelles
+                types, Privacy Shield, etc.).
               </p>
             </section>
 
-            {/* Section 10 */}
+            {/* 10. Modifications */}
             <section>
               <h2 className="text-2xl font-bold mb-4 text-red-500">
                 10. Modifications
               </h2>
               <p className="text-white/70 leading-relaxed">
-                Nous pouvons modifier cette politique de confidentialité à tout moment. Les modifications seront 
-                publiées sur cette page avec une date de mise à jour révisée. Nous vous encourageons à consulter 
-                régulièrement cette page.
+                Cette politique peut être modifiée à tout moment. Les mises à
+                jour seront publiées sur cette page avec la date révisée.
               </p>
             </section>
 
-            {/* Section 11 */}
+            {/* 11. Contact */}
             <section className="border-t border-white/10 pt-6">
               <h2 className="text-2xl font-bold mb-4 text-red-500">
                 11. Contact
               </h2>
               <p className="text-white/70 leading-relaxed mb-4">
-                Pour toute question concernant cette politique de confidentialité ou l&apos;exercice de vos droits :
+                Pour toute question concernant cette politique ou vos droits :
               </p>
               <div className="bg-white/5 p-5 rounded-xl border border-white/10 space-y-3 text-white/70">
                 <p>
-                  <span className="font-semibold text-white">Délégué à la Protection des Données (DPO) :</span>
+                  <span className="font-semibold text-white">
+                    Délégué à la Protection des Données :
+                  </span>{" "}
+                  MealMind DPO
                 </p>
                 <p>
                   <span className="font-semibold text-white">Email :</span>{" "}
-                  <a href="mailto:dpo@mealmind.com" className="text-red-400 hover:text-red-300 transition">
+                  <a
+                    href="mailto:dpo@mealmind.com"
+                    className="text-red-400 hover:text-red-300 transition"
+                  >
                     dpo@mealmind.com
                   </a>
                 </p>
                 <p>
-                  <span className="font-semibold text-white">Adresse :</span> MealMind - DPO, 123 Avenue des Champs-Élysées, 75008 Paris, France
+                  <span className="font-semibold text-white">Adresse :</span>{" "}
+                  123 Avenue des Champs-Élysées, 75008 Paris
                 </p>
                 <p className="mt-4 pt-4 border-t border-white/10">
-                  Vous avez également le droit d&apos;introduire une réclamation auprès de la CNIL :{" "}
-                  <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer" className="text-red-400 hover:text-red-300 transition">
+                  Vous pouvez aussi contacter la CNIL :{" "}
+                  <a
+                    href="https://www.cnil.fr"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-red-400 hover:text-red-300 transition"
+                  >
                     www.cnil.fr
                   </a>
                 </p>
               </div>
             </section>
-
           </div>
         </div>
       </div>
 
+      {/* Pied de page */}
       <Footer />
     </div>
   );

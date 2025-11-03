@@ -6,17 +6,56 @@ import Menu from "@/app/components/menu";
 import Footer from "@/app/components/footer";
 import { useTranslations } from "next-intl";
 
+/**
+ * @fileoverview
+ * Page **Contact** du site MealMind.
+ *
+ * Cette page permet aux utilisateurs de contacter l’équipe MealMind via un formulaire simple et des informations directes :
+ * - Adresse e-mail professionnelle
+ * - Numéro de téléphone
+ * - Adresse postale du siège
+ *
+ * Le formulaire n’effectue pas encore d’envoi réel, mais affiche un message de confirmation simulé.
+ *
+ * **Technologies utilisées :**
+ * - `framer-motion` → animations d’apparition et d’interaction
+ * - `lucide-react` → icônes vectorielles
+ * - `next-intl` → traduction multilingue du contenu
+ * - Composants globaux `Menu` et `Footer` pour la mise en page cohérente
+ */
+
+/**
+ * @component
+ * @description
+ * Affiche la page de contact avec :
+ * - Un en-tête animé
+ * - Les informations de contact principales
+ * - Un formulaire avec validation côté client
+ *
+ * Utilise `next-intl` pour traduire les textes et `Framer Motion` pour animer les transitions.
+ *
+ * @example
+ * ```jsx
+ * import ContactPage from "@/app/contact/page";
+ *
+ * export default function Page() {
+ *   return <ContactPage />;
+ * }
+ * ```
+ *
+ * @returns {JSX.Element} La page complète de contact de MealMind.
+ */
 export default function ContactPage() {
   const t = useTranslations("ContactPage");
 
   return (
     <div className="w-full min-h-screen bg-[#0e0e0e] text-white flex flex-col">
-      {/* Menu */}
+      {/* Barre de navigation */}
       <div className="fixed top-0 left-0 w-full z-10">
         <Menu />
       </div>
 
-      {/* Contenu */}
+      {/* Contenu principal */}
       <div className="flex-grow pt-32 px-6 sm:px-12 md:px-20 lg:px-40 pb-20">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -24,15 +63,17 @@ export default function ContactPage() {
           transition={{ duration: 0.5 }}
           className="max-w-4xl mx-auto text-center"
         >
-          {/* Titre principal */}
+          {/* Titre */}
           <h1 className="text-4xl sm:text-5xl font-extrabold mb-6 text-red-500">
             {t("title")}
           </h1>
           <p className="text-white/70 text-lg mb-12">{t("intro")}</p>
 
-          {/* Carte de contact */}
+          {/* Bloc principal de contact */}
           <div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-md">
+            {/* Coordonnées */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-12">
+              {/* E-mail */}
               <div className="flex flex-col items-center text-center">
                 <Mail size={32} className="text-red-500 mb-3" />
                 <h3 className="font-semibold mb-2">{t("emailTitle")}</h3>
@@ -44,12 +85,14 @@ export default function ContactPage() {
                 </a>
               </div>
 
+              {/* Téléphone */}
               <div className="flex flex-col items-center text-center">
                 <Phone size={32} className="text-red-500 mb-3" />
                 <h3 className="font-semibold mb-2">{t("phoneTitle")}</h3>
                 <p className="text-white/70">+33 1 23 45 67 89</p>
               </div>
 
+              {/* Adresse */}
               <div className="flex flex-col items-center text-center">
                 <MapPin size={32} className="text-red-500 mb-3" />
                 <h3 className="font-semibold mb-2">{t("addressTitle")}</h3>
@@ -69,6 +112,7 @@ export default function ContactPage() {
                 alert(t("formSent"));
               }}
             >
+              {/* Champ : nom */}
               <div>
                 <label className="block mb-2 font-medium text-white/80">
                   {t("name")}
@@ -82,6 +126,7 @@ export default function ContactPage() {
                 />
               </div>
 
+              {/* Champ : email */}
               <div>
                 <label className="block mb-2 font-medium text-white/80">
                   {t("email")}
@@ -95,6 +140,7 @@ export default function ContactPage() {
                 />
               </div>
 
+              {/* Champ : message */}
               <div>
                 <label className="block mb-2 font-medium text-white/80">
                   {t("message")}
@@ -108,6 +154,7 @@ export default function ContactPage() {
                 />
               </div>
 
+              {/* Bouton d’envoi animé */}
               <motion.button
                 type="submit"
                 whileHover={{ scale: 1.03 }}
@@ -121,6 +168,7 @@ export default function ContactPage() {
         </motion.div>
       </div>
 
+      {/* Pied de page */}
       <Footer />
     </div>
   );

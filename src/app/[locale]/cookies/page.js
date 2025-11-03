@@ -4,16 +4,53 @@ import Menu from "@/app/components/menu";
 import Footer from "@/app/components/footer";
 import { Cookie } from "lucide-react";
 
+/**
+ * @fileoverview
+ * Page **Politique de cookies** du site MealMind.
+ *
+ * Cette page explique la nature et l’utilisation des cookies sur le site, conformément au **RGPD** et à la **loi Informatique et Libertés**.
+ * Elle détaille :
+ * - Ce qu’est un cookie et son utilité
+ * - Les différents types de cookies utilisés sur le site (essentiels, performance, fonctionnels, tiers)
+ * - Les options de gestion des cookies via les navigateurs
+ * - La durée de conservation et les droits de l’utilisateur
+ *
+ * Le contenu est statique, en français, et structuré pour une lecture claire.
+ *
+ * **Technologies utilisées :**
+ * - `lucide-react` → icône de cookie
+ * - `next/link` (pas nécessaire ici mais cohérent avec les autres pages)
+ * - `Menu` et `Footer` comme composants globaux
+ */
+
+/**
+ * @component
+ * @description
+ * Affiche la page de **Politique de cookies** avec sections explicatives et mise en page moderne (fond sombre, verre dépoli, hiérarchie visuelle claire).
+ *
+ * @example
+ * ```jsx
+ * import CookiesPage from "@/app/cookies/page";
+ *
+ * export default function Page() {
+ *   return <CookiesPage />;
+ * }
+ * ```
+ *
+ * @returns {JSX.Element} La page complète détaillant la politique de gestion des cookies du site MealMind.
+ */
 export default function CookiesPage() {
   return (
     <div className="w-full min-h-screen bg-[#0e0e0e] text-white">
+      {/* Menu principal */}
       <div className="fixed top-0 left-0 w-full z-10">
         <Menu />
       </div>
 
+      {/* Contenu principal */}
       <div className="pt-32 px-6 sm:px-12 md:px-20 lg:px-40 pb-20">
         <div className="max-w-4xl mx-auto">
-          {/* Header */}
+          {/* En-tête */}
           <div className="flex items-center justify-center gap-4 mb-8">
             <Cookie size={48} className="text-red-600" />
             <h1 className="text-4xl sm:text-5xl font-extrabold text-center">
@@ -25,38 +62,38 @@ export default function CookiesPage() {
             Dernière mise à jour : {new Date().toLocaleDateString("fr-FR")}
           </p>
 
-          {/* Content */}
+          {/* Corps du contenu */}
           <div className="bg-white/5 p-6 sm:p-8 rounded-2xl border border-white/10 backdrop-blur-md space-y-8">
-            
-            {/* Section 1 */}
+            {/* 1. Définition */}
             <section>
               <h2 className="text-2xl font-bold mb-4 text-red-500">
                 Qu&apos;est-ce qu&apos;un cookie ?
               </h2>
               <p className="text-white/70 leading-relaxed">
-                Un cookie est un petit fichier texte déposé sur votre terminal (ordinateur, tablette, smartphone) 
-                lors de la visite d&apos;un site web. Il permet au site de mémoriser des informations sur votre visite, 
-                comme votre langue préférée et d&apos;autres paramètres, afin de faciliter votre prochaine visite et 
-                de rendre le site plus utile.
+                Un cookie est un petit fichier texte déposé sur votre terminal
+                (ordinateur, tablette, smartphone) lors de la visite d&apos;un
+                site web. Il permet de mémoriser des informations utiles comme
+                vos préférences linguistiques, afin d&apos;améliorer votre
+                expérience et de faciliter vos futures visites.
               </p>
             </section>
 
-            {/* Section 2 */}
+            {/* 2. Types de cookies */}
             <section>
               <h2 className="text-2xl font-bold mb-4 text-red-500">
                 Types de cookies utilisés
               </h2>
-              
+
               <div className="space-y-6">
-                {/* Cookies essentiels */}
+                {/* Essentiels */}
                 <div className="bg-white/5 p-5 rounded-xl border border-white/10">
                   <h3 className="text-xl font-semibold mb-2 text-white">
                     🔒 Cookies essentiels
                   </h3>
                   <p className="text-white/70 mb-3">
-                    Ces cookies sont nécessaires au fonctionnement du site et ne peuvent pas être désactivés. 
-                    Ils sont généralement établis en réponse à des actions que vous effectuez et qui constituent 
-                    une demande de services (connexion, remplissage de formulaires, etc.).
+                    Indispensables au bon fonctionnement du site, ces cookies
+                    garantissent la sécurité, la gestion des sessions et la
+                    sauvegarde des préférences de base.
                   </p>
                   <ul className="list-disc list-inside text-white/60 space-y-1 ml-4">
                     <li>Authentification et sécurité</li>
@@ -65,50 +102,52 @@ export default function CookiesPage() {
                   </ul>
                 </div>
 
-                {/* Cookies de performance */}
+                {/* Performance */}
                 <div className="bg-white/5 p-5 rounded-xl border border-white/10">
                   <h3 className="text-xl font-semibold mb-2 text-white">
                     📊 Cookies de performance
                   </h3>
                   <p className="text-white/70 mb-3">
-                    Ces cookies nous permettent de compter les visites et les sources de trafic afin de mesurer 
-                    et d&apos;améliorer les performances de notre site. Ils nous aident à savoir quelles pages sont 
-                    les plus et les moins populaires et à voir comment les visiteurs naviguent sur le site.
+                    Ces cookies nous permettent d&apos;analyser le trafic et les
+                    performances du site afin d&apos;améliorer l&apos;expérience
+                    utilisateur et de détecter d&apos;éventuels problèmes
+                    techniques.
                   </p>
                   <ul className="list-disc list-inside text-white/60 space-y-1 ml-4">
                     <li>Analyse du trafic</li>
                     <li>Statistiques de navigation</li>
-                    <li>Amélioration de l&apos;expérience utilisateur</li>
+                    <li>Amélioration continue du site</li>
                   </ul>
                 </div>
 
-                {/* Cookies fonctionnels */}
+                {/* Fonctionnels */}
                 <div className="bg-white/5 p-5 rounded-xl border border-white/10">
                   <h3 className="text-xl font-semibold mb-2 text-white">
                     ⚙️ Cookies fonctionnels
                   </h3>
                   <p className="text-white/70 mb-3">
-                    Ces cookies permettent au site d&apos;offrir des fonctionnalités améliorées et une personnalisation. 
-                    Ils peuvent être définis par nous ou par des tiers dont nous avons ajouté les services à nos pages.
+                    Ils permettent de proposer des fonctionnalités avancées
+                    comme la personnalisation du contenu, la mémorisation des
+                    préférences et les options de partage social.
                   </p>
                   <ul className="list-disc list-inside text-white/60 space-y-1 ml-4">
-                    <li>Mémorisation des préférences</li>
                     <li>Personnalisation du contenu</li>
-                    <li>Fonctionnalités de partage social</li>
+                    <li>Préférences utilisateur</li>
+                    <li>Intégrations sociales</li>
                   </ul>
                 </div>
               </div>
             </section>
 
-            {/* Section 3 */}
+            {/* 3. Gestion des cookies */}
             <section>
               <h2 className="text-2xl font-bold mb-4 text-red-500">
                 Gestion des cookies
               </h2>
               <p className="text-white/70 leading-relaxed mb-4">
-                Vous pouvez contrôler et/ou supprimer les cookies comme vous le souhaitez. Vous pouvez supprimer 
-                tous les cookies déjà présents sur votre ordinateur et paramétrer la plupart des navigateurs pour 
-                qu&apos;ils les bloquent.
+                Vous pouvez contrôler et/ou supprimer les cookies à tout moment
+                via les paramètres de votre navigateur. Vous pouvez aussi
+                configurer celui-ci pour bloquer leur installation par défaut.
               </p>
               <div className="bg-white/5 p-5 rounded-xl border border-white/10">
                 <h3 className="text-lg font-semibold mb-3 text-white">
@@ -116,80 +155,96 @@ export default function CookiesPage() {
                 </h3>
                 <ul className="space-y-2 text-white/70">
                   <li>
-                    <span className="font-semibold text-white">Chrome :</span> Paramètres → Confidentialité et sécurité → Cookies
+                    <span className="font-semibold text-white">Chrome :</span>{" "}
+                    Paramètres → Confidentialité et sécurité → Cookies
                   </li>
                   <li>
-                    <span className="font-semibold text-white">Firefox :</span> Options → Vie privée et sécurité → Cookies
+                    <span className="font-semibold text-white">Firefox :</span>{" "}
+                    Options → Vie privée et sécurité → Cookies
                   </li>
                   <li>
-                    <span className="font-semibold text-white">Safari :</span> Préférences → Confidentialité → Cookies
+                    <span className="font-semibold text-white">Safari :</span>{" "}
+                    Préférences → Confidentialité → Cookies
                   </li>
                   <li>
-                    <span className="font-semibold text-white">Edge :</span> Paramètres → Confidentialité → Cookies
+                    <span className="font-semibold text-white">Edge :</span>{" "}
+                    Paramètres → Confidentialité → Cookies
                   </li>
                 </ul>
               </div>
             </section>
 
-            {/* Section 4 */}
+            {/* 4. Cookies tiers */}
             <section>
               <h2 className="text-2xl font-bold mb-4 text-red-500">
                 Cookies tiers
               </h2>
               <p className="text-white/70 leading-relaxed">
-                Certains cookies peuvent être déposés par des services tiers (Google Analytics, réseaux sociaux, etc.). 
-                Ces services ont leurs propres politiques de confidentialité et de cookies. Nous vous encourageons à 
-                consulter leurs politiques respectives pour comprendre comment ils utilisent vos données.
+                Certains services tiers (ex. Google Analytics, réseaux sociaux)
+                peuvent déposer leurs propres cookies. Chacun d&apos;eux dispose
+                de sa propre politique de confidentialité que nous vous invitons
+                à consulter.
               </p>
             </section>
 
-            {/* Section 5 */}
+            {/* 5. Durée de conservation */}
             <section>
               <h2 className="text-2xl font-bold mb-4 text-red-500">
                 Durée de conservation
               </h2>
               <p className="text-white/70 leading-relaxed">
-                Les cookies ont une durée de vie variable selon leur type :
+                Les cookies ont une durée de vie limitée selon leur nature :
               </p>
               <ul className="list-disc list-inside text-white/60 space-y-2 mt-3 ml-4">
                 <li>
-                  <span className="text-white font-semibold">Cookies de session :</span> supprimés à la fermeture du navigateur
+                  <span className="text-white font-semibold">
+                    Cookies de session :
+                  </span>{" "}
+                  supprimés à la fermeture du navigateur
                 </li>
                 <li>
-                  <span className="text-white font-semibold">Cookies persistants :</span> conservés jusqu&apos;à 13 mois maximum
+                  <span className="text-white font-semibold">
+                    Cookies persistants :
+                  </span>{" "}
+                  conservés jusqu&apos;à 13 mois maximum
                 </li>
               </ul>
             </section>
 
-            {/* Section 6 */}
+            {/* 6. Vos droits */}
             <section>
               <h2 className="text-2xl font-bold mb-4 text-red-500">
                 Vos droits
               </h2>
               <p className="text-white/70 leading-relaxed">
-                Conformément au RGPD, vous disposez d&apos;un droit d&apos;accès, de rectification, de suppression et 
-                d&apos;opposition concernant vos données personnelles. Pour exercer ces droits ou pour toute question 
-                concernant notre politique de cookies, vous pouvez nous contacter à l&apos;adresse suivante : 
-                <span className="text-red-400 font-semibold"> contact@mealmind.com</span>
+                Conformément au RGPD, vous disposez d&apos;un droit
+                d&apos;accès, de rectification, de suppression et
+                d&apos;opposition concernant vos données personnelles. Pour
+                exercer ces droits ou pour toute question relative à notre
+                politique de cookies, contactez-nous à :{" "}
+                <span className="text-red-400 font-semibold">
+                  contact@mealmind.com
+                </span>
+                .
               </p>
             </section>
 
-            {/* Section 7 */}
+            {/* 7. Modifications */}
             <section className="border-t border-white/10 pt-6">
               <h2 className="text-2xl font-bold mb-4 text-red-500">
                 Modifications de cette politique
               </h2>
               <p className="text-white/70 leading-relaxed">
-                Nous nous réservons le droit de modifier cette politique de cookies à tout moment. 
-                Toute modification sera publiée sur cette page avec une date de mise à jour révisée. 
-                Nous vous encourageons à consulter régulièrement cette page pour rester informé de nos pratiques.
+                Cette politique peut être modifiée à tout moment pour refléter
+                les évolutions légales ou techniques. Les changements seront
+                publiés sur cette page, avec une date de mise à jour révisée.
               </p>
             </section>
-
           </div>
         </div>
       </div>
 
+      {/* Pied de page */}
       <Footer />
     </div>
   );

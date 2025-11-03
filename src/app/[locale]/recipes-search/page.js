@@ -7,8 +7,36 @@ import Menu from "@/app/components/menu";
 import Footer from "@/app/components/footer";
 import { useTranslations } from "next-intl";
 
-// ✅ Difficultés et catégories traduites via t()
+/**
+ * @fileoverview
+ * Le composant `SearchPage` permet à l’utilisateur de filtrer et rechercher des recettes
+ * selon différents critères :
+ * - Nom, difficulté, sous-catégorie
+ * - Temps de préparation / cuisson
+ * - Nombre d’ingrédients
+ * - Valeurs nutritionnelles (type, opérateur, valeur)
+ *
+ * Une fois le formulaire soumis, les filtres sont passés dans l’URL
+ * et la navigation redirige vers la page `/recipes` avec les bons paramètres (`?name=&difficulty=&...`).
+ *
+ * Il utilise :
+ * - **next-intl** pour la traduction des labels et catégories
+ * - **Framer Motion** pour une animation fluide à l’apparition
+ * - **Next.js router** pour construire dynamiquement la recherche
+ */
+
+/**
+ * @constant {string[]} difficulties
+ * Liste des niveaux de difficulté disponibles pour filtrer les recettes.
+ * Les clés sont traduites via `t("difficulties.key")`.
+ */
 const difficulties = ["easy", "medium", "hard"];
+
+/**
+ * @constant {string[]} subCategoriesKeys
+ * Liste des sous-catégories possibles pour filtrer les recettes.
+ * Chaque clé est traduite avec `t("categories.key")`.
+ */
 const subCategoriesKeys = [
   "barbecues",
   "batchCooking",
@@ -55,7 +83,11 @@ const subCategoriesKeys = [
   "vegetarian",
 ];
 
-// ✅ Types de valeurs nutritionnelles traduites via t()
+/**
+ * @constant {string[]} nutritionTypesKeys
+ * Liste des types de valeurs nutritionnelles filtrables (kcal, protéines, etc.),
+ * traduits via `t("nutritionLabels.key")`.
+ */
 const nutritionTypesKeys = [
   "kcal",
   "fat",
@@ -67,11 +99,29 @@ const nutritionTypesKeys = [
   "salt",
 ];
 
+/**
+ * @component
+ * @description
+ * Page de recherche avancée des recettes.
+ * Fournit un formulaire complet de filtres et redirige vers `/recipes` avec les paramètres d’URL.
+ *
+ * @example
+ * ```jsx
+ * import SearchPage from "@/app/search/page";
+ *
+ * export default function Page() {
+ *   return <SearchPage />;
+ * }
+ * ```
+ *
+ * @returns {JSX.Element} Formulaire animé avec filtres dynamiques et recherche redirigeant vers la page des recettes.
+ */
 export default function SearchPage() {
   const router = useRouter();
   const params = useParams();
   const t = useTranslations("RecipesSearchPage");
 
+  // --- État local des filtres ---
   const [filters, setFilters] = useState({
     name: "",
     difficulty: "",
@@ -87,6 +137,11 @@ export default function SearchPage() {
     nutritionValue: "",
   });
 
+  /**
+   * @function handleChange
+   * @description Met à jour l’état local des filtres à chaque saisie utilisateur.
+   * @param {React.ChangeEvent<HTMLInputElement | HTMLSelectElement>} e - Événement de saisie ou sélection.
+   */
   const handleChange = (e) => {
     setFilters({
       ...filters,
@@ -94,6 +149,13 @@ export default function SearchPage() {
     });
   };
 
+  /**
+   * @function handleSearch
+   * @description
+   * Construit les paramètres de recherche et redirige l’utilisateur
+   * vers la page `/recipes` avec les filtres appliqués.
+   * @param {React.FormEvent<HTMLFormElement>} e - Soumission du formulaire.
+   */
   const handleSearch = (e) => {
     e.preventDefault();
     const queryParams = new URLSearchParams();
@@ -103,17 +165,21 @@ export default function SearchPage() {
     router.push(`/${params.locale}/recipes?${queryParams.toString()}`);
   };
 
+  // --- Rendu principal ---
   return (
     <div className="min-h-screen bg-[#0e0e0e] text-white">
+      {/* Menu global */}
       <div className="fixed top-0 left-0 w-full z-10">
         <Menu />
       </div>
 
+      {/* Contenu principal */}
       <div className="pt-32 pb-20 px-6 sm:px-10 md:px-20 lg:px-40">
         <h1 className="text-3xl sm:text-4xl font-bold mb-10 text-center">
           {t("title")}
         </h1>
 
+        {/* Formulaire animé */}
         <motion.form
           onSubmit={handleSearch}
           initial={{ opacity: 0, y: 20 }}
@@ -121,7 +187,7 @@ export default function SearchPage() {
           transition={{ duration: 0.4 }}
           className="max-w-3xl mx-auto flex flex-col space-y-8"
         >
-          {/* Nom */}
+          {/* --- Nom de recette --- */}
           <div>
             <label className="block mb-2 font-medium text-white/80">
               {t("searchPlaceholder")}
@@ -136,7 +202,7 @@ export default function SearchPage() {
             />
           </div>
 
-          {/* Difficulté */}
+          {/* --- Difficulté --- */}
           <div>
             <label className="block mb-2 font-medium text-white/80">
               {t("difficulty")}
@@ -156,7 +222,7 @@ export default function SearchPage() {
             </select>
           </div>
 
-          {/* Sous-catégorie */}
+          {/* --- Sous-catégorie --- */}
           <div>
             <label className="block mb-2 font-medium text-white/80">
               {t("category")}
@@ -176,7 +242,7 @@ export default function SearchPage() {
             </select>
           </div>
 
-          {/* Temps de préparation */}
+          {/* --- Temps de préparation --- */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block mb-2 font-medium text-white/80">
@@ -204,7 +270,7 @@ export default function SearchPage() {
             </div>
           </div>
 
-          {/* Temps de cuisson */}
+          {/* --- Temps de cuisson --- */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block mb-2 font-medium text-white/80">
@@ -232,7 +298,7 @@ export default function SearchPage() {
             </div>
           </div>
 
-          {/* Ingrédients min / max */}
+          {/* --- Ingrédients min/max --- */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block mb-2 font-medium text-white/80">
@@ -262,8 +328,9 @@ export default function SearchPage() {
             </div>
           </div>
 
-          {/* Nutrition */}
+          {/* --- Nutrition --- */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {/* Type nutritionnel */}
             <div>
               <label className="block mb-2 font-medium text-white/80">
                 {t("nutritionType")}
@@ -283,6 +350,7 @@ export default function SearchPage() {
               </select>
             </div>
 
+            {/* Opérateur */}
             <div>
               <label className="block mb-2 font-medium text-white/80">
                 {t("nutritionOperator")}
@@ -299,6 +367,7 @@ export default function SearchPage() {
               </select>
             </div>
 
+            {/* Valeur */}
             <div>
               <label className="block mb-2 font-medium text-white/80">
                 {t("nutritionValue")}
@@ -314,7 +383,7 @@ export default function SearchPage() {
             </div>
           </div>
 
-          {/* Bouton */}
+          {/* --- Bouton de recherche --- */}
           <div className="flex justify-center w-full pt-6">
             <button
               type="submit"

@@ -6,9 +6,45 @@ import Menu from "@/app/components/menu";
 import Footer from "@/app/components/footer";
 import { useTranslations } from "next-intl";
 
+/**
+ * @fileoverview
+ * Page **À propos (About)** du site MealMind.
+ *
+ * Cette page présente la mission, la vision et les valeurs fondamentales du projet MealMind :
+ * - **Passion** : transmettre l’amour de la cuisine et de l’équilibre alimentaire
+ * - **Innovation** : allier technologie et nutrition
+ * - **Communauté** : créer un espace d’échange et de partage
+ * - **Durabilité** : promouvoir une alimentation responsable et consciente
+ *
+ * **Technologies utilisées :**
+ * - `framer-motion` → animations d’apparition et d’interaction au survol
+ * - `lucide-react` → icônes symbolisant les valeurs
+ * - `next-intl` → gestion multilingue des textes
+ * - Composants globaux `Menu` et `Footer`
+ */
+
+/**
+ * @component
+ * @description
+ * Page de présentation du projet MealMind (vision, mission, valeurs).
+ * Le contenu est animé pour une expérience fluide et moderne.
+ * Les textes sont dynamiques via le système de traduction `next-intl`.
+ *
+ * @example
+ * ```jsx
+ * import AboutPage from "@/app/about/page";
+ *
+ * export default function Page() {
+ *   return <AboutPage />;
+ * }
+ * ```
+ *
+ * @returns {JSX.Element} La page complète "À propos" de MealMind.
+ */
 export default function AboutPage() {
   const t = useTranslations("AboutPage");
 
+  // Définition des valeurs fondamentales avec icônes et traductions
   const values = [
     {
       icon: <Heart size={36} className="text-red-500" />,
@@ -34,13 +70,14 @@ export default function AboutPage() {
 
   return (
     <div className="w-full min-h-screen bg-[#0e0e0e] text-white flex flex-col">
-      {/* Menu */}
+      {/* Menu principal */}
       <div className="fixed top-0 left-0 w-full z-10">
         <Menu />
       </div>
 
       {/* Contenu principal */}
       <div className="flex-grow pt-32 px-6 sm:px-12 md:px-20 lg:px-40 pb-20">
+        {/* En-tête */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -108,6 +145,7 @@ export default function AboutPage() {
         </motion.div>
       </div>
 
+      {/* Pied de page */}
       <Footer />
     </div>
   );

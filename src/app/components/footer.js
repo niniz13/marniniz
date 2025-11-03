@@ -4,6 +4,41 @@ import Link from "next/link";
 import { Instagram, Github, Linkedin } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+/**
+ * @fileoverview
+ * Le composant `Footer` affiche le pied de page global du site, comprenant :
+ * - Des liens de navigation internes.
+ * - Des sections "À propos" et "Légal".
+ * - Des icônes vers les réseaux sociaux.
+ * - Un message de copyright.
+ *
+ * Le contenu est traduit dynamiquement grâce à `next-intl`, via les clés du namespace `Footer`.
+ *
+ * Les styles reposent sur Tailwind CSS pour une mise en page responsive et moderne.
+ */
+
+/**
+ * @component
+ * @description
+ * Affiche le pied de page de l'application avec liens internes et externes,
+ * textes traduits, et icônes de réseaux sociaux.
+ *
+ * @example
+ * ```jsx
+ * import Footer from "@/components/Footer";
+ *
+ * export default function Layout({ children }) {
+ *   return (
+ *     <>
+ *       <main>{children}</main>
+ *       <Footer />
+ *     </>
+ *   );
+ * }
+ * ```
+ *
+ * @returns {JSX.Element} Le composant de pied de page multilingue.
+ */
 export default function Footer() {
   const t = useTranslations("Footer");
 

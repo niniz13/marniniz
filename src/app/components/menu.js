@@ -22,33 +22,90 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import LanguageSwitcher from "./languageSwitcher";
 
+/**
+ * @fileoverview
+ * Le composant `Menu` gère la barre de navigation principale du site.
+ * Il inclut :
+ * - La navigation entre les pages principales (`Home`, `Recipes`, etc.)
+ * - Un champ de recherche intelligent (`GlassInput`) avec redirection.
+ * - La gestion du compte utilisateur (connexion, déconnexion, paramètres, etc.)
+ * - Un `LanguageSwitcher` pour le changement de langue dynamique.
+ * - Une version mobile responsive avec menu burger animé (Framer Motion).
+ *
+ * Ce composant s’intègre avec :
+ * - **NextAuth** pour la gestion de session utilisateur.
+ * - **next-intl** pour les traductions.
+ * - **Framer Motion** pour les animations de menus.
+ * - **TailwindCSS** pour le style réactif.
+ */
+
+/**
+ * @component
+ * @description
+ * Composant principal du menu de navigation (desktop et mobile) pour le site MealMind.
+ * Il gère l’état de la recherche, l’ouverture des menus et les interactions utilisateur
+ * selon le statut de session.
+ *
+ * @example
+ * ```jsx
+ * import Menu from "@/components/Menu";
+ *
+ * export default function Header() {
+ *   return (
+ *     <header className="fixed top-0 left-0 right-0 z-50 bg-black/60 backdrop-blur-lg">
+ *       <Menu />
+ *     </header>
+ *   );
+ * }
+ * ```
+ *
+ * @returns {JSX.Element} La barre de navigation complète et réactive du site.
+ */
 export default function Menu() {
+  // --- États locaux ---
   const [searchValue, setSearchValue] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Référence du menu utilisateur (pour fermer en cas de clic extérieur)
   const menuRef = useRef(null);
+
+  // --- Hooks Next.js & next-intl ---
   const router = useRouter();
   const params = useParams();
   const t = useTranslations("Menu");
 
-  // Récupération session et état de chargement
+  // --- Gestion de session (NextAuth) ---
   const { data: session, status } = useSession();
 
+  /**
+   * @function handleSearch
+   * @description
+   * Gère la recherche utilisateur :
+   * - Supprime les espaces inutiles.
+   * - Redirige vers la page de résultats avec `name` et `page=1`.
+   */
   const handleSearch = () => {
     const trimmed = searchValue.trim();
     if (trimmed !== "") {
-      // Supprime les anciens paramètres d’URL (comme page=5)
       const newUrl = `/recipes?name=${encodeURIComponent(trimmed)}&page=1`;
-
-      // 🔹 Redirige proprement
       router.push(newUrl);
     }
   };
 
+  /**
+   * @function handleKeyPress
+   * @description
+   * Déclenche la recherche lorsqu'on appuie sur la touche "Entrée".
+   * @param {React.KeyboardEvent<HTMLInputElement>} e - L’événement clavier du champ de recherche.
+   */
   const handleKeyPress = (e) => {
     if (e.key === "Enter") handleSearch();
   };
 
+  /**
+   * Ferme automatiquement le menu utilisateur quand l’utilisateur clique à l’extérieur.
+   */
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -61,12 +118,14 @@ export default function Menu() {
 
   return (
     <div className="w-full flex justify-between items-center gap-4 px-6 sm:px-12 md:px-20 lg:px-40 py-5 relative">
+      {/* --- LOGO --- */}
       <Link href="/" className="font-black text-2xl tracking-[-0.05em]">
         MealMind
       </Link>
 
       {/* --- MENU DESKTOP --- */}
       <div className="hidden md:flex items-center gap-8">
+        {/* Liens principaux */}
         <Link
           href="/recipes-search"
           className="font-bold text-lg tracking-[-0.03em] hover:underline"
@@ -74,10 +133,10 @@ export default function Menu() {
           {t("recipes")}
         </Link>
 
-        {/* --- LANGUAGE SWITCHER --- */}
+        {/* Sélecteur de langue */}
         <LanguageSwitcher />
 
-        {/* --- BARRE DE RECHERCHE --- */}
+        {/* Barre de recherche */}
         <div className="relative flex items-center">
           <GlassInput
             value={searchValue}
@@ -92,9 +151,9 @@ export default function Menu() {
           </button>
         </div>
 
-        {/* --- USER MENU --- */}
+        {/* --- MENU UTILISATEUR --- */}
         <div className="relative" ref={menuRef}>
-          {/* Loader si la session est en cours de chargement */}
+          {/* Loader pendant la récupération de session */}
           {status === "loading" ? (
             <div className="backdrop-blur-3xl bg-transparent rounded-full border border-white/30 p-3 text-white">
               <Loader2 size={22} className="animate-spin" />
@@ -108,7 +167,7 @@ export default function Menu() {
             </button>
           )}
 
-          {/* --- POPUP MENU --- */}
+          {/* --- POPUP DU MENU UTILISATEUR --- */}
           <AnimatePresence>
             {menuOpen && status === "authenticated" && (
               <motion.div
@@ -119,6 +178,7 @@ export default function Menu() {
                 className="absolute right-0 mt-3 w-56 backdrop-blur-3xl border border-white/20 rounded-xl shadow-lg"
               >
                 <div className="p-3 text-sm text-white/80">
+                  {/* Profil utilisateur */}
                   <div className="flex items-center gap-3 px-2 py-1">
                     {session.user.image && (
                       <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center bg-white/10 border border-white/20">
@@ -138,6 +198,7 @@ export default function Menu() {
 
                   <hr className="border-white/10 my-2" />
 
+                  {/* Liens utilisateur */}
                   <button
                     onClick={() => {
                       router.push("/my-recipes");
@@ -172,6 +233,7 @@ export default function Menu() {
               </motion.div>
             )}
 
+            {/* Menu si non connecté */}
             {menuOpen && status === "unauthenticated" && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
@@ -200,7 +262,7 @@ export default function Menu() {
         </div>
       </div>
 
-      {/* --- BURGER MOBILE --- */}
+      {/* --- BURGER MENU MOBILE --- */}
       <button className="md:hidden p-2" onClick={() => setMobileMenuOpen(true)}>
         <MenuIcon size={28} />
       </button>
@@ -272,7 +334,8 @@ export default function Menu() {
                   </Link>
                 </>
               )}
-              {/* --- LANGUAGE SWITCHER MOBILE --- */}
+
+              {/* Sélecteur de langue mobile */}
               <LanguageSwitcher />
             </div>
           </motion.div>

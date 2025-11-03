@@ -12,21 +12,67 @@ import { Download, Heart } from "lucide-react";
 import toast from "react-hot-toast";
 import { useLocale, useTranslations } from "next-intl";
 
+/**
+ * @fileoverview
+ * Le composant `RecipeDetailPage` affiche le détail complet d’une recette sélectionnée.
+ *
+ * Fonctionnalités principales :
+ * - Récupération des données d’une recette via l’API `/api/recipes/[id]`
+ * - Gestion des états (`loading`, `failed`, `succeeded`)
+ * - Affichage dynamique des sections (ingrédients, instructions, nutrition)
+ * - Gestion des favoris (ajout/suppression) liée à l’utilisateur connecté
+ * - Export simplifié au format PDF via `window.print()`
+ * - Animations d’apparition avec **Framer Motion**
+ * - Traductions multilingues avec **next-intl**
+ */
+
+/**
+ * @component
+ * @description
+ * Page d’affichage des détails d’une recette.
+ *
+ * Ce composant gère la récupération, l’affichage et les interactions utilisateur :
+ * - Lecture des informations principales (image, titre, temps, description)
+ * - Gestion des favoris via API (`/api/favorites`)
+ * - Affichage responsive et visuel cohérent
+ * - Fallbacks visuels via `Skeleton` pendant le chargement
+ *
+ * @example
+ * ```jsx
+ * import RecipeDetailPage from "@/app/recipes/[recipe_id]/page";
+ *
+ * export default function Page() {
+ *   return <RecipeDetailPage />;
+ * }
+ * ```
+ *
+ * @returns {JSX.Element} L’interface complète du détail d’une recette.
+ */
 export default function RecipeDetailPage() {
+  // --- Hooks principaux ---
   const { recipe_id } = useParams();
   const { data: session } = useSession();
   const t = useTranslations("RecipeDetailPage");
   const locale = useLocale();
 
+  // --- États locaux ---
   const [recipe, setRecipe] = useState(null);
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [loadingFavorite, setLoadingFavorite] = useState(false);
 
+  /**
+   * @function handleExportPDF
+   * @description
+   * Déclenche l’impression/export PDF du détail de la recette.
+   */
   const handleExportPDF = () => window.print();
 
-  // Charger les détails de la recette
+  /**
+   * @effect
+   * Récupère les détails de la recette depuis l’API `/api/recipes/[recipe_id]`.
+   */
   useEffect(() => {
     if (!recipe_id) return;
 
@@ -49,7 +95,10 @@ export default function RecipeDetailPage() {
     fetchRecipeDetail();
   }, [t, recipe_id, locale]);
 
-  // Vérifier si la recette est déjà en favoris (plus rapide)
+  /**
+   * @effect
+   * Vérifie si la recette est déjà en favoris pour l’utilisateur connecté.
+   */
   useEffect(() => {
     const checkFavorite = async () => {
       if (!session?.user?.id || !recipe_id) return;
@@ -68,7 +117,12 @@ export default function RecipeDetailPage() {
     checkFavorite();
   }, [session, recipe_id]);
 
-  // Ajouter / retirer des favoris
+  /**
+   * @function toggleFavorite
+   * @description
+   * Ajoute ou retire la recette des favoris.
+   * Affiche un toast selon le résultat.
+   */
   const toggleFavorite = async () => {
     if (!session?.user?.id) {
       toast.error(t("mustBeLoggedIn"));
@@ -100,6 +154,7 @@ export default function RecipeDetailPage() {
     }
   };
 
+  // --- ÉTATS D’INTERFACE ---
   if (status === "loading") {
     return (
       <div className="relative min-h-screen bg-[#0e0e0e] text-white">
@@ -107,6 +162,7 @@ export default function RecipeDetailPage() {
           <Menu />
         </div>
 
+        {/* Skeleton de chargement */}
         <div className="pt-32 px-6 sm:px-12 md:px-20 lg:px-40 pb-20 flex flex-col gap-10">
           <div className="flex flex-col lg:flex-row gap-10">
             <Skeleton
@@ -186,6 +242,7 @@ export default function RecipeDetailPage() {
       ? recipe.strMealThumb
       : "/placeholder.jpg";
 
+  // --- RENDU PRINCIPAL ---
   return (
     <div className="relative min-h-screen bg-[#0e0e0e] text-white">
       <div className="fixed top-0 left-0 w-full z-10">
@@ -193,14 +250,14 @@ export default function RecipeDetailPage() {
       </div>
 
       <div className="pt-32 px-6 sm:px-12 md:px-20 lg:px-40 pb-20">
-        {/* Bloc principal équilibré */}
+        {/* --- IMAGE ET INFOS PRINCIPALES --- */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="grid lg:grid-cols-2 gap-10 items-stretch"
         >
-          {/* Image ajustable */}
+          {/* --- IMAGE --- */}
           <div className="relative rounded-2xl overflow-hidden shadow-lg min-h-[400px] lg:min-h-[500px]">
             <Image
               src={imageSrc}
@@ -212,12 +269,14 @@ export default function RecipeDetailPage() {
             />
           </div>
 
-          {/* Détails plus compacts */}
+          {/* --- DÉTAILS --- */}
           <div className="flex flex-col justify-between">
             <div className="flex flex-col gap-4">
+              {/* Titre + actions */}
               <div className="flex items-start justify-between gap-4">
                 <h1 className="text-4xl font-extrabold">{recipe.strMeal}</h1>
                 <div className="flex gap-2">
+                  {/* --- FAVORIS --- */}
                   <button
                     onClick={toggleFavorite}
                     disabled={loadingFavorite}
@@ -239,6 +298,7 @@ export default function RecipeDetailPage() {
                     />
                   </button>
 
+                  {/* --- EXPORT PDF --- */}
                   <button
                     onClick={handleExportPDF}
                     className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg transition-all no-print"
@@ -250,6 +310,7 @@ export default function RecipeDetailPage() {
                 </div>
               </div>
 
+              {/* --- MÉTADONNÉES --- */}
               <p className="text-white/60 uppercase text-sm tracking-wide">
                 {t("prepTime", { time: recipe.strPrepTime })} —{" "}
                 {t("cookTime", { time: recipe.strCookTime })} —{" "}
@@ -262,6 +323,7 @@ export default function RecipeDetailPage() {
                 </p>
               )}
 
+              {/* --- INFORMATIONS SECONDAIRES --- */}
               <div className="flex flex-wrap gap-3 text-sm text-white/70">
                 {recipe.strDifficulty && (
                   <span className="bg-white/10 border border-white/20 rounded-lg px-3 py-1">
@@ -280,6 +342,7 @@ export default function RecipeDetailPage() {
                 )}
               </div>
 
+              {/* --- INGRÉDIENTS --- */}
               <div>
                 <h3 className="text-2xl font-bold mb-3">{t("ingredients")}</h3>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -304,7 +367,7 @@ export default function RecipeDetailPage() {
           </div>
         </motion.div>
 
-        {/* Instructions */}
+        {/* --- INSTRUCTIONS --- */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -317,7 +380,7 @@ export default function RecipeDetailPage() {
           </p>
         </motion.div>
 
-        {/* Section Nutrition */}
+        {/* --- NUTRITION --- */}
         {recipe.strNutrition &&
           Object.entries(recipe.strNutrition).some(
             ([, value]) =>

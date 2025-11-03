@@ -1,5 +1,35 @@
 import clientPromise from "@/lib/mongodb";
 
+/**
+ * @fileoverview
+ * Route API **GET /api/recipes** — Récupère la liste des recettes filtrées et paginées.
+ *
+ * Cette route interroge la base MongoDB (`recipes_fr` ou `recipes_en`) en fonction de la locale
+ * et applique une série de filtres dynamiques envoyés depuis le front :
+ * - **Nom de recette**, **difficulté**, **sous-catégorie**
+ * - **Nombre d’ingrédients** min/max
+ * - **Temps de préparation / cuisson** min/max
+ * - **Valeurs nutritionnelles** (par opérateur : lt, gt, eq)
+ *
+ * Elle retourne les résultats paginés (12 recettes par page par défaut).
+ *
+ * **Collections MongoDB :**
+ * - `recipes_fr` : données localisées en français
+ * - `recipes_en` : données localisées en anglais
+ *
+ * **Réponses :**
+ * - ✅ 200 : `{ recipes, totalPages, currentPage }`
+ * - ❌ 500 : `{ message: "Erreur serveur" }`
+ *
+ * @see Utilisée par la page /recipes du front MealMind
+ */
+
+/**
+ * Convertit une chaîne de durée (ex: `"1 hr 20 min"`) en nombre total de minutes.
+ *
+ * @param {string} timeStr - Chaîne indiquant le temps ("1 hr", "45 min", etc.)
+ * @returns {number|null} Temps total en minutes, ou `null` si la valeur est invalide
+ */
 function parseTime(timeStr) {
   if (!timeStr) return null;
   const matchHr = timeStr.match(/(\d+)\s*hr/i);
@@ -9,24 +39,38 @@ function parseTime(timeStr) {
   return hours * 60 + mins;
 }
 
+/**
+ * Récupère les recettes depuis MongoDB selon les filtres et la pagination.
+ *
+ * @async
+ * @function GET
+ * @param {Request} req - Requête HTTP contenant les paramètres de recherche dans l'URL
+ * @returns {Promise<Response>} Liste paginée de recettes filtrées au format JSON
+ *
+ * @example
+ * ```js
+ * // Exemple d'appel côté client
+ * const res = await fetch("/api/recipes?locale=fr&page=2&difficulty=Easy");
+ * const data = await res.json();
+ * console.log(data.recipes);
+ * ```
+ */
 export async function GET(req) {
   try {
     const client = await clientPromise;
     const db = client.db();
     const { searchParams } = new URL(req.url);
 
-    // Récupérer la locale envoyée depuis le front
+    /** @type {string} Locale de la requête (fr ou en) */
     const locale = searchParams.get("locale") || "fr";
-
-    // Choisir la bonne collection selon la locale
     const collectionName = locale === "en" ? "recipes_en" : "recipes_fr";
 
-    // Pagination
+    // --- Pagination ---
     const page = parseInt(searchParams.get("page")) || 1;
     const limit = 12;
     const skip = (page - 1) * limit;
 
-    // Filtres
+    // --- Filtres de recherche ---
     const name = searchParams.get("name");
     const difficulty = searchParams.get("difficulty");
     const subCategory = searchParams.get("subCategory");
@@ -41,14 +85,17 @@ export async function GET(req) {
     const nutritionValue = parseFloat(searchParams.get("nutritionValue"));
 
     const filter = {};
-
     if (name) filter.strMeal = { $regex: name, $options: "i" };
     if (difficulty) filter.strDifficulty = difficulty;
     if (subCategory) filter.strSubCategory = subCategory;
 
-    // Récupération des recettes selon les filtres de base
-    const allRecipes = await db.collection(collectionName).find(filter).toArray();
+    // --- Récupération initiale ---
+    const allRecipes = await db
+      .collection(collectionName)
+      .find(filter)
+      .toArray();
 
+    // --- Filtrage avancé en mémoire ---
     const filteredRecipes = allRecipes.filter((r) => {
       const ingredientCount = Array.isArray(r.strIngredients)
         ? r.strIngredients.filter((ing) => ing && ing.trim() !== "").length
@@ -65,12 +112,12 @@ export async function GET(req) {
       if (cookTimeMin && (cook === null || cook < cookTimeMin)) return false;
       if (cookTimeMax && (cook === null || cook > cookTimeMax)) return false;
 
-      // Filtre nutrition
+      // --- Filtrage nutritionnel ---
       if (nutritionKey && !isNaN(nutritionValue) && r.strNutrition) {
         let rawVal = r.strNutrition[nutritionKey];
         if (!rawVal || typeof rawVal !== "string") return false;
 
-        rawVal = rawVal.replace(/[^\d.-]/g, ""); // Supprime g, kcal, etc.
+        rawVal = rawVal.replace(/[^\d.-]/g, ""); // Supprime les unités (g, kcal, etc.)
         const numericVal = parseFloat(rawVal);
         if (isNaN(numericVal)) return false;
 
@@ -90,7 +137,7 @@ export async function GET(req) {
       return true;
     });
 
-    // Pagination
+    // --- Pagination finale ---
     const totalRecipes = filteredRecipes.length;
     const totalPages = Math.ceil(totalRecipes / limit);
     const paginatedRecipes = filteredRecipes.slice(skip, skip + limit);
@@ -100,6 +147,7 @@ export async function GET(req) {
       _id: r._id.toString(),
     }));
 
+    // --- Réponse ---
     return new Response(
       JSON.stringify({
         recipes: recipesWithStringId,
