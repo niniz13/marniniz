@@ -30,14 +30,6 @@ export default function Footer() {
                 {t("navigation.links.recipes")}
               </Link>
             </li>
-            <li>
-              <Link
-                href="/planning-ia"
-                className="hover:text-red-400 transition"
-              >
-                {t("navigation.links.planning")}
-              </Link>
-            </li>
           </ul>
         </div>
 
@@ -55,11 +47,6 @@ export default function Footer() {
             <li>
               <Link href="/contact" className="hover:text-red-400 transition">
                 {t("about.links.contact")}
-              </Link>
-            </li>
-            <li>
-              <Link href="/blog" className="hover:text-red-400 transition">
-                {t("about.links.blog")}
               </Link>
             </li>
           </ul>

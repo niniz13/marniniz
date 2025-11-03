@@ -14,8 +14,7 @@ export default function LanguageSwitcher() {
     router.replace(pathname, { locale: newLocale });
   };
 
-  const currentFlag =
-    params.locale === "fr" ? "/fr.svg" : "/en.svg";
+  const currentFlag = params.locale === "fr" ? "/fr.svg" : "/en.svg";
 
   return (
     <div className="relative flex items-center gap-2">

@@ -2,10 +2,10 @@ import { Inter } from "next/font/google";
 import "../globals.css";
 import StoreProvider from "../StoreProvider";
 import { Toaster } from "react-hot-toast";
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
-import { notFound } from 'next/navigation';
-import { routing } from '@/i18n/routing';
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
+import { notFound } from "next/navigation";
+import { routing } from "@/i18n/routing";
 
 const inter = Inter({
   subsets: ["latin"],

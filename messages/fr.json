@@ -119,8 +119,8 @@
     "searchButton": "Rechercher",
     "difficulties": {
       "easy": "Facile",
-      "medium": "Intermédiaire",
-      "hard": "Difficile"
+      "medium": "Plus d'efforts",
+      "hard": "Un défi"
     },
     "nutritionLabels": {
       "kcal": "Calories (kcal)",
@@ -238,5 +238,52 @@
       "title": "Suivez-nous"
     },
     "copyright": "MealMind Website — Tous droits réservés."
+  },
+  "ContactPage": {
+    "title": "Contactez-nous",
+    "intro": "Une question, une suggestion ou un partenariat ? Nous serons ravis d’échanger avec vous.",
+    "emailTitle": "Email",
+    "phoneTitle": "Téléphone",
+    "addressTitle": "Adresse",
+    "name": "Nom",
+    "namePlaceholder": "Votre nom complet",
+    "email": "Adresse e-mail",
+    "emailPlaceholder": "votre@email.com",
+    "message": "Message",
+    "messagePlaceholder": "Écrivez votre message ici...",
+    "send": "Envoyer",
+    "formSent": "Merci ! Votre message a bien été envoyé."
+  },
+  "AboutPage": {
+    "title": "Notre mission",
+    "intro": "Chez MealMind, nous croyons que bien manger ne doit pas être compliqué. Notre mission est de rendre la cuisine accessible, intuitive et inspirante pour tous, grâce à la technologie et à la créativité.",
+    "visionTitle": "Notre vision",
+    "visionDesc": "Nous voulons aider chacun à mieux planifier ses repas, à découvrir de nouvelles saveurs et à adopter une alimentation plus équilibrée — tout en réduisant le gaspillage alimentaire.",
+    "values": {
+      "passion": {
+        "title": "Passion",
+        "desc": "Nous mettons tout notre cœur dans la création d’outils qui rapprochent les gens autour du plaisir de cuisiner."
+      },
+      "innovation": {
+        "title": "Innovation",
+        "desc": "Nous utilisons l’intelligence artificielle pour simplifier le quotidien et proposer des expériences culinaires uniques."
+      },
+      "community": {
+        "title": "Communauté",
+        "desc": "MealMind est avant tout une aventure collective — une communauté de passionnés qui partagent leurs idées et recettes."
+      },
+      "sustainability": {
+        "title": "Durabilité",
+        "desc": "Nous encourageons une cuisine responsable, respectueuse de l’environnement et des ressources naturelles."
+      }
+    },
+    "conclusion": "Chaque jour, nous travaillons pour offrir une expérience culinaire intelligente, personnalisée et humaine. Rejoignez-nous dans cette aventure gourmande !"
+  },
+  "NotFoundPage": {
+    "title": "Page introuvable",
+    "message": "Oups ! La page que vous recherchez semble ne pas exister. Elle a peut-être été déplacée, renommée ou supprimée.",
+    "backHome": "Retour à l’accueil",
+    "exploreRecipes": "Explorer les recettes",
+    "code": "ERREUR 404 — PAGE NON TROUVÉE"
   }
 }

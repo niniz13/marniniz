@@ -238,5 +238,52 @@
       "title": "Follow us"
     },
     "copyright": "MealMind Website — All rights reserved."
+  },
+  "ContactPage": {
+    "title": "Contact Us",
+    "intro": "Got a question, suggestion, or partnership idea? We’d love to hear from you.",
+    "emailTitle": "Email",
+    "phoneTitle": "Phone",
+    "addressTitle": "Address",
+    "name": "Name",
+    "namePlaceholder": "Your full name",
+    "email": "Email address",
+    "emailPlaceholder": "your@email.com",
+    "message": "Message",
+    "messagePlaceholder": "Write your message here...",
+    "send": "Send",
+    "formSent": "Thank you! Your message has been sent successfully."
+  },
+  "AboutPage": {
+    "title": "Our Mission",
+    "intro": "At MealMind, we believe that eating well shouldn’t be complicated. Our mission is to make cooking accessible, intuitive, and inspiring for everyone — through technology and creativity.",
+    "visionTitle": "Our Vision",
+    "visionDesc": "We aim to help people plan their meals better, discover new flavors, and adopt a balanced diet — while reducing food waste.",
+    "values": {
+      "passion": {
+        "title": "Passion",
+        "desc": "We put our heart into creating tools that bring people together around the joy of cooking."
+      },
+      "innovation": {
+        "title": "Innovation",
+        "desc": "We use artificial intelligence to simplify daily life and offer unique culinary experiences."
+      },
+      "community": {
+        "title": "Community",
+        "desc": "MealMind is a collective journey — a community of enthusiasts sharing their ideas and recipes."
+      },
+      "sustainability": {
+        "title": "Sustainability",
+        "desc": "We promote responsible cooking that respects the environment and natural resources."
+      }
+    },
+    "conclusion": "Every day, we work to deliver an intelligent, personalized, and human cooking experience. Join us on this delicious adventure!"
+  },
+  "NotFoundPage": {
+    "title": "Page not found",
+    "message": "Oops! The page you’re looking for doesn’t seem to exist. It may have been moved, renamed, or deleted.",
+    "backHome": "Back to home",
+    "exploreRecipes": "Explore recipes",
+    "code": "ERROR 404 — PAGE NOT FOUND"
   }
 }

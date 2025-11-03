@@ -68,12 +68,6 @@ export default function Menu() {
       {/* --- MENU DESKTOP --- */}
       <div className="hidden md:flex items-center gap-8">
         <Link
-          href="/planning-ia"
-          className="font-bold text-lg tracking-[-0.03em] hover:underline"
-        >
-          {t("planningIA")}
-        </Link>
-        <Link
           href="/recipes-search"
           className="font-bold text-lg tracking-[-0.03em] hover:underline"
         >
@@ -156,16 +150,6 @@ export default function Menu() {
 
                   <button
                     onClick={() => {
-                      router.push("/my-plannings");
-                      setMenuOpen(false);
-                    }}
-                    className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-md hover:bg-white/10 transition-all"
-                  >
-                    <Calendar size={18} /> {t("myPlannings")}
-                  </button>
-
-                  <button
-                    onClick={() => {
                       router.push("/settings");
                       setMenuOpen(false);
                     }}
@@ -242,20 +226,11 @@ export default function Menu() {
                 {t("home")}
               </Link>
               <Link
-                href="/planning-ia"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {t("planningIA")}
-              </Link>
-              <Link
                 href="/recipes-search"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {t("recipes")}
               </Link>
-
-              {/* --- LANGUAGE SWITCHER MOBILE --- */}
-              <LanguageSwitcher />
 
               {status === "loading" ? (
                 <div className="animate-spin text-white/60">
@@ -268,12 +243,6 @@ export default function Menu() {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {t("myRecipes")}
-                  </Link>
-                  <Link
-                    href="/my-plannings"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {t("myPlannings")}
                   </Link>
                   <Link
                     href="/settings"
@@ -303,6 +272,8 @@ export default function Menu() {
                   </Link>
                 </>
               )}
+              {/* --- LANGUAGE SWITCHER MOBILE --- */}
+              <LanguageSwitcher />
             </div>
           </motion.div>
         )}
