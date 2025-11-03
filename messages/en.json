@@ -3,7 +3,7 @@
     "hero": {
       "title": "Plan your meals in seconds with AI",
       "description": "Simplify your life in the kitchen with our intelligent AI. With one click, generate your meal plan for the week, along with a complete and optimized shopping list. Want inspiration? Explore hundreds of recipes based on your preferences, diet, or ingredients you already have at home.",
-      "cta": "Create my plan"
+      "cta": "Search for recipes"
     }
   },
   "RecipesPage": {

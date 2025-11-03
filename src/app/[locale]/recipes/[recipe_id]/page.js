@@ -274,7 +274,7 @@ export default function RecipeDetailPage() {
             <div className="flex flex-col gap-4">
               {/* Titre + actions */}
               <div className="flex items-start justify-between gap-4">
-                <h1 className="text-4xl font-extrabold">{recipe.strMeal}</h1>
+                <h1 className="text-4xl font-extrabold text-white">{recipe.strMeal}</h1>
                 <div className="flex gap-2">
                   {/* --- FAVORIS --- */}
                   <button
@@ -344,8 +344,8 @@ export default function RecipeDetailPage() {
 
               {/* --- INGRÉDIENTS --- */}
               <div>
-                <h3 className="text-2xl font-bold mb-3">{t("ingredients")}</h3>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <h3 className="text-2xl text-white font-bold mb-3">{t("ingredients")}</h3>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-white">
                   {recipe.strIngredients?.length > 0 ? (
                     recipe.strIngredients.map((ing, i) => (
                       <li
@@ -374,7 +374,7 @@ export default function RecipeDetailPage() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mt-14"
         >
-          <h2 className="text-3xl font-bold mb-4">{t("instructions")}</h2>
+          <h2 className="text-3xl text-white font-bold mb-4">{t("instructions")}</h2>
           <p className="text-white/80 leading-relaxed whitespace-pre-line">
             {recipe.strDirections || t("error")}
           </p>
@@ -392,8 +392,8 @@ export default function RecipeDetailPage() {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="mt-12"
             >
-              <h2 className="text-3xl font-bold mb-4">{t("nutrition")}</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <h2 className="text-3xl text-white font-bold mb-4">{t("nutrition")}</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-white">
                 {Object.entries(recipe.strNutrition)
                   .filter(
                     ([, value]) =>

@@ -3,7 +3,7 @@
     "hero": {
       "title": "Planifie tes repas en quelques secondes grâce à l'IA",
       "description": "Simplifie ta vie en cuisine grâce à notre IA intelligente. En un clic, génère ton planning de repas pour la semaine, accompagné de la liste de courses complète et optimisée. Tu veux de l'inspiration ? Explore des centaines de recettes selon tes envies, ton régime ou les ingrédients que tu as déjà chez toi.",
-      "cta": "Créer mon planning"
+      "cta": "Chercher des recettes"
     }
   },
   "RecipesPage": {

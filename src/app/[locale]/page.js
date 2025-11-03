@@ -67,7 +67,7 @@ export default function Home() {
           </p>
 
           <Link
-            href="/recipes"
+            href="/recipes-search"
             className="bg-red-600 rounded-sm px-8 py-3 text-white font-bold transition-all duration-300 hover:bg-red-400 cursor-pointer"
           >
             {t("hero.cta")}

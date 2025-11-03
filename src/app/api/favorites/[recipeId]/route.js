@@ -58,7 +58,7 @@ export async function GET(req, { params }) {
     }
 
     // Récupération du paramètre dynamique [recipeId]
-    const { recipeId } = params;
+    const { recipeId } = await params;
 
     // Connexion à MongoDB
     const client = await clientPromise;
