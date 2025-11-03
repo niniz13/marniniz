@@ -7,67 +7,64 @@ import Menu from "@/app/components/menu";
 import Footer from "@/app/components/footer";
 import { useTranslations } from "next-intl";
 
-const difficulties = ["Easy", "More effort", "A challenge"];
-
-const subCategories = [
-  "Barbecues",
-  "Batch cooking",
-  "Birthdays",
-  "Biscuit recipes",
-  "Bread",
-  "Breakfast",
-  "Breakfast recipes",
-  "Budget dinners",
-  "Cakes",
-  "Cheese recipes",
-  "Chicken",
-  "Cocktails",
-  "Coffees",
-  "Desserts",
-  "Dinner",
-  "Dinner recipes",
-  "Fish and seafood",
-  "Fitness & lifestyle",
-  "Free-from baking",
-  "Freezable meals",
-  "High protein",
-  "Hosting",
-  "Keto",
-  "Kids' baking",
-  "Kids' birthdays",
-  "Low calorie",
-  "Lunch",
-  "Lunch recipes",
-  "Meat",
-  "Mocktails",
-  "Pasta",
-  "Picnics",
-  "Quick bakes",
-  "Salads",
-  "Savoury pastries",
-  "Slow cooker",
-  "Smoothies",
-  "Special occasions",
-  "Spring recipes",
-  "Storecupboard",
-  "Student meals",
-  "Sweet treats",
-  "Teas",
-  "Vegan",
-  "Vegan baking",
-  "Vegetarian",
+// ✅ Difficultés et catégories traduites via t()
+const difficulties = ["easy", "medium", "hard"];
+const subCategoriesKeys = [
+  "barbecues",
+  "batchCooking",
+  "birthdays",
+  "biscuits",
+  "bread",
+  "breakfast",
+  "budgetDinners",
+  "cakes",
+  "cheese",
+  "chicken",
+  "cocktails",
+  "coffees",
+  "desserts",
+  "dinner",
+  "fishSeafood",
+  "fitness",
+  "freeFromBaking",
+  "freezableMeals",
+  "highProtein",
+  "hosting",
+  "keto",
+  "kidsBaking",
+  "kidsBirthdays",
+  "lowCalorie",
+  "lunch",
+  "meat",
+  "mocktails",
+  "pasta",
+  "picnics",
+  "quickBakes",
+  "salads",
+  "savouryPastries",
+  "slowCooker",
+  "smoothies",
+  "specialOccasions",
+  "springRecipes",
+  "storecupboard",
+  "studentMeals",
+  "sweetTreats",
+  "teas",
+  "vegan",
+  "veganBaking",
+  "vegetarian",
 ];
 
-// 🔹 Types de valeurs nutritionnelles réelles
-const nutritionTypes = [
-  { key: "kcal", label: "Calories (kcal)" },
-  { key: "fat", label: "Fat (g)" },
-  { key: "saturates", label: "Saturated fat (g)" },
-  { key: "carbs", label: "Carbs (g)" },
-  { key: "sugars", label: "Sugars (g)" },
-  { key: "fibre", label: "Fibre (g)" },
-  { key: "protein", label: "Protein (g)" },
-  { key: "salt", label: "Salt (g)" },
+// ✅ Types de valeurs nutritionnelles traduites via t()
+const nutritionTypesKeys = [
+  "kcal",
+  "fat",
+  "saturates",
+  "carbs",
+  "sugars",
+  "fibre",
+  "protein",
+  "salt",
 ];
 
 export default function SearchPage() {
@@ -150,10 +147,10 @@ export default function SearchPage() {
               onChange={handleChange}
               className="w-full bg-white/10 text-white p-3 rounded-lg border border-white/20 focus:ring-2 focus:ring-white/30 outline-none"
             >
-              <option value="">-- Choisir --</option>
-              {difficulties.map((d) => (
-                <option key={d} value={d}>
-                  {d === "" ? "-- Choisir --" : d}
+              <option value="">{t("chooseOption")}</option>
+              {difficulties.map((key) => (
+                <option key={key} value={t(`difficulties.${key}`)}>
+                  {t(`difficulties.${key}`)}
                 </option>
               ))}
             </select>
@@ -170,10 +167,10 @@ export default function SearchPage() {
               onChange={handleChange}
               className="w-full bg-white/10 text-white p-3 rounded-lg border border-white/20 focus:ring-2 focus:ring-white/30 outline-none"
             >
-              <option value="">-- Choisir --</option>
-              {subCategories.map((s) => (
-                <option key={s} value={s}>
-                  {s}
+              <option value="">{t("chooseOption")}</option>
+              {subCategoriesKeys.map((key) => (
+                <option key={key} value={t(`categories.${key}`)}>
+                  {t(`categories.${key}`)}
                 </option>
               ))}
             </select>
@@ -277,10 +274,10 @@ export default function SearchPage() {
                 onChange={handleChange}
                 className="w-full bg-white/10 text-white p-3 rounded-lg border border-white/20 focus:ring-2 focus:ring-white/30 outline-none"
               >
-                <option value="">-- Choisir --</option>
-                {nutritionTypes.map((n) => (
-                  <option key={n.key} value={n.key}>
-                    {n.label}
+                <option value="">{t("chooseOption")}</option>
+                {nutritionTypesKeys.map((key) => (
+                  <option key={key} value={key}>
+                    {t(`nutritionLabels.${key}`)}
                   </option>
                 ))}
               </select>

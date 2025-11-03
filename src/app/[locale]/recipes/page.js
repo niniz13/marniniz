@@ -10,13 +10,14 @@ import Skeleton from "@mui/material/Skeleton";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Footer from "@/app/components/footer";
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from "next-intl";
 
 function RecipesList() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const params = useParams();
-  const t = useTranslations('RecipesPage');
+  const t = useTranslations("RecipesPage");
+  const locale = useLocale();
 
   const [recipes, setRecipes] = useState([]);
   const [status, setStatus] = useState("idle");
@@ -27,6 +28,13 @@ function RecipesList() {
   );
 
   const prevFiltersRef = useRef(null);
+
+  const name = searchParams.get("name");
+  const difficulty = searchParams.get("difficulty");
+  const subCategory = searchParams.get("subCategory");
+  const nutritionKey = searchParams.get("nutritionKey");
+  const nutritionOp = searchParams.get("nutritionOp");
+  const nutritionValue = searchParams.get("nutritionValue");
 
   useEffect(() => {
     const filtersToWatch = [
@@ -48,7 +56,10 @@ function RecipesList() {
       .map((key) => `${key}=${searchParams.get(key) || ""}`)
       .join("&");
 
-    if (prevFiltersRef.current !== null && prevFiltersRef.current !== currentFilters) {
+    if (
+      prevFiltersRef.current !== null &&
+      prevFiltersRef.current !== currentFilters
+    ) {
       const page = parseInt(searchParams.get("page")) || 1;
       if (page > 1) {
         const newParams = new URLSearchParams(searchParams);
@@ -61,12 +72,12 @@ function RecipesList() {
   }, [
     searchParams,
     router,
-    searchParams.get("name"),
-    searchParams.get("difficulty"),
-    searchParams.get("subCategory"),
-    searchParams.get("nutritionKey"),
-    searchParams.get("nutritionOp"),
-    searchParams.get("nutritionValue"),
+    name,
+    difficulty,
+    subCategory,
+    nutritionKey,
+    nutritionOp,
+    nutritionValue,
   ]);
 
   useEffect(() => {
@@ -76,10 +87,13 @@ function RecipesList() {
         const pageFromUrl = parseInt(searchParams.get("page")) || 1;
         setCurrentPage(pageFromUrl);
 
-        const res = await fetch(`/api/recipes?${searchParams.toString()}`, {
-          cache: "force-cache",
-        });
-        if (!res.ok) throw new Error(t('serverError', { status: res.status }));
+        const res = await fetch(
+          `/api/recipes?${searchParams.toString()}&locale=${locale}`,
+          {
+            cache: "no-cache",
+          }
+        );
+        if (!res.ok) throw new Error(t("serverError", { status: res.status }));
         const data = await res.json();
 
         setRecipes(data.recipes);
@@ -92,7 +106,7 @@ function RecipesList() {
       }
     };
     fetchFilteredRecipes();
-  }, [t, searchParams]);
+  }, [t, searchParams, locale]);
 
   const handlePageChange = (_, value) => {
     setCurrentPage(value);
@@ -133,15 +147,15 @@ function RecipesList() {
   }
 
   if (status === "failed") {
-    return <p className="text-center text-red-400">{t('error')} : {error}</p>;
+    return (
+      <p className="text-center text-red-400">
+        {t("error")} : {error}
+      </p>
+    );
   }
 
   if (status === "succeeded" && recipes.length === 0) {
-    return (
-      <p className="text-center text-white/60">
-        {t('noResults')}
-      </p>
-    );
+    return <p className="text-center text-white/60">{t("noResults")}</p>;
   }
 
   return (
@@ -155,7 +169,10 @@ function RecipesList() {
             transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
             viewport={{ once: true }}
           >
-            <Link href={`/${params.locale}/recipes/${recipe._id}`} className="block group">
+            <Link
+              href={`/${params.locale}/recipes/${recipe._id}`}
+              className="block group"
+            >
               <div className="relative w-full h-64">
                 {recipe.strMealThumb ? (
                   <Image
@@ -174,7 +191,8 @@ function RecipesList() {
                   {recipe.strMeal}
                 </h3>
                 <p className="text-sm text-red-400">
-                  {recipe.strDishType || "?"} • {t('servings', { count: recipe.strServings || "?" })}
+                  {recipe.strDishType || "?"} •{" "}
+                  {t("servings", { count: recipe.strServings || "?" })}
                 </p>
               </div>
             </Link>
@@ -204,7 +222,7 @@ function RecipesList() {
 }
 
 export default function RecipesPage() {
-  const t = useTranslations('RecipesPage');
+  const t = useTranslations("RecipesPage");
 
   return (
     <div className="relative w-full min-h-screen text-white bg-[#0e0e0e] overflow-hidden">
@@ -214,12 +232,12 @@ export default function RecipesPage() {
 
       <div className="pt-32 px-6 sm:px-12 md:px-20 lg:px-40">
         <h2 className="text-3xl sm:text-4xl font-extrabold mb-10">
-          {t('title')}
+          {t("title")}
         </h2>
 
         <Suspense
           fallback={
-            <p className="text-white/70 text-center p-10">{t('loading')}</p>
+            <p className="text-white/70 text-center p-10">{t("loading")}</p>
           }
         >
           <RecipesList />

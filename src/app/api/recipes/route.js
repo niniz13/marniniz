@@ -15,6 +15,12 @@ export async function GET(req) {
     const db = client.db();
     const { searchParams } = new URL(req.url);
 
+    // Récupérer la locale envoyée depuis le front
+    const locale = searchParams.get("locale") || "fr";
+
+    // Choisir la bonne collection selon la locale
+    const collectionName = locale === "en" ? "recipes_en" : "recipes_fr";
+
     // Pagination
     const page = parseInt(searchParams.get("page")) || 1;
     const limit = 12;
@@ -40,7 +46,8 @@ export async function GET(req) {
     if (difficulty) filter.strDifficulty = difficulty;
     if (subCategory) filter.strSubCategory = subCategory;
 
-    const allRecipes = await db.collection("recipes").find(filter).toArray();
+    // Récupération des recettes selon les filtres de base
+    const allRecipes = await db.collection(collectionName).find(filter).toArray();
 
     const filteredRecipes = allRecipes.filter((r) => {
       const ingredientCount = Array.isArray(r.strIngredients)

@@ -10,12 +10,13 @@ import { motion } from "framer-motion";
 import Footer from "@/app/components/footer";
 import { Download, Heart } from "lucide-react";
 import toast from "react-hot-toast";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 export default function RecipeDetailPage() {
   const { recipe_id } = useParams();
   const { data: session } = useSession();
   const t = useTranslations("RecipeDetailPage");
+  const locale = useLocale();
 
   const [recipe, setRecipe] = useState(null);
   const [status, setStatus] = useState("loading");
@@ -31,7 +32,9 @@ export default function RecipeDetailPage() {
 
     const fetchRecipeDetail = async () => {
       try {
-        const res = await fetch(`/api/recipes/${recipe_id}`);
+        const res = await fetch(`/api/recipes/${recipe_id}?locale=${locale}`, {
+          cache: "force-cache",
+        });
         if (!res.ok) throw new Error(t("serverError", { status: res.status }));
 
         const data = await res.json();
@@ -44,7 +47,7 @@ export default function RecipeDetailPage() {
     };
 
     fetchRecipeDetail();
-  }, [t, recipe_id]);
+  }, [t, recipe_id, locale]);
 
   // Vérifier si la recette est déjà en favoris (plus rapide)
   useEffect(() => {
@@ -334,21 +337,27 @@ export default function RecipeDetailPage() {
                       value &&
                       (Array.isArray(value) ? value.length > 0 : value !== "")
                   )
-                  .map(([label, values]) => (
-                    <div
-                      key={label}
-                      className="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col items-start"
-                    >
-                      <h4 className="font-semibold text-white/90 mb-1">
-                        {label}
-                      </h4>
-                      <p className="text-white/70">
-                        {Array.isArray(values)
-                          ? values.join(" — ")
-                          : String(values)}
-                      </p>
-                    </div>
-                  ))}
+                  .map(([label, values]) => {
+                    const translatedLabel = t(`nutritionLabels.${label}`, {
+                      default: label,
+                    });
+
+                    return (
+                      <div
+                        key={label}
+                        className="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col items-start"
+                      >
+                        <h4 className="font-semibold text-white/90 mb-1">
+                          {translatedLabel}
+                        </h4>
+                        <p className="text-white/70">
+                          {Array.isArray(values)
+                            ? values.join(" — ")
+                            : String(values)}
+                        </p>
+                      </div>
+                    );
+                  })}
               </div>
             </motion.div>
           )}

@@ -7,12 +7,13 @@ import { motion } from "framer-motion";
 import Skeleton from "@mui/material/Skeleton";
 import Menu from "@/app/components/menu";
 import Footer from "@/app/components/footer";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 
 function FavoriteRecipesList() {
   const { data: session, status: authStatus } = useSession();
   const t = useTranslations("MyRecipesPage");
+  const locale = useLocale();
   const [recipes, setRecipes] = useState([]);
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
@@ -27,7 +28,7 @@ function FavoriteRecipesList() {
     const fetchFavorites = async () => {
       setStatus("loading");
       try {
-        const res = await fetch("/api/user/favorites", {
+        const res = await fetch(`/api/user/favorites?locale=${locale}`, {
           credentials: "include",
         });
 
@@ -44,7 +45,7 @@ function FavoriteRecipesList() {
     };
 
     fetchFavorites();
-  }, [session, authStatus, t]);
+  }, [session, authStatus, t, locale]);
 
   // --- Loading skeleton ---
   if (authStatus === "loading" || status === "loading") {
