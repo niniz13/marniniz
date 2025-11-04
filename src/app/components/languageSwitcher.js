@@ -77,7 +77,7 @@ export default function LanguageSwitcher() {
   };
 
   return (
-    <div className="relative flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full border border-white/20 shadow-sm hover:bg-white/20 transition">
+    <div className="relative flex items-center gap-2 backdrop-blur-3xl bg-transparent rounded-full border border-white/30 px-5 py-3 shadow-sm hover:bg-white/20 transition">
       {/* Affiche le drapeau actif */}
       <Image
         src={currentLang.flag}

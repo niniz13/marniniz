@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import recipesReducer from "./features/recipes/recipesSlice";
+import favoritesReducer from "./features/favoriteRecipes/favoriteRecipesSlice";
 
 /**
  * @fileoverview
@@ -51,8 +51,7 @@ import recipesReducer from "./features/recipes/recipesSlice";
 export const makeStore = () => {
   return configureStore({
     reducer: {
-      /** Reducer principal gérant les recettes */
-      recipes: recipesReducer,
+      favorites: favoritesReducer,
     },
   });
 };

@@ -9,8 +9,12 @@ import Menu from "@/app/components/menu";
 import { motion } from "framer-motion";
 import Footer from "@/app/components/footer";
 import { Download, Heart } from "lucide-react";
-import toast from "react-hot-toast";
 import { useLocale, useTranslations } from "next-intl";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  checkFavorite,
+  toggleFavorite,
+} from "@/lib/features/favoriteRecipes/favoriteRecipesSlice";
 
 /**
  * @fileoverview
@@ -20,7 +24,7 @@ import { useLocale, useTranslations } from "next-intl";
  * - Récupération des données d’une recette via l’API `/api/recipes/[id]`
  * - Gestion des états (`loading`, `failed`, `succeeded`)
  * - Affichage dynamique des sections (ingrédients, instructions, nutrition)
- * - Gestion des favoris (ajout/suppression) liée à l’utilisateur connecté
+ * - Gestion des favoris (ajout/suppression) via Redux (slice `favoritesSlice`)
  * - Export simplifié au format PDF via `window.print()`
  * - Animations d’apparition avec **Framer Motion**
  * - Traductions multilingues avec **next-intl**
@@ -33,7 +37,7 @@ import { useLocale, useTranslations } from "next-intl";
  *
  * Ce composant gère la récupération, l’affichage et les interactions utilisateur :
  * - Lecture des informations principales (image, titre, temps, description)
- * - Gestion des favoris via API (`/api/favorites`)
+ * - Gestion des favoris via Redux et API (`/api/favorites`)
  * - Affichage responsive et visuel cohérent
  * - Fallbacks visuels via `Skeleton` pendant le chargement
  *
@@ -54,13 +58,18 @@ export default function RecipeDetailPage() {
   const { data: session } = useSession();
   const t = useTranslations("RecipeDetailPage");
   const locale = useLocale();
+  const dispatch = useDispatch();
 
-  // --- États locaux ---
+  // --- Sélecteurs Redux ---
+  const { favorites, loading: loadingFavorite } = useSelector(
+    (state) => state.favorites
+  );
+  const isFavorite = favorites[recipe_id] || false;
+
+  // --- États locaux pour la recette ---
   const [recipe, setRecipe] = useState(null);
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState(null);
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [loadingFavorite, setLoadingFavorite] = useState(false);
 
   /**
    * @function handleExportPDF
@@ -97,61 +106,21 @@ export default function RecipeDetailPage() {
 
   /**
    * @effect
-   * Vérifie si la recette est déjà en favoris pour l’utilisateur connecté.
+   * Vérifie si la recette est déjà en favoris via Redux pour l’utilisateur connecté.
    */
   useEffect(() => {
-    const checkFavorite = async () => {
-      if (!session?.user?.id || !recipe_id) return;
-      try {
-        const res = await fetch(`/api/favorites/${recipe_id}`, {
-          credentials: "include",
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setIsFavorite(data.favorite);
-        }
-      } catch (err) {
-        console.error("Erreur vérification favoris :", err);
-      }
-    };
-    checkFavorite();
-  }, [session, recipe_id]);
+    if (session?.user?.id && recipe_id) {
+      dispatch(checkFavorite({ recipeId: recipe_id }));
+    }
+  }, [dispatch, session, recipe_id]);
 
   /**
-   * @function toggleFavorite
+   * @function handleToggleFavorite
    * @description
-   * Ajoute ou retire la recette des favoris.
-   * Affiche un toast selon le résultat.
+   * Déclenche l’ajout ou le retrait de la recette des favoris via Redux.
    */
-  const toggleFavorite = async () => {
-    if (!session?.user?.id) {
-      toast.error(t("mustBeLoggedIn"));
-      return;
-    }
-
-    setLoadingFavorite(true);
-    try {
-      const res = await fetch("/api/favorites", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ recipeId: recipe_id }),
-        credentials: "include",
-        cache: "force-cache",
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setIsFavorite(data.favorite);
-        toast.success(
-          data.favorite ? t("addedToFavorites") : t("removedFromFavorites")
-        );
-      } else {
-        toast.error(data.favorite ? t("favoriteError") : t("unfavoriteError"));
-      }
-    } catch (err) {
-      console.error("Erreur favoris :", err);
-    } finally {
-      setLoadingFavorite(false);
-    }
+  const handleToggleFavorite = () => {
+    dispatch(toggleFavorite({ recipeId: recipe_id, t, session }));
   };
 
   // --- ÉTATS D’INTERFACE ---
@@ -274,11 +243,13 @@ export default function RecipeDetailPage() {
             <div className="flex flex-col gap-4">
               {/* Titre + actions */}
               <div className="flex items-start justify-between gap-4">
-                <h1 className="text-4xl font-extrabold text-white">{recipe.strMeal}</h1>
+                <h1 className="text-4xl font-extrabold text-white">
+                  {recipe.strMeal}
+                </h1>
                 <div className="flex gap-2">
                   {/* --- FAVORIS --- */}
                   <button
-                    onClick={toggleFavorite}
+                    onClick={handleToggleFavorite}
                     disabled={loadingFavorite}
                     className={`flex items-center gap-2 px-4 py-2 border rounded-lg transition-all ${
                       isFavorite
@@ -344,7 +315,9 @@ export default function RecipeDetailPage() {
 
               {/* --- INGRÉDIENTS --- */}
               <div>
-                <h3 className="text-2xl text-white font-bold mb-3">{t("ingredients")}</h3>
+                <h3 className="text-2xl text-white font-bold mb-3">
+                  {t("ingredients")}
+                </h3>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-white">
                   {recipe.strIngredients?.length > 0 ? (
                     recipe.strIngredients.map((ing, i) => (
@@ -374,7 +347,9 @@ export default function RecipeDetailPage() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mt-14"
         >
-          <h2 className="text-3xl text-white font-bold mb-4">{t("instructions")}</h2>
+          <h2 className="text-3xl text-white font-bold mb-4">
+            {t("instructions")}
+          </h2>
           <p className="text-white/80 leading-relaxed whitespace-pre-line">
             {recipe.strDirections || t("error")}
           </p>
@@ -392,7 +367,9 @@ export default function RecipeDetailPage() {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="mt-12"
             >
-              <h2 className="text-3xl text-white font-bold mb-4">{t("nutrition")}</h2>
+              <h2 className="text-3xl text-white font-bold mb-4">
+                {t("nutrition")}
+              </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-white">
                 {Object.entries(recipe.strNutrition)
                   .filter(
