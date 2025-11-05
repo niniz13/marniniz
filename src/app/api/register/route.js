@@ -1,19 +1,29 @@
 import { hash } from "bcryptjs";
 import clientPromise from "@/lib/mongodb";
+import { z } from "zod";
 
 /**
  * @fileoverview
  * Route API **POST /api/register** — Crée un nouvel utilisateur dans la base MongoDB.
  *
  * Cette route reçoit les informations du formulaire d’inscription depuis le front-end,
- * vérifie si l’adresse email est déjà utilisée, puis stocke un nouvel utilisateur
- * avec un mot de passe **haché avec bcrypt**.
+ * valide les données avec **Zod**, vérifie si l’adresse email est déjà utilisée,
+ * puis stocke un nouvel utilisateur avec un mot de passe **haché avec bcrypt**.
  *
  * **Champs requis :**
  * - `name` *(string)* → Nom complet de l’utilisateur
  * - `email` *(string)* → Adresse email unique
- * - `password` *(string)* → Mot de passe brut à hacher
+ * - `password` *(string)* → Mot de passe brut à hacher (doit respecter certaines contraintes)
  * - `image` *(string, optionnel)* → URL d’image de profil
+ *
+ * **Validation Zod :**
+ * - Le nom doit contenir au moins 2 caractères.
+ * - L'email doit être valide.
+ * - Le mot de passe doit contenir :
+ *   - au moins 8 caractères,
+ *   - une majuscule,
+ *   - un chiffre,
+ *   - un caractère spécial.
  *
  * **Sécurité :**
  * - Le mot de passe est haché via `bcryptjs` avant insertion.
@@ -22,8 +32,27 @@ import clientPromise from "@/lib/mongodb";
  * **Réponses possibles :**
  * - ✅ 201 : `{ success: true }` → Utilisateur créé avec succès
  * - ⚠️ 400 : `{ error: "User already exists" }` → Email déjà enregistré
+ * - ⚠️ 400 : `{ error: "Validation error", details: { field: message } }` → Données invalides
  * - ❌ 500 : `{ message: "Erreur serveur" }` → Erreur inattendue
  */
+
+/**
+ * Schéma de validation Zod pour les données d'inscription utilisateur.
+ */
+const registerSchema = z.object({
+  name: z.string().min(2, "Le nom doit contenir au moins 2 caractères."),
+  email: z.string().email("Adresse email invalide."),
+  password: z
+    .string()
+    .min(8, "Le mot de passe doit contenir au moins 8 caractères.")
+    .regex(/[A-Z]/, "Le mot de passe doit contenir une majuscule.")
+    .regex(/[0-9]/, "Le mot de passe doit contenir un chiffre.")
+    .regex(
+      /[^A-Za-z0-9]/,
+      "Le mot de passe doit contenir un caractère spécial."
+    ),
+  image: z.string().optional(),
+});
 
 /**
  * Crée un nouvel utilisateur dans la collection `users`.
@@ -42,7 +71,7 @@ import clientPromise from "@/lib/mongodb";
  *   body: JSON.stringify({
  *     name: "Alice Dupont",
  *     email: "alice@example.com",
- *     password: "secret123",
+ *     password: "SuperPass1!",
  *   }),
  * });
  *
@@ -53,14 +82,30 @@ import clientPromise from "@/lib/mongodb";
 export async function POST(req) {
   try {
     // Lecture du corps JSON
-    const { name, email, password, image } = await req.json();
+    const body = await req.json();
 
-    // Vérification des champs requis
-    if (!name || !email || !password) {
-      return new Response(JSON.stringify({ error: "Champs manquants" }), {
-        status: 400,
+    // Validation des données avec Zod
+    const parsed = registerSchema.safeParse(body);
+    if (!parsed.success) {
+      // Regroupe les erreurs par champ
+      const fieldErrors = {};
+      parsed.error.errors.forEach((err) => {
+        fieldErrors[err.path[0]] = err.message;
       });
+
+      return new Response(
+        JSON.stringify({
+          error: "Validation error",
+          details: fieldErrors,
+        }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
     }
+
+    const { name, email, password, image } = parsed.data;
 
     // Connexion à MongoDB
     const client = await clientPromise;
@@ -71,6 +116,7 @@ export async function POST(req) {
     if (existing) {
       return new Response(JSON.stringify({ error: "User already exists" }), {
         status: 400,
+        headers: { "Content-Type": "application/json" },
       });
     }
 
@@ -95,6 +141,7 @@ export async function POST(req) {
     console.error("Erreur API /register :", err);
     return new Response(JSON.stringify({ message: "Erreur serveur" }), {
       status: 500,
+      headers: { "Content-Type": "application/json" },
     });
   }
 }
