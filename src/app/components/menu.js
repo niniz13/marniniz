@@ -133,9 +133,6 @@ export default function Menu() {
           {t("recipes")}
         </Link>
 
-        {/* Sélecteur de langue */}
-        <LanguageSwitcher />
-
         {/* Barre de recherche */}
         <div className="relative flex items-center">
           <GlassInput
@@ -151,6 +148,9 @@ export default function Menu() {
             <Search size={20} strokeWidth={2} />
           </button>
         </div>
+
+        {/* Sélecteur de langue */}
+        <LanguageSwitcher />
 
         {/* --- MENU UTILISATEUR --- */}
         <div className="relative" ref={menuRef}>

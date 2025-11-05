@@ -7,12 +7,15 @@
     }
   },
   "RecipesPage": {
-    "title": "Search results",
-    "loading": "Loading...",
-    "error": "Error",
-    "noResults": "No recipes found with these filters.",
-    "servings": "Serves {count}",
-    "serverError": "Server error: {status}"
+    "title": "Recipes",
+    "loading": "Loading recipes...",
+    "error": "An error occurred",
+    "noResults": "No recipes found",
+    "noResultsTitle": "No recipes found",
+    "noResultsDescription": "Try adjusting your filters or check the spelling of your search.",
+    "resetFilters": "Reset filters",
+    "serverError": "Server error (status {{status}})",
+    "servings": "{count} serving(s)"
   },
   "LoginPage": {
     "title": "Login",

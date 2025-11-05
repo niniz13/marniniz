@@ -4,7 +4,6 @@ import { Suspense, useEffect, useState, useRef } from "react";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import Menu from "@/app/components/menu";
 import Skeleton from "@mui/material/Skeleton";
 import Pagination from "@mui/material/Pagination";
@@ -53,7 +52,6 @@ function RecipesList() {
   const t = useTranslations("RecipesPage");
   const locale = useLocale();
 
-  // --- États internes ---
   const [recipes, setRecipes] = useState([]);
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
@@ -64,7 +62,6 @@ function RecipesList() {
 
   const prevFiltersRef = useRef(null);
 
-  // --- Extraction des filtres depuis les paramètres d’URL ---
   const name = searchParams.get("name");
   const difficulty = searchParams.get("difficulty");
   const subCategory = searchParams.get("subCategory");
@@ -72,10 +69,6 @@ function RecipesList() {
   const nutritionOp = searchParams.get("nutritionOp");
   const nutritionValue = searchParams.get("nutritionValue");
 
-  /**
-   * @effect
-   * Réinitialise la page à 1 si les filtres changent (ex. : changement de nom, difficulté, etc.).
-   */
   useEffect(() => {
     const filtersToWatch = [
       "name",
@@ -120,11 +113,6 @@ function RecipesList() {
     nutritionValue,
   ]);
 
-  /**
-   * @effect
-   * Récupère les recettes filtrées depuis l’API `/api/recipes`.
-   * Gère les erreurs et met à jour la pagination.
-   */
   useEffect(() => {
     const fetchFilteredRecipes = async () => {
       setStatus("loading");
@@ -134,10 +122,9 @@ function RecipesList() {
 
         const res = await fetch(
           `/api/recipes?${searchParams.toString()}&locale=${locale}`,
-          {
-            cache: "no-cache",
-          }
+          { cache: "no-cache" }
         );
+
         if (!res.ok) throw new Error(t("serverError", { status: res.status }));
         const data = await res.json();
 
@@ -153,13 +140,6 @@ function RecipesList() {
     fetchFilteredRecipes();
   }, [t, searchParams, locale]);
 
-  /**
-   * @function handlePageChange
-   * @description
-   * Change la page de la pagination et met à jour l’URL (page=X).
-   * @param {React.ChangeEvent<unknown>} _ - Événement de changement de page (ignoré).
-   * @param {number} value - Numéro de la page sélectionnée.
-   */
   const handlePageChange = (_, value) => {
     setCurrentPage(value);
     const query = new URLSearchParams(searchParams);
@@ -167,7 +147,7 @@ function RecipesList() {
     router.push(`/${params.locale}/recipes?${query.toString()}`);
   };
 
-  // --- États visuels ---
+  // --- État : chargement ---
   if (status === "loading") {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
@@ -199,6 +179,7 @@ function RecipesList() {
     );
   }
 
+  // --- État : erreur ---
   if (status === "failed") {
     return (
       <p className="text-center text-red-400">
@@ -207,19 +188,36 @@ function RecipesList() {
     );
   }
 
+  // --- État : aucun résultat ---
   if (status === "succeeded" && recipes.length === 0) {
-    return <p className="text-center text-white/60">{t("noResults")}</p>;
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-center text-white/70">
+        <h3 className="text-2xl font-semibold mb-3">
+          {t("noResultsTitle", { defaultMessage: "Aucune recette trouvée" })}
+        </h3>
+        <p className="max-w-md text-white/50 mb-6">
+          {t("noResultsDescription", {
+            defaultMessage:
+              "Essayez d’ajuster vos filtres ou vérifiez l’orthographe de votre recherche.",
+          })}
+        </p>
+        <button
+          onClick={() => router.push(`/${params.locale}/recipes`)}
+          className="flex-1 bg-white/10 border border-white/20 hover:bg-white/20 min-w-[150px] px-6 py-2 rounded-lg text-sm sm:text-base transition-all"
+        >
+          {t("resetFilters", { defaultMessage: "Réinitialiser les filtres" })}
+        </button>
+      </div>
+    );
   }
 
-  // --- Rendu principal ---
+  // --- État : succès ---
   return (
     <>
       {/* --- GRILLE DE RECETTES --- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
-        {recipes.map((recipe, index) => (
-          <div
-            key={recipe._id}
-          >
+        {recipes.map((recipe) => (
+          <div key={recipe._id}>
             <Link
               href={`/${params.locale}/recipes/${recipe._id}`}
               className="block group"
@@ -296,12 +294,10 @@ export default function RecipesPage() {
 
   return (
     <div className="relative w-full min-h-screen text-white bg-[#0e0e0e] overflow-hidden">
-      {/* --- MENU FIXE --- */}
       <div className="fixed top-0 left-0 w-full z-10">
         <Menu />
       </div>
 
-      {/* --- CONTENU PRINCIPAL --- */}
       <div className="pt-32 px-6 sm:px-12 md:px-20 lg:px-40">
         <h2 className="text-3xl sm:text-4xl font-extrabold mb-10">
           {t("title")}
@@ -316,7 +312,6 @@ export default function RecipesPage() {
         </Suspense>
       </div>
 
-      {/* --- PIED DE PAGE --- */}
       <Footer />
     </div>
   );

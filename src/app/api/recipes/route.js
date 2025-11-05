@@ -40,6 +40,18 @@ function parseTime(timeStr) {
 }
 
 /**
+ * Supprime les accents d'une chaîne pour permettre une recherche accent-insensible.
+ *
+ * @param {string} str - Chaîne à normaliser
+ * @returns {string} Chaîne sans accents
+ */
+function normalizeString(str) {
+  return str
+    .normalize("NFD") // décompose les lettres accentuées (é → e +  ́)
+    .replace(/[\u0300-\u036f]/g, ""); // supprime les diacritiques
+}
+
+/**
  * Récupère les recettes depuis MongoDB selon les filtres et la pagination.
  *
  * @async
@@ -85,7 +97,6 @@ export async function GET(req) {
     const nutritionValue = parseFloat(searchParams.get("nutritionValue"));
 
     const filter = {};
-    if (name) filter.strMeal = { $regex: name, $options: "i" };
     if (difficulty) filter.strDifficulty = difficulty;
     if (subCategory) filter.strSubCategory = subCategory;
 
@@ -95,8 +106,16 @@ export async function GET(req) {
       .find(filter)
       .toArray();
 
-    // --- Filtrage avancé en mémoire ---
+    // --- Filtrage avancé en mémoire (y compris accent-insensible) ---
     const filteredRecipes = allRecipes.filter((r) => {
+      // --- Nom de recette ---
+      if (name) {
+        const searchNorm = normalizeString(name.toLowerCase());
+        const recipeNameNorm = normalizeString((r.strMeal || "").toLowerCase());
+        if (!recipeNameNorm.includes(searchNorm)) return false;
+      }
+
+      // --- Ingrédients ---
       const ingredientCount = Array.isArray(r.strIngredients)
         ? r.strIngredients.filter((ing) => ing && ing.trim() !== "").length
         : 0;
@@ -104,6 +123,7 @@ export async function GET(req) {
       if (minIngredients && ingredientCount < minIngredients) return false;
       if (maxIngredients && ingredientCount > maxIngredients) return false;
 
+      // --- Temps de préparation / cuisson ---
       const prep = parseTime(r.strPrepTime);
       const cook = parseTime(r.strCookTime);
 

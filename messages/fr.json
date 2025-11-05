@@ -7,12 +7,15 @@
     }
   },
   "RecipesPage": {
-    "title": "Résultats de votre recherche",
-    "loading": "Chargement...",
-    "error": "Erreur",
-    "noResults": "Aucune recette trouvée avec ces filtres.",
-    "servings": "Pour {count} personnes",
-    "serverError": "Erreur serveur: {status}"
+    "title": "Recettes",
+    "loading": "Chargement des recettes...",
+    "error": "Une erreur est survenue",
+    "noResults": "Aucune recette trouvée",
+    "noResultsTitle": "Aucune recette trouvée",
+    "noResultsDescription": "Essayez d’ajuster vos filtres ou vérifiez l’orthographe de votre recherche.",
+    "resetFilters": "Réinitialiser les filtres",
+    "serverError": "Erreur du serveur (code {{status}})",
+    "servings": "{count} portion(s)"
   },
   "LoginPage": {
     "title": "Connexion",
