@@ -145,6 +145,7 @@ export default function Menu() {
           />
           <button
             onClick={handleSearch}
+            aria-label="Rechercher une recette"
             className="absolute right-2 p-2 rounded-full hover:bg-white/10 transition-colors duration-300"
           >
             <Search size={20} strokeWidth={2} />
@@ -161,6 +162,7 @@ export default function Menu() {
           ) : (
             <button
               onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Ouvrir le menu utilisateur"
               className="backdrop-blur-3xl bg-transparent rounded-full border border-white/30 p-3 text-white transition-all duration-300 hover:bg-white/10 cursor-pointer"
             >
               <User size={22} strokeWidth={2.2} />
@@ -263,7 +265,7 @@ export default function Menu() {
       </div>
 
       {/* --- BURGER MENU MOBILE --- */}
-      <button className="md:hidden p-2" onClick={() => setMobileMenuOpen(true)}>
+      <button className="md:hidden p-2" aria-label="Ouvrir le menu de navigation" onClick={() => setMobileMenuOpen(true)}>
         <MenuIcon size={28} />
       </button>
 
@@ -278,6 +280,7 @@ export default function Menu() {
           >
             <button
               className="self-end mb-6"
+              aria-label="Fermer le menu de navigation"
               onClick={() => setMobileMenuOpen(false)}
             >
               <X size={28} />

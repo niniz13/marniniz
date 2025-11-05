@@ -217,12 +217,8 @@ function RecipesList() {
       {/* --- GRILLE DE RECETTES --- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
         {recipes.map((recipe, index) => (
-          <motion.div
+          <div
             key={recipe._id}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
-            viewport={{ once: true }}
           >
             <Link
               href={`/${params.locale}/recipes/${recipe._id}`}
@@ -251,7 +247,7 @@ function RecipesList() {
                 </p>
               </div>
             </Link>
-          </motion.div>
+          </div>
         ))}
       </div>
 

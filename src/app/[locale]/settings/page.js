@@ -268,6 +268,7 @@ export default function SettingsPage() {
                 console.error(err);
               }
             }}
+            data-cy="delete-account-button"
             className="px-6 py-2 rounded-lg text-sm sm:text-base transition-all bg-red-600/80 hover:bg-red-600"
           >
             {t('deleteButton')}
